@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping
 public class MainController {
-    @GetMapping("main")
+    @GetMapping("/")
     public String main(){
         return "pages/index";
     }
-    @PostMapping("main")
+    @PostMapping("/")
     public void mainList(){
 
 
