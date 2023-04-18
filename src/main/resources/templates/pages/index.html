@@ -18,34 +18,90 @@
         <!-- map_wrap -->
         <!-- content -->
         <div class="travel_list">
-            <h2>기록 남기기</h2>
-            <a href="#">내 여행지 목록보기</a>
-            <form method="post" action="">
-                <p>제목</p>
-                <input name="title" type="text" placeholder="여행 이름">
-                <p>DAY</p>
-                <input name="day" type="number" value="1">
-                <p>리스트</p>
-                <div class="">
-                    <ul>
-                        <li>장소명 : </li>
-                        <li>위치 : </li>
-                        <li>운영 시간 : <input type="text" placeholder="7:00 - 19:00"/> </li>
-                        <li>
-                            <textarea placeholder="여행지 정보 및 TIP 메모메모★">
+            <h2>Travel Log</h2>
+            <a href="#">상세 보기 +</a>
+            <ul>
 
-                            </textarea>
-                        </li>
-                    </ul>
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"> 여행이름 </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <a href="#"> 저장하기 </a>
-                <a href="#">새로작성하기</a>
-            </form>
+                <div class="modal-body">
+                    <form method="post" action="">
+                        <input class="item_id" value="" type="hidden" />
+                        <table>
+                            <colgroup>
+                                <col style="width:100px;">
+                                <col style="width:calc(100% - 100px);">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>Day</th>
+                                    <td>
+                                        <input name="travel_day" class="travel_day" type="number" value="1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>장소명</th>
+                                    <td>
+                                        <input name="place_name" class="place_name" type="text" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>주소</th>
+                                    <td>
+                                        <input name="road_address_name" class="road_address_name" type="text" readonly>
+                                        <input name="address_name" class="address_name" type="text" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>phone</th>
+                                    <td>
+                                        <input name="phone" class="phone" type="text" value="1" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>URL</th>
+                                    <td>
+                                        <input name="place_url" class="place_url" type="text" value="1" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>시간</th>
+                                    <td>
+                                        <li>도착: <input class="time" name="time1" type="text" placeholder="7:00"/> </li>
+                                        <li>출발: <input type="text" name="time2" placeholder="7:00"/> </li>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>여행지 정보 및 운영 시간</th>
+                                    <td>
+                                        <textarea name="travel_content" class="travel_content"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">다시 작성하기 </button>
+                    <button type="button" class="btn btn-primary" onclick="itemSave()" >저장하기</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
-
     <script>
     // 마커를 담을 배열입니다
     var markers = [];
@@ -185,13 +241,15 @@
                 }
 
                 if (places.place_url) {
-                itemStr += '    <span><a class="place_url" href="' + places.place_url + '" target="_blank">' + places.place_url + '</span>' ;
+                itemStr += '    <span><a class="place_url" href="' + places.place_url + '" target="_blank">' + places.place_url + '</a></span>' ;
                 }
 
                 itemStr += '  <span class="tel phone">' + places.phone  + '</span>';
-                itemStr += '  <a href="javascript:travelItem('+ places.id +')">더하기</a> <a class="#">지우기</a>' +
-          '</div>';
-
+                itemStr += '<button type="button" class="btn btn-primary item-add" data-id="'+ places.id +'' +
+                    '" data-bs-toggle="modal" data-bs-target="#staticBackdrop">' +
+                    '  추가하기 ' +
+                    '</button>' +
+                '</div>';
         el.innerHTML = itemStr;
       el.className = 'item';
 
@@ -279,27 +337,53 @@
     </script>
 
 <script>
-    function travelItem(i){
-        let item = "#triveItem" + i;
+    $(document).on("click", ".item-add", function () {
+        let i = $(this).data('id');
+        let Iitem = "#triveItem" + i;
+        let item = $(Iitem);
+
         console.log(item);
-        let travelId = i;
+        let item_id = i;
         let place_name =$(item).find('.place_name').html();
         let road_address_name =$(item).find('.road_address_name').html();
         let address_name =$(item).find('.address_name').html();
         let place_url =$(item).find('.place_url').html();
         let phone =$(item).find('.phone').html();
 
+        $('.modal-body .item_id').val(i);
+        $('.modal-body .place_name').val(place_name);
+        $('.modal-body .road_address_name').val(road_address_name);
+        $('.modal-body .address_name').val(address_name);
+        $('.modal-body .place_url').val(place_url);
+        $('.modal-body .phone').val(phone);
+
+    });
+
+
+
+    function itemSave(){
+        let item_id = $('.modal-body .item_id').val();
+        let travel_day = $('.modal-body .travel_day').val();
+        let place_name = $('.modal-body .place_name').val();
+        let road_address_name = $('.modal-body .road_address_name').val();
+        let address_name = $('.modal-body .address_name').val();
+        let place_url = $('.modal-body .place_url').val();
+        let phone = $('.modal-body .phone').val();
+        let travel_content = $('.modal-body .travel_content').val();
 
         $.ajax({
             url : "${contextPath}/main",
             type : "post",
-            data : { "travelId" : travelId,
-                     "place_name" : place_name,
-                    "road_address_name":road_address_name,
-                    "address_name":address_name,
-                    "place_url":place_url,
-                    "phone":phone
-                    },
+            data : {
+                "travel_day" : travel_day,
+                "travelId" : item_id,
+                "travel_content" : travel_content,
+                "place_name" : place_name,
+                "road_address_name":road_address_name,
+                "address_name":address_name,
+                "place_url":place_url,
+                "phone":phone
+            },
             success : function(result){
                 // 자바에서 결과값 전달 받아서 실행
                 console.log("성공")
