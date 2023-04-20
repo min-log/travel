@@ -6,19 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "user_id")
 @Getter
 @Entity
-public class Category {
+public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long category_id;
-    private String category_name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user_id;  //작성자 id
+    private String category_name; // 카테고리 이름
+    private String category_area; // 시/도
+    private String category_area_details; // 군구
+
+    private boolean category_open; // 카테고리 외부 공개 여부
+
+
 }

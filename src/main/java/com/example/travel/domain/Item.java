@@ -12,25 +12,26 @@ import javax.persistence.*;
 @ToString(exclude = "userId, category_id")
 @Getter
 @Entity
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long travel_id;
+    private Long item_id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category_id;
-    private Long travel_day; // DAY 번호
-    private String travel_content; // 내용
 
-    //user
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user_no;
+    private String item_day; //여행 DAY
+    private int item_account; // 비용
+    private String item_content; //내용
 
-    //카카오 api
-    private Long item_id; // id
-    private String place_name; // 장소이름
-    private String road_address_name; //주소1
-    private String address_name; //주소2
+    //kakao api
+    private String id; // 장소 ID
+    private String place_name; // 장소 명
+    private String phone; // 전화번호
     private String place_url; //url
-    private String phone; //연락처
+    private String address_name; // 지번 주소
+    private String road_address_name; // 도로명 주소
+    private String x; //x 좌표값
+    private String y; // y 좌표값
+    private String distance; // 중심좌표까지의 거리
 
 }
