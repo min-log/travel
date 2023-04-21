@@ -1,35 +1,30 @@
 package com.example.travel.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Getter
+@Builder
 @Entity
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_no;
-    private String user_id;
-    private String user_password;
-    private String user_email;
-    private String user_name;
-    private String user_age;
-    private String user_gender;
-    private String user_phone;
-    private String user_address;
-    private String user_img;
+    private Long userNo;
+    private String userId;
+    private String userEmail;
+    private String userPassword;
+    private String userName;
+    private String userBirthday;
+    private String userGender;
+    private String userPhone;
+    private String userAddress;
+    private String userImg;
 
 
 }

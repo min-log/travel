@@ -9,16 +9,16 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "category,user_id")
+@ToString(exclude = "categoryId,userNo")
 @Getter
 @Entity
 public class People {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long people_id;
+    private Long peopleId;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
+    private Category categoryId;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user_id;
+    private User userNo;
 
 }
