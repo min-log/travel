@@ -1,6 +1,7 @@
 package com.example.travel.service;
 
-import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserSaveDTO;
+import com.example.travel.dto.user.UserSaveResultDTO;
 import com.example.travel.service.user.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class UserServiceTest {
     @Test
     @DisplayName("1. user 회원가입")
     public void test1(){
-        UserDTO dto = UserDTO.builder()
+        UserSaveDTO dto = UserSaveDTO.builder()
                 .userId("admin")
                 .userEmail("admin@naver.com")
                 .userPassword("user1234")
@@ -33,14 +34,14 @@ class UserServiceTest {
     @Test
     @DisplayName("2. user 정보 가져오기")
     public void test2(){
-        UserDTO user = userService.userGetNo(1L);
+        UserSaveResultDTO user = userService.userGetNo(1L);
         System.out.println(user);
     }
 
     @Test
     @DisplayName("3. user 정보 수정")
     public void test3(){
-        UserDTO dto = UserDTO.builder()
+        UserSaveDTO dto = UserSaveDTO.builder()
                 .userNo(1L)
                 .userEmail("admin@gmail.com")
                 .userPassword("admin")
@@ -49,7 +50,7 @@ class UserServiceTest {
                 .userAddress("경기도")
                 .build();
 
-        UserDTO result = userService.userModitfy(dto);
+        UserSaveResultDTO result = userService.userModitfy(dto);
         System.out.println(result);
 
     }

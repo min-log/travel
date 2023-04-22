@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+  <div class="container-fluid mt-5">
+    <div>
+      <h2 class="tit text-center mb-4">회원가입</h2>
+
+      <form id="joinForm" th:object="${user}" th:action="@{/join}" th:method="post" class="box content_box">
+
+        <table>
+          <colgroup>
+            <col style="width:100px">
+            <col style="width:calc(100% - 100px)">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th>
+              <label for="userId">
+                아이디 <span class="txt_info ck">*</span>
+              </label>
+            </th>
+            <td><input name="userId" id="userId" th:field="*{userId}" class="form-control" type="text" placeholder="아이디를 입력하세요."></td>
+          </tr>
+          <tr>
+            <th>비밀번호 <span class="txt_info ck">*</span></th>
+            <td>
+              <input name="userPassword" id="userPassword" th:field="*{userPassword}" type="password"  class="form-control" placeholder="비밀번호를 입력하세요.">
+            </td>
+          </tr>
+          <tr>
+            <th>이름 <span class="txt_info ck">*</span></th>
+            <td><input name="userName" id="userName" th:field="*{userName}" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
+          </tr>
+          <tr>
+            <th>생년월일 <span class="txt_info ck">*</span></th>
+            <td><input name="userBirthday" id="userBirthday" th:field="*{userBirthday}" class="form-control" type="text" placeholder="생년월일 6자리를 입력하세요."></td>
+          </tr>
+
+
+
+          <tr>
+            <th>이메일 <span class="txt_info ck">*</span></th>
+            <td>
+              <input name="userEmail" id="userEmail" th:field="*{userEmail}" th:errorclass="err"  class="form-control" type="text" placeholder="이메일을 입력하세요.">
+              <input type="text" th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}">
+
+            </td>
+          </tr>
+
+          <tr>
+            <th>연락처 <span class="txt_info ck">*</span></th>
+            <td><input name="userPhone" id="userPhone"  th:field="*{userPhone}"  class="form-control" type="text"  placeholder="연락처를 입력하세요. EX) 010-0000-0000"></td>
+          </tr>
+          <tr>
+            <th>주소</th>
+            <td><input name="userAddress" id="userAddress" th:field="*{userAddress}"  class="form-control" type="text" placeholder="주소를 입력하세요."></td>
+          </tr>
+          <tr>
+            <th>성별</th>
+            <td>
+              <label for="userGenderM">
+                <input name="userGender" id="userGenderM" value="userGenderM" type="radio" /> 남성
+              </label>
+              <label for="userGenderW">
+                <input name="userGender" id="userGenderW" value="userGenderW" type="radio" /> 여성
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>프로필 <br />이미지</th>
+            <td>
+              <div class="userimg_box"><img src="" alt="프로필 이미지"></div>
+              <input name="userImg" id="userImg" class="form-control" type="text" placeholder="이메일을 입력하세요.">
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <label for="userAgree">
+          <input name="userAgree" id="userAgree" type="checkbox"/> 개인정보 동의 <span class="txt_info ck">*</span>
+        </label>
+        <div class="user_agree_wrap">
+          개인정보활용 내용
+        </div>
+        <p class="txt_info mt-2">* '여행지 찾기'메뉴 에서 모두와 공유하고 소통할 수 있어요.</p>
+        <a class="w-100 btn btn-primary mt-4" href="javascript:void(0)" onclick="joinForm()" >가입하기</a>
+      </form>
+    </div>
+  </div>
+  <script>
+      function joinForm(){
+          if(document.getElementById("userId").value==''){
+              alert("아이디를 입력해주세요.");
+              return false;
+          }
+          if(document.getElementById("userPassword").value==''){
+              alert("비밀번호를 입력해주세요.");
+              return false;
+          }
+
+          if(document.getElementById("userName").value==''){
+              alert("이름을 입력해주세요.");
+              return false;
+          }
+          if(document.getElementById("userEmail").value==''){
+              alert("이메일을 입력해주세요.");
+              return false;
+          }
+
+          if(document.getElementById("userPhone").value==''){
+              alert("핸드폰번호를 입력해주세요.");
+              return false;
+          }
+          if(document.getElementById("userBirthday").value==''){
+              alert("생년월일을 입력해주세요.");
+              return false;
+          }
+
+          if ( ! $('input[name=userAgree]:checked').val()) {
+              alert('개인정보 활용에 동의해주세요.');
+              return false;
+          }
+
+          document.getElementById('joinForm').submit();
+      }
+  </script>
+
+</th:block>
+</html>
+

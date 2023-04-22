@@ -1,12 +1,15 @@
 package com.example.travel.service.user;
 
 import com.example.travel.domain.User;
-import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserSaveDTO;
+import com.example.travel.dto.user.UserSaveResultDTO;
 import com.example.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.validation.BindingResult;
+
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @Service
@@ -17,32 +20,34 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User userSave(UserDTO userDTO) {
-        User entity = dtoToEntity(userDTO);
+    public User userSave(UserSaveDTO userSaveDTO) {
+        log.info("userSaveDTO : {}" , userSaveDTO);
+        User entity = dtoToEntity(userSaveDTO);
         User result = userRepository.save(entity);
+        log.info("result : {}" , result);
         return result;
     }
 
     @Override
-    public UserDTO userGetNo(Long no) {
+    public UserSaveResultDTO userGetNo(Long no) {
         User entity = userRepository.getUserByUserNo(no);
         return entityToDto(entity);
     }
 
     @Override
-    public UserDTO userModitfy(UserDTO userDTO) {
+    public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO) {
 
-        UserDTO dto = UserDTO.builder()
-                .userNo(userDTO.getUserNo())
-                .userId(userDTO.getUserId())
-                .userEmail(userDTO.getUserEmail())
-                .userPassword(userDTO.getUserPassword())
-                .userName(userDTO.getUserName())
-                .userBirthday(userDTO.getUserBirthday())
-                .userGender(userDTO.getUserGender())
-                .userPhone(userDTO.getUserPhone())
-                .userAddress(userDTO.getUserAddress())
-                .userImg(userDTO.getUserImg())
+        UserSaveDTO dto = UserSaveDTO.builder()
+                .userNo(userSaveDTO.getUserNo())
+                .userId(userSaveDTO.getUserId())
+                .userEmail(userSaveDTO.getUserEmail())
+                .userPassword(userSaveDTO.getUserPassword())
+                .userName(userSaveDTO.getUserName())
+                .userBirthday(userSaveDTO.getUserBirthday())
+                .userGender(userSaveDTO.getUserGender())
+                .userPhone(userSaveDTO.getUserPhone())
+                .userAddress(userSaveDTO.getUserAddress())
+                .userImg(userSaveDTO.getUserImg())
                 .build();
         User entity = dtoToEntity(dto);
         User entitySave = userRepository.save(entity);

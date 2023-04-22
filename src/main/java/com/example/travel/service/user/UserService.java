@@ -1,31 +1,32 @@
 package com.example.travel.service.user;
 
 import com.example.travel.domain.User;
-import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserSaveDTO;
+import com.example.travel.dto.user.UserSaveResultDTO;
 
 public interface UserService {
-    public User userSave(UserDTO userDTO); // user 저장
-    public UserDTO userGetNo(Long no); // user 가져오기
-    public UserDTO userModitfy(UserDTO userDTO);
+    public User userSave(UserSaveDTO userSaveDTO); // user 저장
+    public UserSaveResultDTO userGetNo(Long no); // user 가져오기
+    public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO);
 
 
-    default User dtoToEntity(UserDTO userDTO){
+    default User dtoToEntity(UserSaveDTO dto){
         return User.builder()
-                .userNo(userDTO.getUserNo())
-                .userId(userDTO.getUserId())
-                .userEmail(userDTO.getUserEmail())
-                .userPassword(userDTO.getUserPassword())
-                .userName(userDTO.getUserName())
-                .userBirthday(userDTO.getUserBirthday())
-                .userGender(userDTO.getUserGender())
-                .userPhone(userDTO.getUserPhone())
-                .userAddress(userDTO.getUserAddress())
-                .userImg(userDTO.getUserImg())
+                .userNo(dto.getUserNo())
+                .userId(dto.getUserId())
+                .userEmail(dto.getUserEmail())
+                .userPassword(dto.getUserPassword())
+                .userName(dto.getUserName())
+                .userBirthday(dto.getUserBirthday())
+                .userGender(dto.getUserGender())
+                .userPhone(dto.getUserPhone())
+                .userAddress(dto.getUserAddress())
+                .userImg(dto.getUserImg())
                 .build();
     }
 
-    default UserDTO entityToDto(User user){
-        return UserDTO.builder()
+    default UserSaveResultDTO entityToDto(User user){
+        return UserSaveResultDTO.builder()
                 .userNo(user.getUserNo())
                 .userId(user.getUserId())
                 .userEmail(user.getUserEmail())
