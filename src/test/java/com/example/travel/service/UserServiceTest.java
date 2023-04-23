@@ -18,14 +18,17 @@ class UserServiceTest {
     @DisplayName("1. user 회원가입")
     public void test1(){
         UserSaveDTO dto = UserSaveDTO.builder()
-                .userId("admin")
+                .userId("지민테스트")
                 .userEmail("admin@naver.com")
                 .userPassword("user1234")
                 .userName("관리자")
                 .userBirthday("930430")
                 .userGender("여")
                 .userPhone("010-1111-1111")
-                .userAddress("가산")
+                .address("테스트")
+                .addressPostcode("234")
+                .addressDetail("t")
+                .addressExtra("T")
                 .build();
         // 저장확인
         System.out.println(userService.userSave(dto));
@@ -39,6 +42,14 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("getUserByUserId")
+    public void testuserId(){
+        int result = userService.userGetId("지민테스트");
+        System.out.println(result);
+    }
+
+
+    @Test
     @DisplayName("3. user 정보 수정")
     public void test3(){
         UserSaveDTO dto = UserSaveDTO.builder()
@@ -47,7 +58,7 @@ class UserServiceTest {
                 .userPassword("admin")
                 .userName("수정 관리자")
                 .userPhone("010-2333-2333")
-                .userAddress("경기도")
+                .address("경기도")
                 .build();
 
         UserSaveResultDTO result = userService.userModitfy(dto);

@@ -5,11 +5,13 @@
     font-style: normal;
 }
 
+.ml-2 {margin-left: 0.5rem!important}
 
 * {font-family: S-CoreDream-3Light !important;color:#333;font-size:14px;line-height:1.4em !important;}
 a {text-decoration: none;color:#333;}
 a:hover {color:#333;}
-table {width: 100%;}
+table {width: 100%;table-layout: fixed;}
+table th {vertical-align: top;line-height: 30px !important;}
 table th,
 table td {padding:10px 10px;box-sizing: border-box}
 :root {
@@ -25,9 +27,9 @@ table td {padding:10px 10px;box-sizing: border-box}
 .container-fluid {padding-left: 20px;padding-right: 20px;}
 
 
-.tit {font-size: 24px;}
+.tit {font-size: 24px;font-weight: bold}
 .txt_info {color: #999;font-size: 12px;}
-.txt_info.ck {display:inline-block;maring-left:4px;margin-left: 4px;vertical-align: top;}
+.txt_info.ck {display:inline-block;maring-left:4px;margin-left: 4px;vertical-align: top;color:var(--color-main);font-size: 16px;}
 /*header*/
 header .container-fluid {justify-content: space-between !important;}
 header .align-items-center {justify-content: flex-end;}

@@ -23,8 +23,19 @@ public class User extends BaseEntity {
     private String userBirthday;
     private String userGender;
     private String userPhone;
-    private String userAddress;
+
+
     private String userImg;
+
+    //주소
+    private String addressPostcode;
+    private String address;
+    private String addressDetail;
+    private String addressExtra;
+
+    private Boolean userAgree;//개인정보 동의
+
+
 
 
 }

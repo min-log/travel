@@ -35,6 +35,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int userGetId(String id) {
+        User result = userRepository.getUserByUserId(id);
+        log.info("뽑아진 ID 정보: {}",result);
+        if ( result == null){
+            //성공
+            return 0;
+        }else{
+            //실패
+            return 5;
+        }
+
+    }
+
+    @Override
     public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO) {
 
         UserSaveDTO dto = UserSaveDTO.builder()
@@ -46,7 +60,10 @@ public class UserServiceImpl implements UserService {
                 .userBirthday(userSaveDTO.getUserBirthday())
                 .userGender(userSaveDTO.getUserGender())
                 .userPhone(userSaveDTO.getUserPhone())
-                .userAddress(userSaveDTO.getUserAddress())
+                .address(userSaveDTO.getAddress())
+                .addressPostcode(userSaveDTO.getAddressPostcode())
+                .addressDetail(userSaveDTO.getAddressDetail())
+                .addressExtra(userSaveDTO.getAddressExtra())
                 .userImg(userSaveDTO.getUserImg())
                 .build();
         User entity = dtoToEntity(dto);

@@ -31,10 +31,15 @@ public class UserSaveResultDTO {
     @NotBlank(message = "핸드폰번호를 입력하세요.")
     private String userPhone;
     private String userBirthday;
-    private String userAddress;
+    //주소
+    private String addressPostcode;
+    private String address;
+    private String addressDetail;
+    private String addressExtra;
+
     private String userGender;
     private String userImg;
-    private Boolean userAgree;
+
 
 
 }

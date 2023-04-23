@@ -7,6 +7,7 @@ import com.example.travel.dto.user.UserSaveResultDTO;
 public interface UserService {
     public User userSave(UserSaveDTO userSaveDTO); // user 저장
     public UserSaveResultDTO userGetNo(Long no); // user 가져오기
+    public int userGetId(String id); // user id 체크
     public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO);
 
 
@@ -20,8 +21,12 @@ public interface UserService {
                 .userBirthday(dto.getUserBirthday())
                 .userGender(dto.getUserGender())
                 .userPhone(dto.getUserPhone())
-                .userAddress(dto.getUserAddress())
                 .userImg(dto.getUserImg())
+                .address(dto.getAddress())
+                .addressPostcode(dto.getAddressPostcode())
+                .addressDetail(dto.getAddressDetail())
+                .addressExtra(dto.getAddressExtra())
+                .userAgree(dto.getUserAgree())
                 .build();
     }
 
@@ -35,8 +40,11 @@ public interface UserService {
                 .userBirthday(user.getUserBirthday())
                 .userGender(user.getUserGender())
                 .userPhone(user.getUserPhone())
-                .userAddress(user.getUserAddress())
                 .userImg(user.getUserImg())
+                .address(user.getAddress())
+                .addressPostcode(user.getAddressPostcode())
+                .addressDetail(user.getAddressDetail())
+                .addressExtra(user.getAddressExtra())
                 .build();
     }
 
