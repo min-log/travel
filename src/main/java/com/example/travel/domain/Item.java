@@ -9,28 +9,31 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "userId, category_id")
+@ToString(exclude = "userNo, categoryId")
 @Getter
 @Entity
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long travel_id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category_id;
-    private Long travel_day; // DAY 번호
-    private String travel_content; // 내용
+    private Long itemId;
 
-    //user
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user_no;
 
-    //카카오 api
-    private Long item_id; // id
-    private String place_name; // 장소이름
-    private String road_address_name; //주소1
-    private String address_name; //주소2
-    private String place_url; //url
-    private String phone; //연락처
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category categoryId;
+
+    private String itemDay; //여행 DAY
+    private int itemAccount; // 비용
+    private String itemContent; //내용
+
+    //kakao api
+    private String id; // 장소 ID
+    private String placeName; // 장소 명
+    private String phone; // 전화번호
+    private String placeUrl; //url
+    private String addressName; // 지번 주소
+    private String roadAddressName; // 도로명 주소
+    private String x; //x 좌표값
+    private String y; // y 좌표값
+    private String distance; // 중심좌표까지의 거리
 
 }
