@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class MainController {
-    @GetMapping("")
+    @GetMapping(value = {"","main"})
     public String main(){
         return "pages/index";
     }
