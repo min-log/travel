@@ -20,7 +20,7 @@ public class UserTravel extends BaseEntity {
     private Long userNo;
     private String userId;
     private String userEmail;
-    private String userPassword;
+    private String password;
     private String userName;
     private String userBirthday;
     private String userGender;
@@ -37,16 +37,14 @@ public class UserTravel extends BaseEntity {
 
     private Boolean userAgree;//개인정보 동의
 
-
-
     private Boolean userSocial;//소셜회원 정보
 
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserRole> roleSet = new HashSet<>();
-    public void roleAdd(UserRole role){
-        roleSet.add(role);
+    public void roleAdd(UserRole userRole){
+        roleSet.add(userRole);
     }
 
 

@@ -29,7 +29,7 @@
           <tr>
             <th>비밀번호 <span class="txt_info ck">*</span></th>
             <td>
-              <input th:field="*{userPassword}" name="userPassword" id="userPassword" type="password"  class="form-control" placeholder="비밀번호를 입력하세요.">
+              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="비밀번호를 입력하세요.">
             </td>
           </tr>
           <tr>
@@ -246,10 +246,10 @@
 
               return false;
           }
-          if(document.getElementById("userPassword").value==''){
+          if(document.getElementById("password").value==''){
               $('#modalJoin').modal("show");
               $('.modal-message').html('비밀번호를 입력해주세요.');
-              $("#userPassword").addClass('err');
+              $("#password").addClass('err');
 
               return false;
           }

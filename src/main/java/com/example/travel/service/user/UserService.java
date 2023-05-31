@@ -12,11 +12,11 @@ public interface UserService {
 
 
     default UserTravel dtoToEntity(UserSaveDTO dto){
-        return UserTravel.builder()
+        UserTravel result = UserTravel.builder()
                 .userNo(dto.getUserNo())
                 .userId(dto.getUserId())
                 .userEmail(dto.getUserEmail())
-                .userPassword(dto.getUserPassword())
+                .password(dto.getPassword())
                 .userName(dto.getUserName())
                 .userBirthday(dto.getUserBirthday())
                 .userGender(dto.getUserGender())
@@ -27,7 +27,12 @@ public interface UserService {
                 .addressDetail(dto.getAddressDetail())
                 .addressExtra(dto.getAddressExtra())
                 .userAgree(dto.getUserAgree())
+                .userSocial(dto.getUserSocial())
                 .build();
+
+
+
+        return result;
     }
 
     default UserSaveResultDTO entityToDto(UserTravel userTravel){
@@ -35,7 +40,7 @@ public interface UserService {
                 .userNo(userTravel.getUserNo())
                 .userId(userTravel.getUserId())
                 .userEmail(userTravel.getUserEmail())
-                .userPassword(userTravel.getUserPassword())
+                .password(userTravel.getPassword())
                 .userName(userTravel.getUserName())
                 .userBirthday(userTravel.getUserBirthday())
                 .userGender(userTravel.getUserGender())

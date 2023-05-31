@@ -23,7 +23,7 @@ public class UserSaveResultDTO {
     @NotBlank(message = "이메일을 입력하세요.")
     private String userEmail;
     @NotBlank(message = "비밀번호를 입력하세요.")
-    private String userPassword;
+    private String password;
 
     @NotBlank(message = "이름을 입력하세요.")
     private String userName;

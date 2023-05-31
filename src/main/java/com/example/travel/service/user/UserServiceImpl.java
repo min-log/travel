@@ -1,11 +1,13 @@
 package com.example.travel.service.user;
 
+import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserSaveDTO;
 import com.example.travel.dto.user.UserSaveResultDTO;
 import com.example.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -14,12 +16,20 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     final UserRepository userRepository;
-
+    final PasswordEncoder passwordEncoder;
 
     @Override
     public UserTravel userSave(UserSaveDTO userSaveDTO) {
         log.info("userSaveDTO : {}" , userSaveDTO);
+        // 일반회원 가입
+        userSaveDTO.setUserSocial(false);
+        userSaveDTO.setPassword(passwordEncoder.encode(userSaveDTO.getPassword()));
+
+
         UserTravel entity = dtoToEntity(userSaveDTO);
+        entity.roleAdd(UserRole.USER); // 권한 추가
+
+
         UserTravel result = userRepository.save(entity);
         log.info("result : {}" , result);
         return result;
@@ -52,7 +62,7 @@ public class UserServiceImpl implements UserService {
                 .userNo(userSaveDTO.getUserNo())
                 .userId(userSaveDTO.getUserId())
                 .userEmail(userSaveDTO.getUserEmail())
-                .userPassword(userSaveDTO.getUserPassword())
+                .password(userSaveDTO.getPassword())
                 .userName(userSaveDTO.getUserName())
                 .userBirthday(userSaveDTO.getUserBirthday())
                 .userGender(userSaveDTO.getUserGender())
@@ -63,6 +73,8 @@ public class UserServiceImpl implements UserService {
                 .addressExtra(userSaveDTO.getAddressExtra())
                 .userImg(userSaveDTO.getUserImg())
                 .build();
+
+
         UserTravel entity = dtoToEntity(dto);
         UserTravel entitySave = userRepository.save(entity);
 

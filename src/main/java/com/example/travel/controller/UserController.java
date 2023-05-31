@@ -24,6 +24,8 @@ public class UserController {
         this.userService = userService;
     }
 
+    //==========================================================
+    //회원가입
     @GetMapping("join")
     public String userJoinForm(Model model){
 
@@ -60,16 +62,21 @@ public class UserController {
 
     //로그인 페이지
     @GetMapping("loginForm")
-    public String login(){
+    public String login(String error, String logout, Model model){
+
         return "member/login";
     }
 
 
 
-    @GetMapping("mypage")
-    public String myPage(){
-        return "mypage/main";
-    }
+
+
+
+
+
+
+
+
 
 
 

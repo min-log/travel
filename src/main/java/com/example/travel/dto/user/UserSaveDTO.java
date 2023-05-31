@@ -1,11 +1,14 @@
 package com.example.travel.dto.user;
 
 
+import com.example.travel.domain.UserRole;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,7 +25,7 @@ public class UserSaveDTO {
     @NotBlank(message = "이메일 : 이메일을 입력하세요.")
     private String userEmail;
     @NotBlank(message = "비밀번호 : 비밀번호를 입력하세요.")
-    private String userPassword;
+    private String password;
 
     @NotBlank(message = "이름 : 이름을 입력하세요.")
     private String userName;
@@ -48,6 +51,8 @@ public class UserSaveDTO {
 
     @Max(value = 0, message = "0 이하만 가능합니다.")
     private int idCk;
+
+    private Boolean userSocial;
 
 
 }
