@@ -28,7 +28,7 @@ public class UserDTO {
     private String password;
 
     @NotBlank(message = "이름 : 이름을 입력하세요.")
-    private String userName;
+    private String name;
 
     @NotBlank(message = "연락처 : 연락처를 입력하세요.")
     private String userPhone;

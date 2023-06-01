@@ -14,7 +14,6 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     UserTravel getUserByUserNo(Long no);
     UserTravel getUserByUserId(String id);
 
-
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "select m from UserTravel m where m.userSocial = :social and m.userId = :id",
     nativeQuery = false)

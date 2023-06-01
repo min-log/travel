@@ -39,7 +39,7 @@ public class UserTravelDetailsService implements UserDetailsService {
         log.info("2user : {}",userTravel.getPassword());
         // 있을 경우 UserTravelDTO로 변경
         UserTravelDTO userTravelDTO = new UserTravelDTO(
-                userTravel.getUserName(),
+                userTravel.getUserId(),
                 userTravel.getPassword(),
                 userTravel.getUserSocial(),
                 userTravel.getRoleSet().stream().map

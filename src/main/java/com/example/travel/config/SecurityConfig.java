@@ -37,8 +37,6 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/main")
                 .failureUrl("/loginForm");
 
-
-
         // 자동 로그인
         http.rememberMe()
                 .rememberMeParameter("remember")
@@ -50,8 +48,8 @@ public class SecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/loginForm");
 
-
-
+        http.oauth2Login(); //소셜 로그인 구글 추가
+        
         return http.build();
     }
 }

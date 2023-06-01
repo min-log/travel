@@ -34,7 +34,7 @@
           </tr>
           <tr>
             <th>이름 <span class="txt_info ck">*</span></th>
-            <td><input th:field="*{userName}"  name="userName" id="userName" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
+            <td><input th:field="*{name}"  name="name" id="name" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
           </tr>
           <tr>
             <th>생년월일 <span class="txt_info ck">*</span></th>
@@ -137,7 +137,7 @@
               <br />
               <span th:if="${#fields.hasErrors('userPhone')}" th:errors="*{userPhone}"></span>
               <br />
-              <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+              <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
               <br />
               <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
             </p>
@@ -254,10 +254,10 @@
               return false;
           }
 
-          if(document.getElementById("userName").value==''){
+          if(document.getElementById("name").value==''){
               $('#modalJoin').modal("show");
               $('.modal-message').html('이름을 입력해주세요.');
-              $("#userName").addClass('err');
+              $("#name").addClass('err');
 
 
               return false;

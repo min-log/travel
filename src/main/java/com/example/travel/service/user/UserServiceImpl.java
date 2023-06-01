@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 .userId(userSaveDTO.getUserId())
                 .userEmail(userSaveDTO.getUserEmail())
                 .password(userSaveDTO.getPassword())
-                .userName(userSaveDTO.getUserName())
+                .name(userSaveDTO.getName())
                 .userBirthday(userSaveDTO.getUserBirthday())
                 .userGender(userSaveDTO.getUserGender())
                 .userPhone(userSaveDTO.getUserPhone())

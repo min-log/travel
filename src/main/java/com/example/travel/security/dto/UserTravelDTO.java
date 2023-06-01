@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,12 +15,12 @@ import java.util.Map;
 @Setter
 @ToString
 @Log4j2
-public class UserTravelDTO extends User {
+public class UserTravelDTO extends User implements OAuth2User {
     private String userId;
     private String password;
     private Boolean userSocial;
 
-    private String userName;
+    private String name;
     private Map<String,Object> attr; //OAuth2User 정보
 
     public UserTravelDTO(String username,
@@ -36,13 +37,18 @@ public class UserTravelDTO extends User {
                          String password,
                          Boolean userSocial,
                          Collection<? extends GrantedAuthority> authorities,
-                         Map<String,Object> attr) {
+                         Map<String,Object> attr
+    ) {
         this(username,password,userSocial,authorities); // 기존생성자
         this.attr = attr; //OAuth2User 정보
     }
 
-
-
     //OAuth2User 정보
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attr;
+    }
+
+
 
 }
