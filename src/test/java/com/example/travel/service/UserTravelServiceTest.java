@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UserServiceTest {
+class UserTravelServiceTest {
 
     @Autowired
     private UserService userService;
@@ -20,7 +20,7 @@ class UserServiceTest {
         UserSaveDTO dto = UserSaveDTO.builder()
                 .userId("지민테스트")
                 .userEmail("admin@naver.com")
-                .userPassword("user1234")
+                .password("user1234")
                 .userName("관리자")
                 .userBirthday("930430")
                 .userGender("여")
@@ -55,7 +55,7 @@ class UserServiceTest {
         UserSaveDTO dto = UserSaveDTO.builder()
                 .userNo(1L)
                 .userEmail("admin@gmail.com")
-                .userPassword("admin")
+                .password("admin")
                 .userName("수정 관리자")
                 .userPhone("010-2333-2333")
                 .address("경기도")

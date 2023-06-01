@@ -19,6 +19,6 @@ public class People {
     @ManyToOne(fetch = FetchType.LAZY)
     private Category categoryId;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userNo;
+    private UserTravel userTravelNo;
 
 }

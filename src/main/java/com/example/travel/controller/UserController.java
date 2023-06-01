@@ -1,18 +1,15 @@
 package com.example.travel.controller;
 
 
-import com.example.travel.domain.User;
+import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserSaveDTO;
-import com.example.travel.dto.user.UserSaveResultDTO;
 import com.example.travel.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 
@@ -27,17 +24,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/join")
+    //==========================================================
+    //회원가입
+    @GetMapping("join")
     public String userJoinForm(Model model){
 
-        model.addAttribute("user",new UserSaveDTO()); // 빈 객체 전달 필요
+        model.addAttribute("userTravel",new UserSaveDTO()); // 빈 객체 전달 필요
         log.info("join page ----------------------");
         return "member/join";
     }
 
 
-    @PostMapping("/join")
-    public String userJoin(@Valid @ModelAttribute("user") UserSaveDTO user ,
+    @PostMapping("join")
+    public String userJoin(@Valid @ModelAttribute("userTravel") UserSaveDTO user ,
                            BindingResult bindingResult){
 
         int idCkNo = userService.userGetId(user.getUserId());
@@ -51,13 +50,35 @@ public class UserController {
                 return "member/join";
             }else{
                 //성공 로직
-                User user1 = userService.userSave(user);
-                log.info("user1 :{}" , user1);
+                UserTravel userTravel1 = userService.userSave(user);
+                log.info("user1 :{}" , userTravel1);
                 return "member/joinSuccess";
             }
         }
         return "member/join";
     }
+
+
+
+    //로그인 페이지
+    @GetMapping("loginForm")
+    public String login(String error, String logout, Model model){
+
+        return "member/login";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

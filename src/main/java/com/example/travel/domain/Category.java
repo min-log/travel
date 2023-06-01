@@ -19,7 +19,7 @@ public class Category extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User userNo;  //작성자 id
+    private UserTravel userTravelNo;  //작성자 id
     private String categoryName; // 카테고리 이름
     private String categoryArea; // 시/도
     private String categoryAreaDetails; // 군구

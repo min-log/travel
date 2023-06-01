@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-  <div class="container-fluid mt-5" th:object="${user}" >
+  <div class="container-fluid mt-5" th:object="${userTravel}" >
     <div>
       <h2 class="tit text-center mb-4">회원가입</h2>
 
@@ -29,7 +29,7 @@
           <tr>
             <th>비밀번호 <span class="txt_info ck">*</span></th>
             <td>
-              <input th:field="*{userPassword}" name="userPassword" id="userPassword" type="password"  class="form-control" placeholder="비밀번호를 입력하세요.">
+              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="비밀번호를 입력하세요.">
             </td>
           </tr>
           <tr>
@@ -74,10 +74,10 @@
             <th>성별</th>
             <td>
               <label for="userGenderM">
-                <input name="userGender" id="userGenderM" value="userGenderM" type="radio"  th:checked="${user.userGender eq 'userGenderM'}" checked="checked" /> 남성
+                <input name="userGender" id="userGenderM" value="userGenderM" type="radio"  th:checked="${userTravel.userGender eq 'userGenderM'}" checked="checked" /> 남성
               </label>
               <label for="userGenderW" class="ml-2">
-                <input  name="userGender" id="userGenderW" value="userGenderW" type="radio" th:checked="${user.userGender eq 'userGenderW'}" /> 여성
+                <input  name="userGender" id="userGenderW" value="userGenderW" type="radio" th:checked="${userTravel.userGender eq 'userGenderW'}" /> 여성
               </label>
             </td>
           </tr>
@@ -246,10 +246,10 @@
 
               return false;
           }
-          if(document.getElementById("userPassword").value==''){
+          if(document.getElementById("password").value==''){
               $('#modalJoin').modal("show");
               $('.modal-message').html('비밀번호를 입력해주세요.');
-              $("#userPassword").addClass('err');
+              $("#password").addClass('err');
 
               return false;
           }

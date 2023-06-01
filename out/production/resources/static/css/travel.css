@@ -23,3 +23,10 @@
 .userimg_wrap #userImg {display:none;}
 
 .user_agree_wrap {padding: 10px;max-height:80px;font-size:10px;color:#5F5F5F;overflow: auto;    border: 1px solid #ced4da;border-radius: 0.25rem;}
+.login_social {border-top: 1px dashed #dee2e6;}
+.login_social .btn_social {display: block;font-weight: bold;}
+.login_social .btn_social + .btn_social {margin-top:10px;}
+.login_social .btn_social img {width:20px;margin-right:10px;vertical-align: middle}
+.btn_social.google {background: #1b17ffcc; color:#fff}
+.btn_social.kakao {background: #ffe900; }
+.btn_social.kakao img {width:35px;margin-right:0;}
