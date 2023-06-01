@@ -2,8 +2,7 @@ package com.example.travel.service.user;
 
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.user.UserSaveDTO;
-import com.example.travel.dto.user.UserSaveResultDTO;
+import com.example.travel.dto.user.UserDTO;
 import com.example.travel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,14 +18,12 @@ public class UserServiceImpl implements UserService {
     final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserTravel userSave(UserSaveDTO userSaveDTO) {
+    public UserTravel userSave(UserDTO userSaveDTO) {
         log.info("userSaveDTO : {}" , userSaveDTO);
         // 일반회원 가입
         userSaveDTO.setUserSocial(false);
-        userSaveDTO.setPassword(passwordEncoder.encode(userSaveDTO.getPassword()));
-
-
-        UserTravel entity = dtoToEntity(userSaveDTO);
+        userSaveDTO.setPassword(passwordEncoder.encode(userSaveDTO.getPassword())); // 패스워드 암호화
+        UserTravel entity = dtoToEntity(userSaveDTO); //entity 변경
         entity.roleAdd(UserRole.USER); // 권한 추가
 
 
@@ -36,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserSaveResultDTO userGetNo(Long no) {
+    public UserDTO userGetNo(Long no) {
         UserTravel entity = userRepository.getUserByUserNo(no);
         return entityToDto(entity);
     }
@@ -56,9 +53,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO) {
+    public UserDTO userModitfy(UserDTO userSaveDTO) {
 
-        UserSaveDTO dto = UserSaveDTO.builder()
+        UserDTO dto = UserDTO.builder()
                 .userNo(userSaveDTO.getUserNo())
                 .userId(userSaveDTO.getUserId())
                 .userEmail(userSaveDTO.getUserEmail())

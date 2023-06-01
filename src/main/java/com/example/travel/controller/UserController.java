@@ -2,7 +2,7 @@ package com.example.travel.controller;
 
 
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.user.UserSaveDTO;
+import com.example.travel.dto.user.UserDTO;
 import com.example.travel.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -29,14 +29,14 @@ public class UserController {
     @GetMapping("join")
     public String userJoinForm(Model model){
 
-        model.addAttribute("userTravel",new UserSaveDTO()); // 빈 객체 전달 필요
+        model.addAttribute("userTravel",new UserDTO()); // 빈 객체 전달 필요
         log.info("join page ----------------------");
         return "member/join";
     }
 
 
     @PostMapping("join")
-    public String userJoin(@Valid @ModelAttribute("userTravel") UserSaveDTO user ,
+    public String userJoin(@Valid @ModelAttribute("userTravel") UserDTO user ,
                            BindingResult bindingResult){
 
         int idCkNo = userService.userGetId(user.getUserId());
@@ -63,9 +63,10 @@ public class UserController {
     //로그인 페이지
     @GetMapping("loginForm")
     public String login(String error, String logout, Model model){
-
+        //model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요.");
         return "member/login";
     }
+
 
 
 

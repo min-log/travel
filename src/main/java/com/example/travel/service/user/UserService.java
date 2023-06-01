@@ -1,17 +1,16 @@
 package com.example.travel.service.user;
 
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.user.UserSaveDTO;
-import com.example.travel.dto.user.UserSaveResultDTO;
+import com.example.travel.dto.user.UserDTO;
 
 public interface UserService {
-    public UserTravel userSave(UserSaveDTO userSaveDTO); // user 저장
-    public UserSaveResultDTO userGetNo(Long no); // user 가져오기
+    public UserTravel userSave(UserDTO userSaveDTO); // user 저장
+    public UserDTO userGetNo(Long no); // user 가져오기
     public int userGetId(String id); // user id 체크
-    public UserSaveResultDTO userModitfy(UserSaveDTO userSaveDTO);
+    public UserDTO userModitfy(UserDTO userSaveDTO);
 
 
-    default UserTravel dtoToEntity(UserSaveDTO dto){
+    default UserTravel dtoToEntity(UserDTO dto){
         UserTravel result = UserTravel.builder()
                 .userNo(dto.getUserNo())
                 .userId(dto.getUserId())
@@ -35,8 +34,8 @@ public interface UserService {
         return result;
     }
 
-    default UserSaveResultDTO entityToDto(UserTravel userTravel){
-        return UserSaveResultDTO.builder()
+    default UserDTO entityToDto(UserTravel userTravel){
+        return UserDTO.builder()
                 .userNo(userTravel.getUserNo())
                 .userId(userTravel.getUserId())
                 .userEmail(userTravel.getUserEmail())

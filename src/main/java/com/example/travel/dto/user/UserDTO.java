@@ -17,7 +17,7 @@ import java.util.Set;
 @ToString
 @Builder
 @Validated
-public class UserSaveDTO {
+public class UserDTO {
     private Long userNo;
     @NotNull(message = "아이디 : 아이디를 입력하세요.")
     private String userId;
@@ -54,5 +54,10 @@ public class UserSaveDTO {
 
     private Boolean userSocial;
 
+    @Builder.Default
+    private Set<UserRole> roleSet = new HashSet<>();
+    public void roleAdd(UserRole userRole){
+        roleSet.add(userRole);
+    }
 
 }

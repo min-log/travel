@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     UserTravel getUserByUserId(String id);
 
 
+    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "select m from UserTravel m where m.userSocial = :social and m.userId = :id",
     nativeQuery = false)
     Optional<UserTravel> getUserByUserIdAndUserSocial(@Param(value = "id") String id, @Param(value = "social") boolean social); //로그인 시 필요.

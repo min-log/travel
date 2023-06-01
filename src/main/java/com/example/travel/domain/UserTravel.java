@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Getter
 @Builder
-@Entity
+@ToString
 public class UserTravel extends BaseEntity {
 
     @Id
