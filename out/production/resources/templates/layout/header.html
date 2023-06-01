@@ -35,9 +35,13 @@
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li>
-              <a class="dropdown-item" sec:authorize="isAnonymous()" th:href="@{/loginForm}">로그인</a>
-              <a class="dropdown-item" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="/logout">로그아웃</a>
+            <li sec:authorize="isAnonymous()">
+              <a class="dropdown-item" th:href="@{/loginForm}">로그인</a>
+              <a class="dropdown-item" th:href="@{/join}">회원가입</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+              <a class="dropdown-item" th:href="@{/logout}" href="/logout">로그아웃</a>
+              <a class="dropdown-item" th:href="@{/mypage}">마이페이지</a>
             </li>
           </ul>
         </div>

@@ -69,7 +69,8 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
         }
 
         //존재 하지 않는 회원
-        UserTravel userSave = UserTravel.builder().userEmail(email)
+        UserTravel userSave = UserTravel.builder()
+                .userEmail(email)
                 .userId(email)
                 .password("1111") //기본 비밀번호
                 .userSocial(true)

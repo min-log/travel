@@ -32,10 +32,6 @@ public class UserTravelDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Check Email or Social");
         }
 
-
-
-
-
         log.info("2user : {}",userTravel.getPassword());
         // 있을 경우 UserTravelDTO로 변경
         UserTravelDTO userTravelDTO = new UserTravelDTO(

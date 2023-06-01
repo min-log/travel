@@ -41,6 +41,7 @@ public class UserController {
 
         int idCkNo = userService.userGetId(user.getUserId());
         log.info("아이디 유무 확인 : {}",idCkNo);
+
         user.setIdCk(idCkNo);
 
         log.info("---------user :{}" , user);
@@ -51,8 +52,9 @@ public class UserController {
             }else{
                 //성공 로직
                 UserTravel userTravel1 = userService.userSave(user);
-                log.info("user1 :{}" , userTravel1);
-                return "member/joinSuccess";
+                log.info("회원가입 성공 :{}" , userTravel1);
+
+                return "member/login";
             }
         }
         return "member/join";

@@ -21,6 +21,7 @@ public class UserTravelDTO extends User implements OAuth2User {
     private Boolean userSocial;
 
     private String name;
+
     private Map<String,Object> attr; //OAuth2User 정보
 
     public UserTravelDTO(String username,

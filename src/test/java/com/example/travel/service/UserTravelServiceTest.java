@@ -21,7 +21,7 @@ class UserTravelServiceTest {
                 .userId("user3")
                 .userEmail("admin@naver.com")
                 .password("user1234")
-                .userName("관리자")
+                .name("관리자")
                 .userBirthday("930430")
                 .userGender("여")
                 .userPhone("010-1111-1111")
@@ -58,7 +58,7 @@ class UserTravelServiceTest {
                 .userNo(1L)
                 .userEmail("admin@gmail.com")
                 .password("admin")
-                .userName("수정 관리자")
+                .name("수정 관리자")
                 .userPhone("010-2333-2333")
                 .address("경기도")
                 .build();

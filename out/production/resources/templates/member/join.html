@@ -22,7 +22,7 @@
               </label>
             </th>
             <td>
-              <input th:field="*{userId}"  name="userId" id="userId" class="form-control id"
+              <input th:field="*{userId}" name="userId" id="userId" class="form-control id"
                      th:errorclass="err" type="text" placeholder="아이디를 입력하세요.">
             </td>
           </tr>
@@ -33,7 +33,7 @@
             </td>
           </tr>
           <tr>
-            <th>이름 <span class="txt_info ck">*</span></th>
+            <th><label for="name">이름 <span class="txt_info ck">*</span></label></th>
             <td><input th:field="*{name}"  name="name" id="name" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
           </tr>
           <tr>
@@ -42,7 +42,7 @@
           </tr>
 
           <tr>
-            <th>이메일 <span class="txt_info ck">*</span></th>
+            <th><label for="userEmail">이메일 <span class="txt_info ck">*</span></label></th>
             <td>
               <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="text" placeholder="이메일을 입력하세요.">
             </td>
@@ -118,6 +118,7 @@
             $('#modalJoin').modal("show");
         })
     </script>
+
     <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -127,6 +128,7 @@
           </div>
           <div class="modal-body">
             <p class="modal-message">
+
               <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">
               아이디 변경 : 이미 존재하는 아이디 입니다.
                </span>
@@ -139,13 +141,14 @@
               <br />
               <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
               <br />
-              <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+              <!--
+              <span th:if="${#fields.hasErrors('getUserId')}" th:errors="*{getUserId}"></span>
+              -->
             </p>
           </div>
         </div>
       </div>
     </div>
-
 
   </div>
 
