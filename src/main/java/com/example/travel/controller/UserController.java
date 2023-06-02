@@ -3,8 +3,10 @@ package com.example.travel.controller;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.service.user.MailSendService;
 import com.example.travel.service.user.UserService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -70,7 +73,11 @@ public class UserController {
     }
 
 
-
+    // 아이디 찾기
+    @GetMapping("member/userId")
+    public String userIdSearch(){
+        return "member/userId";
+    }
 
 
 

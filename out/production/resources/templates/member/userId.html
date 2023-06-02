@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+  <div class="container-fluid mt-5">
+    <div class="content_box">
+      <h2 class="tit text-center mb-4">회원 정보 찾기</h2>
+      <div class="loginForm">
+        <form th:action="@{/login_proc}" method="post">
+          <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}"/>
+          <table>
+            <colgroup>
+              <col style="width:100px">
+              <col style="width:calc(100% - 100px)">
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>
+                  <label for="name">
+                    이름
+                  </label>
+                </th>
+                <td>
+                  <input th:name="name" name="name" id="name" class="form-control" type="text" placeholder="이름 입력하세요.">
+                </td>
+              </tr>
+              <tr  class="form-group email-form">
+                <th>
+                  <label for="userEmail1">이메일</label>
+                </th>
+                <td>
+                    <div class="input-group">
+                      <input type="text" class="form-control" name="userEmail1" id="userEmail1" placeholder="이메일" >
+                      <select class="form-control" name="userEmail2" id="userEmail2" >
+                        <option>@naver.com</option>
+                        <option>@daum.net</option>
+                        <option>@gmail.com</option>
+                        <option>@hanmail.com</option>
+                        <option>@yahoo.co.kr</option>
+                      </select>
+                    </div>
+                    <div class="input-group-addon">
+                      <button type="button" class="btn btn-primary" id="mail-Check-Btn">본인인증</button>
+                    </div>
+                    <div class="mail-check-box">
+                      <input class="form-control mail-check-input" placeholder="인증번호 6자리를 입력해주세요!" disabled="disabled" maxlength="6">
+                    </div>
+                    <span id="mail-check-warn"></span>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-check form-switch pt-4 pb-4">
+            <label class="form-check-label" for="remember"> 로그인 상태 유지</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="remember" name="remember">
+          </div>
+          <button class="btn btn-primary btn-lg w-100 " type="submit">로그인</button>
+          <div class=" pt-4 pb-4 mt-4 text-center border-top">
+            <a th:href="@{/join}">회원가입</a> |
+            <a th:href="@{/member/userId}">아이디 찾기</a> |
+            <a th:href="@{/member/userPassword}">비밀번호 찾기</a>
+          </div>
+
+          <div class="login_social pt-4 pb-4 text-center">
+            <h2 class="mb-4">간편 로그인</h2>
+            <a href="/oauth2/authorization/google" class="btn_social google btn btn-lg" ><img th:src="@{/img/icon-google.png}"> 구글 로그인</a>
+            <a href="#" class="btn_social kakao btn btn-lg"><img th:src="@{/img/icon-kakao.png}"> 카카오 로그인</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+      $(function(){
+          $('#mail-Check-Btn').click(function() {
+              const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
+              console.log('완성된 이메일 : ' + email); // 이메일 오는지 확인
+              const checkInput = $('.mail-check-input') // 인증번호 입력하는곳
+
+              $.ajax({
+                  type : 'get',
+                  url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+                  success : function (data) {
+                      console.log("data : " +  data);
+                      checkInput.attr('disabled',false);
+                      code =data;
+                      alert('인증번호가 전송되었습니다.')
+                  }
+              }); // end ajax
+          }); // end send eamil
+          // 인증번호 비교
+          // blur -> focus가 벗어나는 경우 발생
+// $('.mail-check-input').blur(function () {
+//     const inputCode = $(this).val();
+//     const $resultMsg = $('#mail-check-warn');
+//
+//     if(inputCode === code){
+//         $resultMsg.html('인증번호가 일치합니다.');
+//         $resultMsg.css('color','green');
+//         $('#mail-Check-Btn').attr('disabled',true);
+//         $('#userEamil1').attr('readonly',true);
+//         $('#userEamil2').attr('readonly',true);
+//         $('#userEmail2').attr('onFocus', 'this.initialSelect = this.selectedIndex');
+//         $('#userEmail2').attr('onChange', 'this.selectedIndex = this.initialSelect');
+//     }else{
+//         $resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
+//         $resultMsg.css('color','red');
+//     }
+// });
+      });
+  </script>
+</th:block>
+</html>

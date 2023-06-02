@@ -30,6 +30,24 @@ dependencies {
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'//구글소셜로그인
 
+
+
+    // 이메일 설정 spring mail
+    //아파치
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-email
+    implementation group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+//
+    //
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.2'
+
+//    // https://mvnrepository.com/artifact/javax.mail/mail
+//    implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
+//    // 기타 종속성 - 보안
+//    implementation 'javax.net.ssl:javax.net.ssl-api:1.4.1'
+
+
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
