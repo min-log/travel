@@ -78,8 +78,16 @@ public class UserController {
     public String userIdSearch(){
         return "member/userId";
     }
+    @PostMapping("member/userIdCheck")
+    public String userIdCheck(){
+        return "member/userIdCheck";
+    }
 
 
+    @GetMapping("member/userPassword")
+    public String userPasswordSearch(){
+        return "member/userPassword";
+    }
 
 
 

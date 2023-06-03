@@ -15,7 +15,6 @@
 .address_wrap .address_detail {display: flex;}
 .address_wrap .address_detail input + input {margin-left: 10px}
 
-
 .userimg_wrap {width: 165px;}
 .userimg_wrap .userimg_box {width: 100%;height: 170px;background:#ccc;overflow:hidden;border-radius: 0.25rem;border:1px solid #ced4da;border-bottom-left-radius: 0;border-bottom-right-radius: 0;}
 .userimg_wrap .userimg_box img {width:100%;min-height:100%;display: flex;align-items: center;}
@@ -30,3 +29,5 @@
 .btn_social.google {background: #1b17ffcc; color:#fff}
 .btn_social.kakao {background: #ffe900; }
 .btn_social.kakao img {width:35px;margin-right:0;}
+/*ID 찾기*/
+#mail-Check-Btn {border-top-left-radius:0;border-bottom-left-radius: 0;}

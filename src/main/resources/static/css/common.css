@@ -41,7 +41,9 @@ header .align-items-center {justify-content: flex-end;}
 .search_wrap button[type="submit"] {position: absolute;background: none;border:0;top:50%;right:0;transform: translate(0,-50%);}
 .search_wrap button[type="submit"] .bi-search::before {font-size: 20px;font-weight:bold !important;color:var(--color-main);}
 
-
+/*tab*/
+.nav-tabs .nav-link {color:#888;}
+.tab-content {padding:20px 0;}
 
 
 
