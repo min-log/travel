@@ -31,14 +31,16 @@ public class MailSendService{
     String password;
 
 
+    String ePw; // 랜덤 인증번호
+
     // 전달할 이메일 내용
     String msgTit = "[Travel Road]";
     String msgTxt;
 
 
-    // 랜덤 인증번호
-    public static final String ePw = createPassword();
-    public static String createPassword() {
+
+
+    public String createPassword() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -60,14 +62,66 @@ public class MailSendService{
                     break;
             }
         }
-        return key.toString();
+        return ePw=key.toString();
     }
 
 
-    //보내는 메일 내용
+    //메일보내기
+    public String sendEmail(String userEmail, String value) throws Exception {
+        try {
+            createPassword(); // 인증번호 생성
+
+            HtmlEmail email = new HtmlEmail();
+            email.setCharset("euc-kr"); // 한글 인코딩
+            email.setHostName(host); //SMTP서버 설정
+            email.setSmtpPort(port);
+            email.setSSL(true);
+            email.setAuthentication(username, password); //메일인증
+            
+            try {
+                email.addTo(userEmail,userEmail); // 수신자
+            } catch (EmailException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                email.setFrom(username, "Travel Road"); // 발신자
+            } catch (EmailException e) {
+                e.printStackTrace();
+            }
+            
+            // Create the email message
+            email.addTo(userEmail, userEmail);  //수신자
+            email.setFrom(username, "Travel Road"); // 발신자
+
+
+            // 메일 제목 & 내용 설정
+            if(value.equals("userCheck")){
+                //아이디 체크 인증번호가 있을 시 인증 메일 내용 전달
+                msgEmailPw();
+            }
+
+            email.setSubject(msgTit); // 메일 제목
+            email.setHtmlMsg(msgTxt); // 메일 내용
+
+            // set the alternative message
+            //email.setTextMsg("Your email client does not support HTML messages");
+
+            email.send();
+        } catch (EmailException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return ePw;
+   }
+
+
+    // 메일 제목 & 내용 설정
     public void msgEmailPw(){
         msgTit = "[Travel Road] 이메일 인증번호 전달";
-
+        //content
         StringBuffer strBuf = new StringBuffer();
         strBuf.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ko\">");
         strBuf.append("<head>");
@@ -98,49 +152,5 @@ public class MailSendService{
         ///images/home/bul_citizen_icon01.png
 
     }
-    public void sendEmail(String userEmail) throws Exception {
-        try {
-            HtmlEmail email = new HtmlEmail();
-
-            email.setCharset("euc-kr"); // 한글 인코딩
-            email.setHostName(host); //SMTP서버 설정
-            email.setSmtpPort(port);
-            email.setSSL(true);
-            email.setAuthentication(username, password); //메일인증
-            
-            try {
-                email.addTo(userEmail,userEmail); // 수신자
-            } catch (EmailException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                email.setFrom(username, "Travel Road"); // 발신자
-            } catch (EmailException e) {
-                e.printStackTrace();
-            }
-            
-            // Create the email message
-            email.addTo(userEmail, userEmail);  //수신자
-            email.setFrom(username, "Travel Road"); // 발신자
-            
-            
-            if(ePw != null){ //인증번호가 있을 시 인증 메일 내용 전달
-                msgEmailPw();
-            }
-            email.setSubject(msgTit); // 메일 제목
-            email.setHtmlMsg(msgTxt); // 메일 내용
-
-            // set the alternative message
-            //email.setTextMsg("Your email client does not support HTML messages");
-
-            email.send();
-
-        } catch (EmailException e) {
-
-            e.printStackTrace();
-
-        }
-   }
 
 }

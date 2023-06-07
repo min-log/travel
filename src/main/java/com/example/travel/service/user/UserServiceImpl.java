@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 @Log4j2
@@ -76,5 +78,26 @@ public class UserServiceImpl implements UserService {
         UserTravel entitySave = userRepository.save(entity);
 
         return entityToDto(entitySave);
+    }
+
+    //아이디 찾기
+    @Override
+    public String userGetName(String name, String email) {
+        Optional<UserTravel> result = userRepository.getUserByNameAndUserEmail(name, email);
+        if (result.isPresent()){
+            //값이 있을경우
+            return result.get().getUserId();
+        }else{
+            // 값이 없을 경우
+           // throw new IllegalArgumentException("No user found with the given name and email.")
+            return null;
+        }
+
+    }
+
+    //비밀번호 찾기
+    @Override
+    public int userGetPassword(String id, String name, String email) {
+        return 0;
     }
 }

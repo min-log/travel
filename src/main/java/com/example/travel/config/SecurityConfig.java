@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Log4j2
 @Configuration
+
 public class SecurityConfig {
 
     @Autowired

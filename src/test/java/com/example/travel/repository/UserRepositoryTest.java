@@ -30,5 +30,13 @@ public class UserRepositoryTest {
     }
 
 
+    @Test
+    @DisplayName("2. 회원확인")
+    public void test2() {
+
+        Optional<UserTravel> result = userRepository.getUserByNameAndUserEmail("김윤하", "jimin-log@naver.com");
+        System.out.println(result.get());
+    }
+
 
 }

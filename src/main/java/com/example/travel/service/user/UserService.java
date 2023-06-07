@@ -10,6 +10,11 @@ public interface UserService {
     public UserDTO userModitfy(UserDTO userSaveDTO);
 
 
+    public String userGetName(String name,String email); // 아이디 찾기
+    public int userGetPassword(String id,String name,String email); // 비밀번호 찾기
+
+
+
     default UserTravel dtoToEntity(UserDTO dto){
         UserTravel result = UserTravel.builder()
                 .userNo(dto.getUserNo())

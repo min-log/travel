@@ -21,10 +21,10 @@ public class MailController {
         System.out.println("이메일 인증 요청이 들어옴!");
         System.out.println("이메일 인증 이메일 : " + email);
 
-        mailSendService.sendEmail(email); // 인증 번호
-
-        //log.info("이메일 인증 번호 : " + ePw);
-
-        return null;
+        String userCheck = mailSendService.sendEmail(email, "userCheck");// 인증 번호
+        log.info("이메일 인증 번호 : " + userCheck);
+        return userCheck;
     }
+
+
 }
