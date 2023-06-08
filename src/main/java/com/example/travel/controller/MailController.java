@@ -21,7 +21,7 @@ public class MailController {
         System.out.println("이메일 인증 요청이 들어옴!");
         System.out.println("이메일 인증 이메일 : " + email);
 
-        String userCheck = mailSendService.sendEmail(email, "userCheck");// 인증 번호
+        String userCheck = mailSendService.sendEmail(email, email,"userCheck");// 인증 번호
         log.info("이메일 인증 번호 : " + userCheck);
         return userCheck;
     }

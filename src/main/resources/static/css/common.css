@@ -17,11 +17,14 @@ table th,
 table td {padding:10px 10px;box-sizing: border-box}
 :root {
     --color-main:#2595ff;
+    --color-err: #dc3545;
     --color-bg:#eee;
+
 
 }
 .btn-primary {background:var(--color-main);}
 .point-color {color:var(--color-main);}
+.point-err {color:var(--color-err);}
 .box-gray {background:var(--color-bg);}
 
 

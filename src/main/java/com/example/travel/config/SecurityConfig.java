@@ -1,6 +1,8 @@
 package com.example.travel.config;
 
+import com.example.travel.security.service.CustomAuthFailureHandler;
 import com.example.travel.security.service.UserTravelDetailsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +15,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Log4j2
 @Configuration
-
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private UserTravelDetailsService userDetailService; //로그인기능
+
+    private final UserTravelDetailsService userDetailService; //로그인기능
+    private final CustomAuthFailureHandler loginFailHandler;
+
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -36,7 +40,9 @@ public class SecurityConfig {
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
                 .defaultSuccessUrl("/main")
-                .failureUrl("/loginForm");
+                .failureUrl("/loginForm")
+                .failureHandler(loginFailHandler);
+        ;
 
         // 자동 로그인
         http.rememberMe()

@@ -46,7 +46,7 @@ class UserTravelServiceTest {
     @Test
     @DisplayName("getUserByUserId")
     public void testuserId(){
-        int result = userService.userGetId("지민테스트");
+        int result = userService.userGetId("김윤하");
         System.out.println(result);
     }
 

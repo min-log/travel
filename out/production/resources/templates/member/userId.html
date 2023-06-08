@@ -96,10 +96,10 @@
       let msg = "";
 
       // 인증코드 유효시간 카운트다운 및 화면 출력
-      let timer;
-      let isRunning = false;
+      let timer; //카운트 다운
+      let isRunning = false; //인증 코드 유효
 
-      // 인증번호 발송 및 타이머 함수 실행
+      // 타이머 함수 실행
       function sendAuthNum(){
           // 남은 시간(초)
           let leftSec = 60,
@@ -150,9 +150,6 @@
               type : 'get',
               url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
               success : function (data) {
-                  code = data;
-                  console.log("data : " +  code);
-
                   msg  += "<div class='text-center'>";
                   msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";
                   msg  += "<b class='border box-gray p-2 mb-3 mt-3' style='display:inline-block'>"+email+"</b>";
@@ -166,8 +163,9 @@
                   $('#modalJoin').modal("show");
                   checkInput.attr('disabled',false);
                   formSubmit.removeClass('disabled');
-                  sendAuthNum();
-                  //idCk(code);
+
+                  code = data;
+                  sendAuthNum(); //타이머 추가
               }
           }); // end ajax
 
@@ -182,6 +180,7 @@
                   msg = "";
                   emailSendNot(email);
               }else{
+                  msg = "";
                   emailValue.val(email);
                   emailSend(email);
               }

@@ -31,11 +31,21 @@ public class UserRepositoryTest {
 
 
     @Test
-    @DisplayName("2. 회원확인")
+    @DisplayName("2. 회원확인 - 아이디 찾기")
     public void test2() {
 
         Optional<UserTravel> result = userRepository.getUserByNameAndUserEmail("김윤하", "jimin-log@naver.com");
         System.out.println(result.get());
+    }
+
+
+    @Test
+    @DisplayName("3. 회원확인 - 비밀번호찾기")
+    public void test3() {
+
+        Optional<UserTravel> result = userRepository.getUserByPasswordAndUserEmail("wwoo", "김윤하", "jimin-log@naver.com");
+        System.out.println(result.get());
+
     }
 
 

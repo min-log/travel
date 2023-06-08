@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO userModitfy(UserDTO userSaveDTO) {
-
+        log.info("회원정보 수정 =====================");
         UserDTO dto = UserDTO.builder()
                 .userNo(userSaveDTO.getUserNo())
                 .userId(userSaveDTO.getUserId())
@@ -73,10 +73,11 @@ public class UserServiceImpl implements UserService {
                 .userImg(userSaveDTO.getUserImg())
                 .build();
 
-
+        log.info("dto : {}",dto);
         UserTravel entity = dtoToEntity(dto);
+        log.info("entity : {}",entity);
         UserTravel entitySave = userRepository.save(entity);
-
+        log.info("entitySave : {}",entitySave);
         return entityToDto(entitySave);
     }
 
@@ -97,7 +98,18 @@ public class UserServiceImpl implements UserService {
 
     //비밀번호 찾기
     @Override
-    public int userGetPassword(String id, String name, String email) {
-        return 0;
+    public UserDTO userGetPassword(String id, String name, String email) {
+        Optional<UserTravel> result = userRepository.getUserByPasswordAndUserEmail(id, name, email);
+        log.info("result.get() : "+result.get());
+        if (result.isPresent()){
+            UserTravel entity = result.get();
+            UserDTO userDTO = entityToDto(entity);
+            //값이 있을경우
+            return userDTO;
+        }else{
+            // 값이 없을 경우
+            // throw new IllegalArgumentException("No user found with the given name and email.")
+            return null;
+        }
     }
 }
