@@ -1,14 +1,22 @@
 package com.example.travel.service.user;
 
+import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface UserService {
     public UserTravel userSave(UserDTO userSaveDTO); // user 저장
     public UserDTO userGetNo(Long no); // user 가져오기
     public int userGetId(String id); // user id 체크
-    public Boolean userGetEmail(String email);
-    public UserDTO userModitfy(UserDTO userSaveDTO);
+    public Boolean userGetEmail(String email); // user Email 체크
+
+    public String userPasswordModify(UserDTO userDTO); //회원 비밀번호 변경
+
+    public UserDTO userModitfy(UserDTO userSaveDTO); //회원정보 수정
 
 
     public String userGetName(String name,String email); // 아이디 찾기
@@ -35,13 +43,19 @@ public interface UserService {
                 .userSocial(dto.getUserSocial())
                 .build();
 
+        System.out.println("role ---------------");
+        Set<UserRole> roleSet = dto.getRoleSet();
+        roleSet.stream().forEach(userRole -> {
+            result.roleAdd(userRole);
+        });
 
 
         return result;
     }
 
     default UserDTO entityToDto(UserTravel userTravel){
-        return UserDTO.builder()
+
+        UserDTO result = UserDTO.builder()
                 .userNo(userTravel.getUserNo())
                 .userId(userTravel.getUserId())
                 .userEmail(userTravel.getUserEmail())
@@ -55,7 +69,16 @@ public interface UserService {
                 .addressPostcode(userTravel.getAddressPostcode())
                 .addressDetail(userTravel.getAddressDetail())
                 .addressExtra(userTravel.getAddressExtra())
+                .userSocial(userTravel.getUserSocial())
                 .build();
+
+        System.out.println("role ---------------");
+        Set<UserRole> roleSet = userTravel.getRoleSet();
+        roleSet.stream().forEach(userRole -> {
+            result.roleAdd(userRole);
+        });
+
+        return result;
     }
 
 

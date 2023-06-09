@@ -7,7 +7,7 @@
     <div class="content_box">
       <h2 class="tit text-center mb-4">로그인</h2>
       <div class="loginForm">
-        <form th:action="@{/login_proc}" method="post">
+        <form th:action="@{/login_proc}" method="post" th:object="${userTravel}">
           <input name="${_csrf.parameterName}" type="hidden" value="${_csrf.token}"/>
           <table>
             <colgroup>
@@ -22,7 +22,7 @@
                   </label>
                 </th>
                 <td>
-                  <input th:name="username" name="username" id="username" class="form-control id" type="text" placeholder="아이디를 입력하세요.">
+                  <input th:value="*{userId}" name="username" id="username" class="form-control id" type="text" placeholder="아이디를 입력하세요.">
                 </td>
               </tr>
               <tr>
@@ -63,11 +63,12 @@
 
 
   <!-- Modal -->
-  <script type="text/javascript" th:if="${error != null}">
+  <script type="text/javascript" th:if="${error != null || cng != null || joinSuccess != null}">
       $(document).ready(function (){
           $('#modalJoin').modal("show");
       })
   </script>
+
   <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -77,6 +78,8 @@
         </div>
         <div class="modal-body">
           <div class="modal-message">
+            <p th:text="${cng}"></p>
+            <p th:text="${joinSuccess}"></p>
             <p th:text="${exception}">일치하는 회원이 없습니다.</p>
           </div>
         </div>

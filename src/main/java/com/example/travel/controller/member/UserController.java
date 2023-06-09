@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -25,10 +26,6 @@ public class UserController {
     private final MailSendService mailSendService;
 
 
-//   // public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
-
     //==========================================================
     //회원가입
     @GetMapping("join")
@@ -42,7 +39,9 @@ public class UserController {
 
     @PostMapping("join")
     public String userJoin(@Valid @ModelAttribute("userTravel") UserDTO user ,
-                           BindingResult bindingResult) throws Exception {
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes
+    ) throws Exception {
 
         int idCkNo = userService.userGetId(user.getUserId());
         log.info("아이디 유무 확인 : {}",idCkNo);
@@ -61,10 +60,11 @@ public class UserController {
 
                 String userEmail = user.getUserEmail();
                 mailSendService.sendEmail(userEmail, userTravel1.getName(),"joinSuccess");
-
-                return "member/login";
+                redirectAttributes.addAttribute("joinSuccess","회원가입이 완료되었습니다.");
+                return "redirect:/loginForm";
             }
         }
+
         return "member/join";
     }
 
@@ -73,12 +73,18 @@ public class UserController {
     //==========================================================
     //로그인 페이지
     @GetMapping("loginForm")
-    public String login(@RequestParam(value = "error", required = false) String error,
-                        @RequestParam(value = "exception", required = false) String exception,
+    public String login(@RequestParam(value = "error", required = false) String error, // 로그인 실패시 전달되는 파라미터
+                        @RequestParam(value = "exception", required = false) String exception, // 로그인 실패시 전달되는 파라미터
+                        @RequestParam(value = "cng", required = false) String cng, // 비밀번호 변경시 전달되는 파라미터
+                        @RequestParam(value = "joinSuccess", required = false) String joinSuccess, // 회원가입 성송 시 전달되는 파라미터
                         String logout,
                         Model model){
+
+        model.addAttribute("userTravel",new UserDTO());
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
+        model.addAttribute("cng", cng);
+        model.addAttribute("joinSuccess", joinSuccess);
 
         return "member/login";
     }
@@ -93,10 +99,8 @@ public class UserController {
     }
     @PostMapping("member/userIdCheck")
     public String userIdCheck(@ModelAttribute("userTravel") UserDTO user ,Model model){
-
         String Result = userService.userGetName(user.getName(), user.getUserEmail());
         log.info("Result = {}",Result);
-
         if(Result == null){
             model.addAttribute("errTit","회원확인");
             model.addAttribute("errCont","일치하는 회원이 없습니다.");
@@ -106,10 +110,7 @@ public class UserController {
 
         log.info("=======================");
         user.setUserId(Result);
-
-
         return "member/userIdCheck";
-
     }
 
 
@@ -118,6 +119,7 @@ public class UserController {
         model.addAttribute("userTravel",new UserDTO()); // 빈 객체 전달 필요
         return "member/userPassword";
     }
+
     @PostMapping("member/userPasswordModify")
     public String userPasswordCheck(@ModelAttribute("userTravel") UserDTO user ,Model model){
         log.info("회원 비밀번호 찾기  =======================");
@@ -142,19 +144,28 @@ public class UserController {
 
     //비밀번호 변경
     @PostMapping("member/userModify")
-    public String userPasswordModify(@ModelAttribute("userTravel") UserDTO user ,Model model){
+    public String userPasswordModify(@ModelAttribute("userTravel") UserDTO user ,
+                                     Model model,
+                                     RedirectAttributes redirectAttributes){
         log.info("회원정보 수정 ==================================");
-        log.info(user.getUserNo());
-        UserDTO userDTO = userService.userModitfy(user);
-        if (userDTO == null){
+        log.info("화면 정보 : "+ user);
+
+        String userId = userService.userPasswordModify(user);
+        log.info("수정 정보 :" + userId);
+
+        if (userId.equals("null")){
+            log.info("회원정보가 없습니다.");
             model.addAttribute("errTit","회원확인");
             model.addAttribute("errCont","일치하는 회원이 없습니다.");
             log.info("일치하는 회원이 없습니다.");
 
             return "member/userPasswordModify";
+        }else{
+            redirectAttributes.addAttribute("cng","비밀번호가 변경되었습니다.");
+            return "redirect:/loginForm";
         }
 
-        return "/loginForm";
+
     }
 
 

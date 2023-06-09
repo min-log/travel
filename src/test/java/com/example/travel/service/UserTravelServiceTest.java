@@ -18,7 +18,7 @@ class UserTravelServiceTest {
     @DisplayName("1. user 회원가입")
     public void test1(){
         UserDTO dto = UserDTO.builder()
-                .userId("user3")
+                .userId("user1")
                 .userEmail("admin@naver.com")
                 .password("user1234")
                 .name("관리자")
@@ -64,6 +64,22 @@ class UserTravelServiceTest {
                 .build();
 
         UserDTO result = userService.userModitfy(dto);
+        System.out.println(result);
+
+    }
+
+
+    @Test
+    @DisplayName("3. user 패스워드 수정")
+    public void test4(){
+        UserDTO dto = UserDTO.builder()
+                .userId("user1")
+                .userEmail("admin@naver.com")
+                .password("user1234")
+                .name("관리자")
+                .build();
+
+        String result = userService.userPasswordModify(dto);
         System.out.println(result);
 
     }

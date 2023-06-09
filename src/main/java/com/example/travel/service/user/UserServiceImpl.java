@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -62,6 +63,32 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String userPasswordModify(UserDTO userDTO) {
+        log.info("비밀번호 수정 ==========================");
+
+        String name = userDTO.getName();
+        String userEmail = userDTO.getUserEmail();
+        log.info(name);
+        log.info(userEmail);
+        Optional<UserTravel> i = userRepository.getUserByNameAndUserEmail(name, userEmail);
+        if (i.isPresent()){
+            UserTravel userTravel = i.get();
+            log.info("존재하는 : {}",i);
+            UserDTO dto = entityToDto(userTravel);
+            log.info("권한 확인: " + userTravel.getRoleSet());
+            dto.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 패스워드 암호화
+            UserTravel entity = dtoToEntity(dto); //entity 변경
+            UserTravel save = userRepository.save(dtoToEntity(dto));
+
+            return dto.getUserId();
+        }else{
+            log.info("존재 없는");
+            return null;
+        }
+        
     }
 
     @Override
