@@ -36,13 +36,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO userGetNo(Long no) {
-        UserTravel entity = userRepository.getUserByUserNo(no);
+        UserTravel entity = userRepository.getUserTravelByUserNo(no);
         return entityToDto(entity);
     }
 
     @Override
     public int userGetId(String id) {
-        UserTravel result = userRepository.getUserByUserId(id);
+        UserTravel result = userRepository.getUserTravelByUserId(id);
         log.info("뽑아진 ID 정보: {}",result);
         if ( result == null){
             //성공

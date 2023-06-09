@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Builder
-@ToString
+@ToString(exclude = "roleSet")
 public class UserTravel extends BaseEntity {
 
     @Id
