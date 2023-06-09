@@ -7,6 +7,7 @@ public interface UserService {
     public UserTravel userSave(UserDTO userSaveDTO); // user 저장
     public UserDTO userGetNo(Long no); // user 가져오기
     public int userGetId(String id); // user id 체크
+    public Boolean userGetEmail(String email);
     public UserDTO userModitfy(UserDTO userSaveDTO);
 
 

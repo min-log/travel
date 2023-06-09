@@ -355,19 +355,34 @@
       $(function(){
           //본인인증 버튼 클릭
           $('#mail-Check-Btn').click(function() {
-
               const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
-              //console.log("mail-Check-Btn : " + email)
-              if (isRunning){
-                  msg = "";
-                  emailSendNot(email);
-              }else{
-                  msg = "";
-                  emailValue.val(email);
-                  emailSend(email);
-              }
+              $.ajax({
+                 type:'get',
+                 url:'user/emailCheck?userEmail='+email,
+                 success:function (data){
+                    if (data){
+                        msg = "<span>이미 존재하는 이메일입니다.<br />회원 확인을 해주세요.</span>"
+                        $("#modalJoin").modal("show");
+                        $(".modal-message").html(msg);
+                    }else{
+                        if (isRunning){
+                            msg = "";
+                            emailSendNot(email);
+                        }else{
+                            msg = "";
+                            emailValue.val(email);
+                            emailSend(email);
+                        }
+                    }
+                 },
+                  error:function (request,status,error){
 
-              ////console.log('완성된 이메일 : ' + email); // 이메일 오는지 확인
+                  },
+                  complete:function (data) {
+
+                  }
+              });
+
 
           }); // end send eamil
 
@@ -400,6 +415,7 @@
 
           // 아이디 확인
           $("#btnIdCheck").on('click',function(){
+
               let id = idInput.val();
               if (id == null || id == ""){ //값이 없으면 막기
                   return false;
@@ -423,7 +439,9 @@
                       }
                       $(".check-msg-id").html(msg);
                   }
-              })
+              });
+
+
           });
 
 

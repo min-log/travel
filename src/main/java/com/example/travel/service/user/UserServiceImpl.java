@@ -55,6 +55,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean userGetEmail(String email) {
+        Optional<UserTravel> result = userRepository.getUserTravelByUserEmail(email);
+        log.info("이메일 존재 : true  | 이메일 무 존재 : false");
+        if (result.isPresent()){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public UserDTO userModitfy(UserDTO userSaveDTO) {
         log.info("회원정보 수정 =====================");
         UserDTO dto = UserDTO.builder()

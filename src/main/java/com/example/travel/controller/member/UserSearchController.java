@@ -26,4 +26,12 @@ public class UserSearchController {
         }
 
     }
+
+
+    @GetMapping("emailCheck")
+    public Boolean emailCheck(@RequestParam("userEmail") String userEmail){
+        boolean result = userService.userGetEmail(userEmail);
+        return result;
+
+    }
 }

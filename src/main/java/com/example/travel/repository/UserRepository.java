@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     UserTravel getUserTravelByUserNo(Long no);
     
     UserTravel getUserTravelByUserId(String id); // 회원 아이디 유무 확인
-    UserTravel getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
+    Optional<UserTravel> getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
 
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "select m from UserTravel m where m.userSocial = :social and m.userId = :id",
