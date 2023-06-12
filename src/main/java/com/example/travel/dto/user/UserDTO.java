@@ -5,11 +5,13 @@ import com.example.travel.domain.UserRole;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
 import javax.validation.constraints.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -47,12 +49,16 @@ public class UserDTO {
 
 
     private String userGender;
-    private String userImg;
+    private MultipartFile userImg;
+
+
+
+
     @NotNull(message = "개인정보 동의를 체크해주세요.")
     private Boolean userAgree; //개인정보 동의
 
-    @Max(value = 0, message = "0 이하만 가능합니다.")
-    private int idCk;
+//    @Max(value = 0, message = "0 이하만 가능합니다.")
+//    private int idCk;
 
     private Boolean userSocial;
 

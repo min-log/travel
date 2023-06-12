@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 
 @Log4j2
@@ -38,34 +39,39 @@ public class UserController {
 
 
     @PostMapping("join")
-    public String userJoin(@Valid @ModelAttribute("userTravel") UserDTO user ,
+    public String userJoin(@Valid @ModelAttribute("userTravel") UserDTO user,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes
-    ) throws Exception {
+    ) throws Exception, IOException {
 
-        int idCkNo = userService.userGetId(user.getUserId());
-        log.info("아이디 유무 확인 : {}",idCkNo);
-
-        user.setIdCk(idCkNo);
-
-        log.info("---------user :{}" , user);
-        if (idCkNo != 5){
+//        int idCkNo = userService.userGetId(user.getUserId());
+//        log.info("아이디 유무 확인 : {}",idCkNo);
+//
+//        user.setIdCk(idCkNo);
+//
+//        log.info("---------user :{}" , user);
+//        if (idCkNo != 5){
             if(bindingResult.hasErrors()) {
                 log.info("회원 가입 실패");
+                log.info(bindingResult.hasErrors());
                 return "member/join";
             }else{
                 //성공 로직
+                System.out.println(user.getUserImg());
+                System.out.println("-------------------------------");
                 UserTravel userTravel1 = userService.userSave(user);
+
                 log.info("회원가입 성공 :{}" , userTravel1);
+
 
                 String userEmail = user.getUserEmail();
                 mailSendService.sendEmail(userEmail, userTravel1.getName(),"joinSuccess");
                 redirectAttributes.addAttribute("joinSuccess","회원가입이 완료되었습니다.");
                 return "redirect:/loginForm";
             }
-        }
-
-        return "member/join";
+//        }
+//
+//        return "member/join";
     }
 
 

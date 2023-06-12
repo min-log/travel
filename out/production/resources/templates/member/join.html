@@ -7,7 +7,7 @@
     <div>
       <h2 class="tit text-center mb-4">회원가입</h2>
 
-      <form id="joinForm" th:action="@{/join}" th:method="post" class="box content_box" >
+      <form id="joinForm" th:action="@{/join}" enctype="multipart/form-data" th:method="post" class="box content_box" >
         <input th:type="hidden" name="idCheckValue" id="idCheckValue" value="false">
         <input th:type="hidden" name="emailCheckValue" id="emailCheckValue" value="false">
         <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="hidden">
@@ -121,7 +121,7 @@
                 <label for="userImg" class="btn btn-dark btn-sm ">
                   👆프로필 선택하기👆
                 </label>
-                <input type="file" th:field="*{userImg}"  name="userImg" id="userImg" accept="image/*">
+                <input type="file" th:field="*{userImg}"  name="" id="userImg" accept="image/*" multiple="multiple">
               </div>
             </td>
           </tr>
@@ -143,7 +143,7 @@
 
 
     <!-- Modal -->
-    <script type="text/javascript" th:if="${#fields.hasErrors()} or *{idCk}">
+    <script type="text/javascript" th:if="${#fields.hasErrors()}">
         $(document).ready(function (){
             $('#modalJoin').modal("show");
         })
@@ -159,10 +159,10 @@
           <div class="modal-body">
             <p class="modal-message">
 
-              <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">
-              아이디 변경 : 이미 존재하는 아이디 입니다.
-               </span>
-              <br />
+<!--              <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">-->
+<!--              아이디 변경 : 이미 존재하는 아이디 입니다.-->
+<!--               </span>-->
+<!--              <br />-->
               <span th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></span>
               <br />
               <span th:if="${#fields.hasErrors('userBirthday')}" th:errors="*{userBirthday}"></span>

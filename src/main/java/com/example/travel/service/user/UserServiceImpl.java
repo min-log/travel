@@ -1,16 +1,25 @@
 package com.example.travel.service.user;
 
+import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
+import com.example.travel.dto.ImageDTO;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.repository.UserImageRepository;
 import com.example.travel.repository.UserRepository;
+import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -20,20 +29,73 @@ public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
 
+    // 이미지 관련 추가
+    private final FileService fileService;
+    private final UserImageRepository userImageRepository;
+    @Value("${spring.servlet.multipart.location}")
+    private String uploadPath;
+
+
     @Override
-    public UserTravel userSave(UserDTO userSaveDTO) {
-        log.info("userSaveDTO : {}" , userSaveDTO);
+    public UserTravel userSave(UserDTO userDto) {
+        log.info("userSaveDTO : {}" , userDto);
         // 일반회원 가입
-        userSaveDTO.setUserSocial(false);
-        userSaveDTO.setPassword(passwordEncoder.encode(userSaveDTO.getPassword())); // 패스워드 암호화
-        UserTravel entity = dtoToEntity(userSaveDTO); //entity 변경
+        userDto.setUserSocial(false);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword())); // 패스워드 암호화
+        UserTravel entity = dtoToEntity(userDto); //entity 변경
         entity.roleAdd(UserRole.USER); // 권한 추가
 
 
+        log.info("=======================");
+        log.info("이미지 파일이 있을때 : " + userDto.getUserImg());
+        if(!(userDto.getUserImg() == null)) {
+            log.info("이미지 파일이 있을때");
+            UserImage userImage = saveMemberImage(userDto.getUserImg());
+            entity.updateUserImage(userImage);
+        }
+
         UserTravel result = userRepository.save(entity);
+
+
         log.info("result : {}" , result);
+
+
+
+
         return result;
     }
+
+
+
+    //이미지 관련
+    @Transactional(readOnly = false)
+    UserImage saveMemberImage(MultipartFile file) {
+        if(file.getContentType().startsWith("image") == false) {
+            log.warn("이미지 파일이 아닙니다.");
+            return null;
+        }
+
+        String originalName = file.getOriginalFilename();
+        Path root = Paths.get(uploadPath, "member");
+
+        try {
+            ImageDTO imageDTO =  fileService.createImageDTO(originalName, root);
+            UserImage memberImage = UserImage.builder()
+                    .uuid(imageDTO.getUuid())
+                    .fileName(imageDTO.getFileName())
+                    .fileUrl(imageDTO.getFileUrl())
+                    .build();
+
+            file.transferTo(Paths.get(imageDTO.getFileUrl()));
+
+            return userImageRepository.save(memberImage);
+        } catch (IOException e) {
+            log.warn("업로드 폴더 생성 실패: " + e.getMessage());
+        }
+
+        return null;
+    }
+
 
     @Override
     public UserDTO userGetNo(Long no) {

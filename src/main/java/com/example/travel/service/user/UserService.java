@@ -4,9 +4,7 @@ import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public interface UserService {
     public UserTravel userSave(UserDTO userSaveDTO); // user 저장
@@ -34,7 +32,7 @@ public interface UserService {
                 .userBirthday(dto.getUserBirthday())
                 .userGender(dto.getUserGender())
                 .userPhone(dto.getUserPhone())
-                .userImg(dto.getUserImg())
+                //.userImg(dto.getUserImg())
                 .address(dto.getAddress())
                 .addressPostcode(dto.getAddressPostcode())
                 .addressDetail(dto.getAddressDetail())
@@ -64,7 +62,7 @@ public interface UserService {
                 .userBirthday(userTravel.getUserBirthday())
                 .userGender(userTravel.getUserGender())
                 .userPhone(userTravel.getUserPhone())
-                .userImg(userTravel.getUserImg())
+                //.userImg(userTravel.getUserImg())
                 .address(userTravel.getAddress())
                 .addressPostcode(userTravel.getAddressPostcode())
                 .addressDetail(userTravel.getAddressDetail())
@@ -80,6 +78,8 @@ public interface UserService {
 
         return result;
     }
+
+
 
 
 }
