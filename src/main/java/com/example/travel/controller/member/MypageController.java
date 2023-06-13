@@ -1,5 +1,6 @@
 package com.example.travel.controller.member;
 
+import com.example.travel.domain.UserTravel;
 import com.example.travel.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.Cookie;
@@ -23,8 +25,10 @@ public class MypageController {
     private final UserService  userService;
     @GetMapping("")
     public String myPage(HttpServletRequest request, Model model){
+
 //        String userName = principal.getName();
 //        int i = userService.userGetId(userName);
+
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
 

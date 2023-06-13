@@ -39,10 +39,10 @@ public class SecurityConfig {
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/main")
+                .defaultSuccessUrl("/main?u=o")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
-        ;
+
 
         // 자동 로그인
         http.rememberMe()
