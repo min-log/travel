@@ -11,6 +11,7 @@ import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
         UserTravel entity = dtoToEntity(userDto); //entity 변경
         entity.roleAdd(UserRole.USER); // 권한 추가
 
-
+        System.out.println();
         log.info("=======================");
         log.info("이미지 파일이 있을때 : " + userDto.getUserImg());
         if(!(userDto.getUserImg() == null)) {
@@ -90,6 +91,7 @@ public class UserServiceImpl implements UserService {
 
             return userImageRepository.save(memberImage);
         } catch (IOException e) {
+            e.printStackTrace();
             log.warn("업로드 폴더 생성 실패: " + e.getMessage());
         }
 
@@ -105,15 +107,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int userGetId(String id) {
-        UserTravel result = userRepository.getUserTravelByUserId(id);
-        log.info("뽑아진 ID 정보: {}",result);
-        if ( result == null){
-            //성공
-            return 0;
-        }else{
-            //실패
-            return 5;
+        try {
+            UserTravel result = userRepository.getUserTravelByUserId(id);
+            log.info("뽑아진 ID 정보: {}",result);
+            if ( result == null){
+                //성공
+                return 0;
+            }else{
+                //실패
+
+                return 5;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return 5;
+
 
     }
 
@@ -135,6 +145,7 @@ public class UserServiceImpl implements UserService {
         String userEmail = userDTO.getUserEmail();
         log.info(name);
         log.info(userEmail);
+
         Optional<UserTravel> i = userRepository.getUserByNameAndUserEmail(name, userEmail);
         if (i.isPresent()){
             UserTravel userTravel = i.get();
@@ -199,15 +210,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO userGetPassword(String id, String name, String email) {
         Optional<UserTravel> result = userRepository.getUserByPasswordAndUserEmail(id, name, email);
-        log.info("result.get() : "+result.get());
-        if (result.isPresent()){
-            UserTravel entity = result.get();
-            UserDTO userDTO = entityToDto(entity);
-            //값이 있을경우
-            return userDTO;
-        }else{
-            // 값이 없을 경우
-            // throw new IllegalArgumentException("No user found with the given name and email.")
+        try {
+            if (result.isPresent()){
+                log.info("result.get() : "+result.get());
+                UserTravel entity = result.get();
+                UserDTO userDTO = entityToDto(entity);
+                //값이 있을경우
+                return userDTO;
+            }else{
+                return null;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            log.info("에러 메시지2"+e.getMessage());
             return null;
         }
     }

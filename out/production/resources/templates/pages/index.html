@@ -204,8 +204,11 @@
         }
     }
 </script>
-
-
+    <script th:if="${login}" >
+        $(function (){
+            alert("로그인 상태입니다.");
+        });
+    </script>
 
 </th:block>
 </html>

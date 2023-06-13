@@ -7,14 +7,18 @@ import com.example.travel.service.user.MailSendService;
 import com.example.travel.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Map;
 
 
 @Log4j2
@@ -44,13 +48,6 @@ public class UserController {
                            RedirectAttributes redirectAttributes
     ) throws Exception, IOException {
 
-//        int idCkNo = userService.userGetId(user.getUserId());
-//        log.info("아이디 유무 확인 : {}",idCkNo);
-//
-//        user.setIdCk(idCkNo);
-//
-//        log.info("---------user :{}" , user);
-//        if (idCkNo != 5){
             if(bindingResult.hasErrors()) {
                 log.info("회원 가입 실패");
                 log.info(bindingResult.hasErrors());
@@ -66,12 +63,10 @@ public class UserController {
 
                 String userEmail = user.getUserEmail();
                 mailSendService.sendEmail(userEmail, userTravel1.getName(),"joinSuccess");
-                redirectAttributes.addAttribute("joinSuccess","회원가입이 완료되었습니다.");
+                redirectAttributes.addFlashAttribute("joinSuccess","회원가입이 완료되었습니다.");
                 return "redirect:/loginForm";
             }
-//        }
-//
-//        return "member/join";
+
     }
 
 
@@ -79,18 +74,32 @@ public class UserController {
     //==========================================================
     //로그인 페이지
     @GetMapping("loginForm")
-    public String login(@RequestParam(value = "error", required = false) String error, // 로그인 실패시 전달되는 파라미터
+    public String login(
+                        @RequestParam(value = "error", required = false) String error, // 로그인 실패시 전달되는 파라미터
                         @RequestParam(value = "exception", required = false) String exception, // 로그인 실패시 전달되는 파라미터
-                        @RequestParam(value = "cng", required = false) String cng, // 비밀번호 변경시 전달되는 파라미터
-                        @RequestParam(value = "joinSuccess", required = false) String joinSuccess, // 회원가입 성송 시 전달되는 파라미터
+                        //@RequestParam(value = "joinSuccess", required = false) String joinSuccess, // 회원가입 성송 시 전달되는 파라미터
                         String logout,
-                        Model model){
+                        Model model,
+                        HttpServletRequest request,
+                        Authentication authentication,
+                        RedirectAttributes redirectAttributes){
+
+        if (authentication != null){ //로그인 상태일 시 페이지 이동 막기
+            redirectAttributes.addFlashAttribute("login", "on");
+            return "redirect:/main";
+        }
+
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
+        if(flashMap!=null) {
+            model.addAttribute("cng",flashMap.get("cng"));
+            model.addAttribute("joinSuccess", flashMap.get("joinSuccess"));
+        }
+
 
         model.addAttribute("userTravel",new UserDTO());
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        model.addAttribute("cng", cng);
-        model.addAttribute("joinSuccess", joinSuccess);
+
 
         return "member/login";
     }
@@ -121,29 +130,40 @@ public class UserController {
 
 
     @GetMapping("member/userPassword")
-    public String userPasswordSearch(Model model){
+    public String userPasswordSearch(Model model,HttpServletRequest request){
         model.addAttribute("userTravel",new UserDTO()); // 빈 객체 전달 필요
+
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
+        if(flashMap!=null) {
+            model.addAttribute("errTit",flashMap.get("errTit"));
+            model.addAttribute("errCont", flashMap.get("errCont"));
+        }
+
         return "member/userPassword";
     }
 
     @PostMapping("member/userPasswordModify")
-    public String userPasswordCheck(@ModelAttribute("userTravel") UserDTO user ,Model model){
+    public String userPasswordCheck(@ModelAttribute("userTravel") UserDTO user ,Model model,
+            HttpServletRequest request,
+            RedirectAttributes redirect){
         log.info("회원 비밀번호 찾기  =======================");
-        log.info("user.getUserNo() : {}",user.getUserNo());
+
         log.info("user.getUserId() : {}",user.getUserId());
         log.info("user.getName() : {}",user.getName());
         log.info("user.getUserEmail() : {}",user.getUserEmail());
 
+
         UserDTO result = userService.userGetPassword(user.getUserId(), user.getName(), user.getUserEmail());
-        user.setUserNo(result.getUserNo());
+        log.info("result :{}" ,result);
 
         if(result == null){
-            model.addAttribute("errTit","회원확인");
-            model.addAttribute("errCont","일치하는 회원이 없습니다.");
+            redirect.addFlashAttribute("errTit","회원확인");
+            redirect.addFlashAttribute("errCont","일치하는 회원이 없습니다.");
             log.info("일치하는 회원이 없습니다.");
 
-            return "member/userPassword";
+            return "redirect:/member/userPassword";
         }
+
 
         return "member/userPasswordModify";
     }
@@ -167,7 +187,8 @@ public class UserController {
 
             return "member/userPasswordModify";
         }else{
-            redirectAttributes.addAttribute("cng","비밀번호가 변경되었습니다.");
+
+            redirectAttributes.addFlashAttribute("cng","비밀번호가 변경되었습니다.");
             return "redirect:/loginForm";
         }
 
