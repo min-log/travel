@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/main?u=o")
+                .defaultSuccessUrl("/main?login=true")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
 
