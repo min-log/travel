@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <th:block th:fragment="header">
-  <header class="py-3 border-bottom">
+  <header class="py-2 border-bottom">
     <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: auto 2fr;">
       <a class="logo" th:href="@{/}">
         <img th:src="@{/img/logo.png}" />
@@ -24,14 +24,12 @@
         </div>
 
 
-        <div class="flex-shrink-0 dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="user_info flex-shrink-0 dropdown">
+          <a href="#" class="d-block link-dark text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
             <p class="profile_image_wrap">
-              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-              <img sec:authorize="isAnonymous()" src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png" alt="mdo" class="rounded-circle">
+              <img sec:authorize="isAnonymous()" src="https://github.com/mdo.png" alt="mdo" class="rounded-circle">
             </p>
-            <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
-            <span sec:authorize="isAnonymous()">User</span>
           </a>
           <ul class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="#">New project...</a></li>

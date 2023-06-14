@@ -38,9 +38,10 @@ table td {padding:10px 10px;box-sizing: border-box}
 /*header*/
 header .container-fluid {justify-content: space-between !important;}
 header .align-items-center {justify-content: flex-end;}
-header .logo {width: 62px;}
+header .logo {width: 80px;height:auto}
 header .logo img {width:100%;height: auto;}
-
+header .user_info .profile_image_wrap {width:50px;height:50px;border:2px solid var(--color-main);border-radius:50%;background:#fff;box-sizing:border-box}
+header .user_info .profile_image_wrap img {width:100%;height:100%;}
 .search_wrap {position: relative;}
 .search_wrap .form-control {padding-right: 30px}
 .search_wrap .form-control::placeholder {color: var(--color-main);opacity: 0.8;}

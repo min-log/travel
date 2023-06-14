@@ -35,7 +35,7 @@
           <tr>
             <th>비밀번호 <span class="txt_info ck">*</span></th>
             <td>
-              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="비밀번호를 입력하세요.">
+              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="영어와 숫자로 포함해서 6~12자리 이내로 입력해주세요.">
             </td>
           </tr>
           <tr>
@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <th>생년월일 <span class="txt_info ck">*</span></th>
-            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" placeholder="생년월일 6자리를 입력하세요."></td>
+            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="생년월일 6자리를 입력하세요." maxlength="6"></td>
           </tr>
 
           <tr>

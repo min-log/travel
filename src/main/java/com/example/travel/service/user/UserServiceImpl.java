@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserTravel userSave(UserDTO userDto) {
+        log.info("user 객체 저장 및 반환 ==========================");
         log.info("userSaveDTO : {}" , userDto);
         // 일반회원 가입
         userDto.setUserSocial(false);
@@ -50,7 +51,6 @@ public class UserServiceImpl implements UserService {
         entity.roleAdd(UserRole.USER); // 권한 추가
 
         System.out.println();
-        log.info("=======================");
         log.info("getUserImg : " + userDto.getUserImg());
         if(!(userDto.getUserImg() == null)) {
             log.info("이미지 파일이 있을때");
@@ -59,13 +59,6 @@ public class UserServiceImpl implements UserService {
         }
 
         UserTravel result = userRepository.save(entity);
-
-
-        log.info("result : {}" , result);
-
-
-
-
         return result;
     }
 
@@ -74,6 +67,7 @@ public class UserServiceImpl implements UserService {
     //이미지 관련
     @Transactional(readOnly = false)
     UserImage saveMemberImage(MultipartFile file) {
+        log.info("이미지 저장 ==========================");
         if(file.getContentType().startsWith("image") == false) {
             log.warn("이미지 파일이 아닙니다.");
             return null;
@@ -105,12 +99,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO userGetNo(Long no) {
+        log.info("user 고유번호로 존재 유무확인 ==========================");
         UserTravel entity = userRepository.getUserTravelByUserNo(no);
         return entityToDto(entity);
     }
 
     @Override
     public int userGetId(String id) {
+        log.info("아이디 존재 유무확인 ==========================");
         try {
             UserTravel result = userRepository.getUserTravelByUserId(id);
             log.info("뽑아진 ID 정보: {}",result);
@@ -119,7 +115,6 @@ public class UserServiceImpl implements UserService {
                 return 0;
             }else{
                 //실패
-
                 return 5;
             }
         } catch (Exception e) {
@@ -127,12 +122,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return 5;
-
-
     }
 
     @Override
     public Boolean userGetEmail(String email) {
+        log.info("이메일 존재 유무확인 ==========================");
         Optional<UserTravel> result = userRepository.getUserTravelByUserEmail(email);
         log.info("이메일 존재 : true  | 이메일 무 존재 : false");
         if (result.isPresent()){
@@ -148,28 +142,34 @@ public class UserServiceImpl implements UserService {
 
         String name = userDTO.getName();
         String userEmail = userDTO.getUserEmail();
+        String userId = userDTO.getUserId();
         log.info(name);
-        log.info(userEmail);
+        log.info(userId);
 
-        Optional<UserTravel> i = userRepository.getUserByNameAndUserEmail(name, userEmail);
-        if (i.isPresent()){
+        try {
+                Optional<UserTravel> i = userRepository.getUserPullByUserId(userId);
+                if (i.isPresent()){
+                    log.info("USER가 존재할 경우 : {}",i);
+                    log.info(i.get().getUserImg().getOriginFileName());
+                    log.info(i.get().getUserId());
+                    log.info(i.get().getUserId());
 
-            UserTravel userTravel = i.get();
+                    UserTravel userTravel = i.get();
+                    UserResponseDTO userResponseDTO = entityToResponseDto(userTravel);
+                    userResponseDTO.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 패스워드 암호화
 
-            log.info("존재하는 : {}",i);
-            UserDTO dto = entityToDto(userTravel);
-            dto.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 패스워드 암호화
+                    UserTravel entity = responseDtoToEntity(userResponseDTO); //entity 변경
+                    UserTravel save = userRepository.save(entity);
 
-            UserTravel entity = dtoToEntity(dto); //entity 변경
-
-            UserTravel save = userRepository.save(dtoToEntity(dto));
-
-            return dto.getUserId();
-        }else{
-            log.info("존재 없는");
-            return null;
+                    return save.getUserId();
+                }else{
+                    log.info("존재 없는");
+                    return null;
+                }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        
+        return null;
     }
 
     @Override

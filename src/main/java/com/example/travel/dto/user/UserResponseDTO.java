@@ -45,6 +45,11 @@ public class UserResponseDTO {
     private Boolean userAgree; //개인정보 동의
     private Boolean userSocial;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<UserRole> roleSet = new HashSet<>();
+    public void roleAdd(UserRole userRole){
+        roleSet.add(userRole);
+    }
 
 }
