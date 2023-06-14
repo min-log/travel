@@ -3,11 +3,15 @@ package com.example.travel.controller.member;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserResponseDTO;
+import com.example.travel.security.dto.UserTravelAdapter;
+import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.user.MailSendService;
 import com.example.travel.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Map;
@@ -31,7 +36,31 @@ public class UserController {
     private final MailSendService mailSendService;
 
 
-    //==========================================================
+    @GetMapping("loginCk")
+    public String loginCheck(@AuthenticationPrincipal UserTravelAdapter user,
+                             HttpSession session){
+        log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
+
+
+        if (user != null){
+            log.info("로그인");
+            log.info(user.getUserId());
+            log.info(user.getProfile());
+            session.setAttribute("userT",user);
+
+            //log.info(userTravelDTO.getImageUrl());
+
+        }else{
+            log.info("로그아웃");
+            session.removeAttribute("user");
+        }
+
+        return "redirect:/main";
+    }
+
+
+
+    //==============7============================================
     //회원가입
     @GetMapping("join")
     public String userJoinForm(Model model){

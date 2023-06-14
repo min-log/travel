@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ImageDTO {
 
     private String fileName;
+    private String originFileName;
     private String uuid;
     private String fileUrl;
 

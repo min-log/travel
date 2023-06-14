@@ -5,9 +5,9 @@
 <th:block th:fragment="header">
   <header class="py-3 border-bottom">
     <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: auto 2fr;">
-      <div class="logo">
-        <img th:src="@{/static/img/logo.png}" />
-      </div>
+      <a class="logo" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" />
+      </a>
 
       <div class="d-flex align-items-center">
         <a href="#">여행지 찾기</a>
@@ -25,9 +25,13 @@
 
 
         <div class="flex-shrink-0 dropdown">
-          <span sec:authentication="name"></span>
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            <p class="profile_image_wrap">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              <img sec:authorize="isAnonymous()" src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            </p>
+            <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
+            <span sec:authorize="isAnonymous()">User</span>
           </a>
           <ul class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="#">New project...</a></li>
@@ -47,5 +51,6 @@
       </div>
     </div>
   </header>
+
 </th:block>
 </html>

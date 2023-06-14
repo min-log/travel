@@ -5,8 +5,10 @@ import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.ImageDTO;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.UserImageRepository;
 import com.example.travel.repository.UserRepository;
+import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,11 +35,12 @@ public class UserServiceImpl implements UserService {
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
+
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
 
-
     @Override
+    @Transactional
     public UserTravel userSave(UserDTO userDto) {
         log.info("userSaveDTO : {}" , userDto);
         // 일반회원 가입
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         System.out.println();
         log.info("=======================");
-        log.info("이미지 파일이 있을때 : " + userDto.getUserImg());
+        log.info("getUserImg : " + userDto.getUserImg());
         if(!(userDto.getUserImg() == null)) {
             log.info("이미지 파일이 있을때");
             UserImage userImage = saveMemberImage(userDto.getUserImg());
@@ -82,6 +85,7 @@ public class UserServiceImpl implements UserService {
         try {
             ImageDTO imageDTO =  fileService.createImageDTO(originalName, root);
             UserImage memberImage = UserImage.builder()
+                    .originFileName(imageDTO.getOriginFileName())
                     .uuid(imageDTO.getUuid())
                     .fileName(imageDTO.getFileName())
                     .fileUrl(imageDTO.getFileUrl())
@@ -137,6 +141,7 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    @Transactional
     @Override
     public String userPasswordModify(UserDTO userDTO) {
         log.info("비밀번호 수정 ==========================");
@@ -148,12 +153,15 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserTravel> i = userRepository.getUserByNameAndUserEmail(name, userEmail);
         if (i.isPresent()){
+
             UserTravel userTravel = i.get();
+
             log.info("존재하는 : {}",i);
             UserDTO dto = entityToDto(userTravel);
-            log.info("권한 확인: " + userTravel.getRoleSet());
             dto.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 패스워드 암호화
+
             UserTravel entity = dtoToEntity(dto); //entity 변경
+
             UserTravel save = userRepository.save(dtoToEntity(dto));
 
             return dto.getUserId();
@@ -225,5 +233,30 @@ public class UserServiceImpl implements UserService {
             log.info("에러 메시지2"+e.getMessage());
             return null;
         }
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDTO userInfo(UserTravelDTO userDTO) {
+        try {
+
+            Optional<UserTravel> result = userRepository.getUserPullByUserId(userDTO.getUserId());
+
+            if (result.isPresent()) {
+                log.info("!2");
+                UserTravel userTravel = result.get();
+                return UserResponseDTO.builder()
+                        .userNo(userTravel.getUserNo())
+                        .userId(userTravel.getUserId())
+                        .userImg(userTravel.getUserImg())
+                        .build();
+            } else {
+                log.info("!3");
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

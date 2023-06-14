@@ -1,8 +1,13 @@
 package com.example.travel.service.user;
 
+import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.dto.user.UserResponseDTO;
+import com.example.travel.security.dto.UserTravelDTO;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -20,6 +25,8 @@ public interface UserService {
     public String userGetName(String name,String email); // 아이디 찾기
     public UserDTO userGetPassword(String id,String name,String email); // 비밀번호 찾기
 
+    @Transactional
+    public UserResponseDTO userInfo(UserTravelDTO userDTO);
 
 
     default UserTravel dtoToEntity(UserDTO dto){
@@ -32,7 +39,7 @@ public interface UserService {
                 .userBirthday(dto.getUserBirthday())
                 .userGender(dto.getUserGender())
                 .userPhone(dto.getUserPhone())
-                //.userImg(dto.getUserImg())
+                //.userImg((UserImage)dto.getUserImg())
                 .address(dto.getAddress())
                 .addressPostcode(dto.getAddressPostcode())
                 .addressDetail(dto.getAddressDetail())
@@ -62,7 +69,7 @@ public interface UserService {
                 .userBirthday(userTravel.getUserBirthday())
                 .userGender(userTravel.getUserGender())
                 .userPhone(userTravel.getUserPhone())
-                //.userImg(userTravel.getUserImg())
+                //.userImg((MultipartFile)userTravel.getUserImg())
                 .address(userTravel.getAddress())
                 .addressPostcode(userTravel.getAddressPostcode())
                 .addressDetail(userTravel.getAddressDetail())

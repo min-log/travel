@@ -18,11 +18,8 @@ public abstract class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NonNull
     private String uuid;
-    @NonNull
     private String fileName;
-    @NonNull
+    private String originFileName;
     private String fileUrl;
 }

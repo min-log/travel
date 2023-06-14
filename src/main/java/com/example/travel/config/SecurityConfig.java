@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/main?login=true")
+                .defaultSuccessUrl("/loginCk")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
 
@@ -53,7 +53,7 @@ public class SecurityConfig {
 
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/loginForm");
+                .logoutSuccessUrl("/loginCk");
 
         http.oauth2Login(); //소셜 로그인 구글 추가
         

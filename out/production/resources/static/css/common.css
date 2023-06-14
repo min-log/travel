@@ -38,7 +38,8 @@ table td {padding:10px 10px;box-sizing: border-box}
 /*header*/
 header .container-fluid {justify-content: space-between !important;}
 header .align-items-center {justify-content: flex-end;}
-
+header .logo {width: 62px;}
+header .logo img {width:100%;height: auto;}
 
 .search_wrap {position: relative;}
 .search_wrap .form-control {padding-right: 30px}

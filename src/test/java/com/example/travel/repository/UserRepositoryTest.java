@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -118,5 +120,20 @@ public class UserRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("유저 이미지")
+    @Transactional
+    public void image(){
+        Optional<UserTravel> result = userRepository.getUserPullByUserId("admin");
+        if (result.isPresent()){
+            System.out.println("?");
+            UserTravel userTravel = result.get();
+            System.out.println(userTravel);
+            System.out.println(userTravel.getUserImg().getFileUrl());
+        }else{
+            System.out.println("없음");
+        }
+
+    }
 
 }

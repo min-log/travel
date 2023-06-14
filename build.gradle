@@ -48,6 +48,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    // https://mvnrepository.com/artifact/commons-io/commons-io 파일 저장
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+
 }
 
 tasks.named('test') {
