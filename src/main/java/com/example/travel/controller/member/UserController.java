@@ -36,31 +36,7 @@ public class UserController {
     private final MailSendService mailSendService;
 
 
-    @GetMapping("loginCk")
-    public String loginCheck(@AuthenticationPrincipal UserTravelAdapter user,
-                             HttpSession session){
-        log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
-
-
-        if (user != null){
-            log.info("로그인");
-            log.info(user.getUserId());
-            log.info(user.getProfile());
-            session.setAttribute("userT",user);
-
-            //log.info(userTravelDTO.getImageUrl());
-
-        }else{
-            log.info("로그아웃");
-            session.removeAttribute("user");
-        }
-
-        return "redirect:/main";
-    }
-
-
-
-    //==============7============================================
+    //==========================================================
     //회원가입
     @GetMapping("join")
     public String userJoinForm(Model model){

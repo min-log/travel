@@ -88,16 +88,17 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
                 .password("1111")
                 .userSocial(true)
                 .build();
+        userOAuth.roleAdd(UserRole.USER); // 권한 추가
         if (picture != null){ // 이미지가 있을경우
             UserImage build = UserImage.builder().originFileName(picture).build();
             UserImage ImageSaveResult = userImageRepository.save(build);
             userOAuth.updateUserImage(ImageSaveResult);
-            UserTravel save = userRepository.save(userOAuth);
+            UserTravel save = userRepository.save(userOAuth);  //저장
             UserTravelAdapter userTravelAdapter = new UserTravelAdapter(save, oAuth2User.getAttributes());
             userTravelAdapter.setProfile(ImageSaveResult.getOriginFileName());
             return userTravelAdapter;
         }else{
-            UserTravel save = userRepository.save(userOAuth);
+            UserTravel save = userRepository.save(userOAuth); //저장
             UserTravelAdapter userTravelAdapter = new UserTravelAdapter(save, oAuth2User.getAttributes());
             return userTravelAdapter;
         }

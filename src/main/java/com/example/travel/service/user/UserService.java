@@ -29,6 +29,11 @@ public interface UserService {
     public UserResponseDTO userInfo(UserTravelDTO userDTO);
 
 
+    //마이페이지=======================
+    //회원 프로필 변경
+    public Boolean UserProfileImage(UserDTO userDTO);
+
+
     //entity - dto  : 받는 값
     default UserTravel dtoToEntity(UserDTO dto){
         UserTravel result = UserTravel.builder()

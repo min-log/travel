@@ -259,4 +259,18 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+
+    @Override
+    public Boolean UserProfileImage(UserDTO userDTO) {
+        String userId = userDTO.getUserId();
+        Optional<UserTravel> userPullByUserId = userRepository.getUserPullByUserId(userId);
+        if (userPullByUserId.isPresent()){
+            UserImage userImg = userPullByUserId.get().getUserImg();
+
+        }else{
+            return false;
+        }
+        return null;
+    }
 }
