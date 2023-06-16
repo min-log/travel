@@ -9,6 +9,7 @@ import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.UserImageRepository;
 import com.example.travel.repository.UserRepository;
 import com.example.travel.security.dto.UserTravelDTO;
+import com.example.travel.security.service.UserTravelDetailsService;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
+
 
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
@@ -237,7 +239,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDTO userInfo(UserTravelDTO userDTO) {
+    public UserTravel userInfo(UserDTO userDTO) {
         try {
 
             Optional<UserTravel> result = userRepository.getUserPullByUserId(userDTO.getUserId());
@@ -245,11 +247,7 @@ public class UserServiceImpl implements UserService {
             if (result.isPresent()) {
                 log.info("!2");
                 UserTravel userTravel = result.get();
-                return UserResponseDTO.builder()
-                        .userNo(userTravel.getUserNo())
-                        .userId(userTravel.getUserId())
-                        .userImg(userTravel.getUserImg())
-                        .build();
+                return userTravel;
             } else {
                 log.info("!3");
                 return null;
@@ -261,16 +259,25 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Transactional
     @Override
-    public Boolean UserProfileImage(UserDTO userDTO) {
-        String userId = userDTO.getUserId();
-        Optional<UserTravel> userPullByUserId = userRepository.getUserPullByUserId(userId);
-        if (userPullByUserId.isPresent()){
-            UserImage userImg = userPullByUserId.get().getUserImg();
+    public String userProfileImage(UserDTO userDto) {
+        String userId = userDto.getUserId();
+        Optional<UserTravel> userPullByUser = userRepository.getUserPullByUserId(userId);
+        if (userPullByUser.isPresent()){
+            UserTravel userTravel = userPullByUser.get();
 
+            if(!(userDto.getUserImg() == null)) {
+                log.info("이미지 파일이 있을때");
+                UserImage userImage = saveMemberImage(userDto.getUserImg());
+                userTravel.updateUserImage(userImage);
+            }
+
+            UserTravel result = userRepository.save(userTravel);
+
+            return result.getUserImg().getOriginFileName();
         }else{
-            return false;
+            return null;
         }
-        return null;
     }
 }

@@ -10,7 +10,7 @@
       <!-- start : navbar -->
       <div class="navbar  ">
         <div class="profile_card border rounded-3 p-3 mb-3">
-          <p class="profile_image_wrap">
+          <p class="profile_image_wrap border">
             <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="">
             <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false && session.userT.profile == null}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="">
             <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == true}" th:src="${session.userT.profile}" src="/img/profile_img.png" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="">
@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-sm">
-            <a>
+            <a th:href="@{/mypage/userModify}">
               <h6 class="my-0">회원정보 수정</h6>
             </a>
           </li>

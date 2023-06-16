@@ -26,12 +26,12 @@ public interface UserService {
     public UserDTO userGetPassword(String id,String name,String email); // 비밀번호 찾기
 
     @Transactional
-    public UserResponseDTO userInfo(UserTravelDTO userDTO);
+    public UserTravel userInfo(UserDTO userDTO);
 
 
     //마이페이지=======================
     //회원 프로필 변경
-    public Boolean UserProfileImage(UserDTO userDTO);
+    public String userProfileImage(UserDTO userDTO);
 
 
     //entity - dto  : 받는 값

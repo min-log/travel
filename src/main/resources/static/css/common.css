@@ -68,7 +68,7 @@ header .gnb_wrap a + a:after {content:'';border-left:1px solid var(--color-main)
 /*tab*/
 .nav-tabs .nav-link {color:#888;}
 .tab-content {padding:20px 0;}
-.content_nav {display: flex;}
+.content_nav {display: flex;align-items: flex-start;}
 .navbar {width: 300px;}
 .navbar .list-group {width:100%;}
 
@@ -80,7 +80,7 @@ header .gnb_wrap a + a:after {content:'';border-left:1px solid var(--color-main)
 .content {width:calc(100% - 340px);margin-left:40px;}
 .content-tit {overflow:hidden;padding: 10px 0;}
 .content-tit * {display: inline-block}
-.content-tit .num:after {display:block;content: '';width:8px;height:8px;position:absolute;bottom: 0;left: 1px;background: var(--color-sub);}
+.content-tit .num:after {display:block;content: '';width:8px;height:8px;position:absolute;bottom: 0;left: 2px;background: var(--color-sub);z-index:-5;}
 .content-tit .num {background:var(--color-sub);border-radius:50%;width:24px;height:24px;line-height:24px !important;text-align:center;color:#fff;position: relative;margin-left:15px;top: -8px;transform: rotate(10deg);font-weight:bold;font-size:12px}
 .content-tit .btn {float:right;}
 .content-con {}

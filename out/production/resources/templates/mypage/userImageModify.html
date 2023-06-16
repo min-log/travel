@@ -8,7 +8,7 @@
     <div class="content_box" th:object="${userTravel}">
       <h2 class="tit text-center mb-4">회원 프로필 수정하기</h2>
 
-      <form th:action="@{/maypage/userImageModify}" method="post" enctype="multipart/form-data">
+      <form th:action="@{/mypage/userImageModify}" method="post" enctype="multipart/form-data">
         <div class="profile_card rounded-3 p-5 mb-3 m-auto">
           <div class="userimg_wrap">
             <p class="userimg_box">
@@ -21,9 +21,9 @@
             </label>
           </div>
           <input type="file" th:field="*{userImg}"  name="" id="userImg" accept="image/*" multiple="multiple" style="display:none">
-          <p class="id m-3 mb-5" th:text="${session.userT.userId}" ></p>
-          <input th:if="${session.userT != null}"  th:field="*{userId}" th:value="${session.userT.userId}" type="hidden" />
-          <a th:href="@{/mypage/userImageModify}" class="btn btn btn-primary" type="sudmit">회원 사진 변경하기</a>
+          <p class="id m-3 mb-5"  th:text="*{userId}" ></p>
+          <input th:field="*{userId}" th:name="*{userId}" th:id="*{userId}" th:value="*{userId}" type="hidden" />
+          <button class="btn btn btn-primary" type="submit">회원 사진 변경하기</button>
         </div>
       </form>
     </div>
@@ -46,7 +46,7 @@
     </script>
     <!-- end 프로필 이미지 -->
 
-
+  </div>
 
 </th:block>
 </html>

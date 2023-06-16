@@ -1,6 +1,7 @@
 package com.example.travel.security.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
