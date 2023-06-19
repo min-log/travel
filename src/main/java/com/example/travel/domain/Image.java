@@ -21,5 +21,5 @@ public abstract class Image {
     private String uuid;
     private String fileName;
     private String originFileName;
-    private String fileUrl;
+    private String path; // 폴더 생성 날짜
 }

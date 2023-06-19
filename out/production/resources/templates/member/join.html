@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}">
-<th:block layout:fragment="content">
-  <div class="container-fluid mt-5"  >
+<th:block layout:fragment="content" >
+  <div class="container-fluid mt-5" th:object="${userTravel}" >
     <div>
       <h2 class="tit text-center mb-4">회원가입</h2>
 
-      <form id="joinForm" th:action="@{/join}" th:object="${userTravel}" enctype="multipart/form-data" th:method="post" class="box content_box" >
+      <form id="joinForm" th:action="@{/join}" enctype="multipart/form-data" th:method="post" class="box content_box" >
         <input th:type="hidden" name="idCheckValue" id="idCheckValue" value="false">
         <input th:type="hidden" name="emailCheckValue" id="emailCheckValue" value="false">
         <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="hidden">

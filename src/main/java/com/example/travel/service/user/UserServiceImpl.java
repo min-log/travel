@@ -55,9 +55,13 @@ public class UserServiceImpl implements UserService {
         System.out.println();
         log.info("getUserImg : " + userDto.getUserImg());
         if(!(userDto.getUserImg() == null)) {
-            log.info("이미지 파일이 있을때");
-            UserImage userImage = saveMemberImage(userDto.getUserImg());
-            entity.updateUserImage(userImage);
+            MultipartFile userImg = userDto.getUserImg();
+            log.info("저장하자");
+
+            UserImage imageDTO = fileService.createImageDTO(userImg);
+            UserImage save = userImageRepository.save(imageDTO);
+            log.info("저장됨");
+            entity.updateUserImage(save);
         }
 
         UserTravel result = userRepository.save(entity);
@@ -66,37 +70,6 @@ public class UserServiceImpl implements UserService {
 
 
 
-    //이미지 관련
-    @Transactional(readOnly = false)
-    UserImage saveMemberImage(MultipartFile file) {
-        log.info("이미지 저장 ==========================");
-        if(file.getContentType().startsWith("image") == false) {
-            log.warn("이미지 파일이 아닙니다.");
-            return null;
-        }
-
-        String originalName = file.getOriginalFilename();
-        Path root = Paths.get(uploadPath, "member");
-
-        try {
-            ImageDTO imageDTO =  fileService.createImageDTO(originalName, root);
-            UserImage memberImage = UserImage.builder()
-                    .originFileName(imageDTO.getOriginFileName())
-                    .uuid(imageDTO.getUuid())
-                    .fileName(imageDTO.getFileName())
-                    .fileUrl(imageDTO.getFileUrl())
-                    .build();
-
-            file.transferTo(Paths.get(imageDTO.getFileUrl()));
-
-            return userImageRepository.save(memberImage);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.warn("업로드 폴더 생성 실패: " + e.getMessage());
-        }
-
-        return null;
-    }
 
 
     @Override
@@ -264,14 +237,20 @@ public class UserServiceImpl implements UserService {
     public String userProfileImage(UserDTO userDto) {
         String userId = userDto.getUserId();
         Optional<UserTravel> userPullByUser = userRepository.getUserPullByUserId(userId);
+
         if (userPullByUser.isPresent()){
             UserTravel userTravel = userPullByUser.get();
 
             if(!(userDto.getUserImg() == null)) {
-                log.info("이미지 파일이 있을때");
-                UserImage userImage = saveMemberImage(userDto.getUserImg());
-                userTravel.updateUserImage(userImage);
+                MultipartFile userImg = userDto.getUserImg();
+                log.info("저장하자");
+
+                UserImage imageDTO = fileService.createImageDTO(userImg);
+                UserImage save = userImageRepository.save(imageDTO);
+                log.info("저장됨");
+                userTravel.updateUserImage(save);
             }
+
 
             UserTravel result = userRepository.save(userTravel);
 

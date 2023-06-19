@@ -50,6 +50,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/commons-io/commons-io 파일 저장
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    // 썸네일 이미지 생성 라이브러리
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
 
 
 }

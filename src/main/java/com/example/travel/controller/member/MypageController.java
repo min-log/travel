@@ -1,8 +1,10 @@
 package com.example.travel.controller.member;
 
+import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
+import com.example.travel.repository.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.security.service.UserTravelDetailsService;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -31,15 +34,43 @@ import java.util.Map;
 @RequestMapping("/mypage")
 public class MypageController {
     private final UserService  userService;
-    private final UserTravelDetailsService userTravelDetailsService;
-
+    final UserImageRepository userImageRepository;
     @GetMapping("")
-    public String myPage(HttpServletRequest request, Model model){
+    public String myPage(@AuthenticationPrincipal UserTravelAdapter user,
+                         HttpSession session,
+                         HttpServletRequest request, Model model){
         log.info("마이페이지");
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
             model.addAttribute("login",flashMap.get("login"));
         }
+
+
+
+        //log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
+        if (user != null){
+            log.info("로그인"); String profile = user.getProfile();
+            String img=null;
+
+            Optional<UserImage> byOriginFileName = userImageRepository.findByOriginFileName(profile);
+            if (byOriginFileName.isPresent()){
+                log.info("있음");
+                UserImage userImage = byOriginFileName.get();
+                String path = userImage.getPath();
+                String originFileName = userImage.getOriginFileName();
+                img = "\\upload\\" +path +"\\"+ originFileName;
+                user.setProfile(img);
+            }else {
+                log.info("없음");
+            }
+            session.setAttribute("userT",user);
+        }else{
+            log.info("로그아웃");
+            session.removeAttribute("user");
+        }
+
+
+
 
         return "mypage/main";
     }
