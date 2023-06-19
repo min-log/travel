@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>layout</title>
-  <th:bloc th:replace="layout/config::config"></th:bloc>
+  <th:block th:replace="layout/config::config"></th:block>
 </head>
 <body>
-  <th:bloc th:replace="layout/header::header"></th:bloc>
+  <th:block th:replace="layout/header::header"></th:block>
   <div id="contentWrap">
-    <th:bloc layout:fragment="content"></th:bloc>
+    <th:block layout:fragment="content"></th:block>
   </div>
-  <th:bloc th:replace="layout/footer::footer"></th:bloc>
+  <th:block th:replace="layout/footer::footer"></th:block>
 </body>
 </html>
