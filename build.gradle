@@ -28,6 +28,18 @@ dependencies {
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
     // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'//구글소셜로그인
+
+    // 이메일 설정 - 아파치
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-email
+    implementation group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+    // javamail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // https://mvnrepository.com/artifact/javax.mail/mail
+//    implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
+////    // 기타 종속성 - 보안
+////    implementation 'javax.net.ssl:javax.net.ssl-api:1.4.1'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -35,6 +47,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // https://mvnrepository.com/artifact/commons-io/commons-io 파일 저장
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
 
 }
 

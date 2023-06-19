@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Getter
 @Builder
-@Entity
+@ToString(exclude = "roleSet")
 public class UserTravel extends BaseEntity {
 
     @Id
@@ -21,14 +21,13 @@ public class UserTravel extends BaseEntity {
     private String userId;
     private String userEmail;
     private String password;
-    private String userName;
+    private String name;
     private String userBirthday;
     private String userGender;
     private String userPhone;
 
-
-    private String userImg;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    private UserImage userImg;//프로필 사진
     //주소
     private String addressPostcode;
     private String address;
@@ -48,6 +47,10 @@ public class UserTravel extends BaseEntity {
     }
 
 
+    //이미지 업데이트 시 사용
+    public void updateUserImage(UserImage userImg) {
+        this.userImg = userImg;
+    }
 
 
 

@@ -8,6 +8,7 @@
 .ml-2 {margin-left: 0.5rem!important}
 
 * {font-family: S-CoreDream-3Light !important;color:#333;font-size:14px;line-height:1.4em !important;}
+b {font-weight:bold;}
 a {text-decoration: none;color:#333;}
 a:hover {color:#333;}
 table {width: 100%;table-layout: fixed;}
@@ -16,11 +17,16 @@ table th,
 table td {padding:10px 10px;box-sizing: border-box}
 :root {
     --color-main:#2595ff;
+    --color-sub: #ff6200;
+    --color-err: #dc3545;
+    --color-bg:#eee;
+
 
 }
 .btn-primary {background:var(--color-main);}
-
-
+.point-color {color:var(--color-main);}
+.point-err {color:var(--color-err);}
+.box-gray {background:var(--color-bg);}
 
 
 #contentWrap {min-height:calc(100vh - 170px)}
@@ -28,23 +34,56 @@ table td {padding:10px 10px;box-sizing: border-box}
 
 
 .tit {font-size: 24px;font-weight: bold}
+.tit_con {font-size:16px;font-weight:bold;color:var(--color-main);}
 .txt_info {color: #999;font-size: 12px;}
 .txt_info.ck {display:inline-block;maring-left:4px;margin-left: 4px;vertical-align: top;color:var(--color-main);font-size: 16px;}
 /*header*/
 header .container-fluid {justify-content: space-between !important;}
 header .align-items-center {justify-content: flex-end;}
+header .logo {width: 80px;height:auto}
+header .logo img {width:100%;height: auto;}
 
 
+header .user_info .link-dark {display: flex !important;align-items: center;}
+header .user_info .link-dark i {font-size: 15px;transition: 1s}
+header .user_info .profile_image_wrap {width:40px;height:40px;border:2px solid var(--color-main);border-radius:50%;background:#fff;box-sizing:border-box;overflow: hidden}
+header .user_info .profile_image_wrap img {width:100%;height:100%;transition: 1s}
+header .user_info .link-dark:hover i {
+    animation-duration:2s;
+    animation-direction:alternate;
+    animation-fill-mode: forwards;
+    font-size: 30px;
+    color: var(--color-main);
+}
+header .user_info .link-dark:hover .profile_image_wrap img {transform: scale(1.9);}
+header .dropdown-menu .txt {font-size:12px;}
+header .gnb_wrap a {font-weight:bold;position:relative;}
+header .gnb_wrap a + a:after {content:'';border-left:1px solid var(--color-main);display:block;position:absolute;top: calc(100% - 9px);left:0;height: 16px;transform: translate(-1px,-100%);}
 .search_wrap {position: relative;}
 .search_wrap .form-control {padding-right: 30px}
 .search_wrap .form-control::placeholder {color: var(--color-main);opacity: 0.8;}
 .search_wrap button[type="submit"] {position: absolute;background: none;border:0;top:50%;right:0;transform: translate(0,-50%);}
 .search_wrap button[type="submit"] .bi-search::before {font-size: 20px;font-weight:bold !important;color:var(--color-main);}
 
+/*tab*/
+.nav-tabs .nav-link {color:#888;}
+.tab-content {padding:20px 0;}
+.content_nav {display: flex;align-items: flex-start;}
+.navbar {width: 300px;}
+.navbar .list-group {width:100%;}
 
+.profile_card {width:100%;max-width:600px;display: flex;align-content: center;flex-direction:column;align-items:center;}
+.profile_card .profile_image_wrap {width:200px;height:200px;border-radius:50%;overflow:hidden;}
+.profile_card .profile_image_wrap img {width:100%;height:100%;}
+.profile_card .id {font-weight:bold;}
 
-
-
+.content {width:calc(100% - 340px);margin-left:40px;}
+.content-tit {overflow:hidden;padding: 10px 0;}
+.content-tit * {display: inline-block}
+.content-tit .num:after {display:block;content: '';width:8px;height:8px;position:absolute;bottom: 0;left: 2px;background: var(--color-sub);z-index:-5;}
+.content-tit .num {background:var(--color-sub);border-radius:50%;width:24px;height:24px;line-height:24px !important;text-align:center;color:#fff;position: relative;margin-left:15px;top: -8px;transform: rotate(10deg);font-weight:bold;font-size:12px}
+.content-tit .btn {float:right;}
+.content-con {}
 /*지도*/
 .map_wrap {position:relative;width:100%;height:500px;}
 .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
@@ -82,8 +121,6 @@ header .align-items-center {justify-content: flex-end;}
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
-
-
 
 .travel_list {min-width:300px;}
 

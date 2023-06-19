@@ -1,43 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <th:block th:fragment="header">
-        <header class="py-3 border-bottom">
-                <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: auto 2fr;">
-                        <div class="logo">
-                                <p class="d-flex align-items-center col-lg-4 mb-2 mb-lg-0 link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                                </p>
-                        </div>
+  <header class="py-2 border-bottom">
+    <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: auto 2fr;">
+      <a class="logo" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" />
+      </a>
 
-                        <div class="d-flex align-items-center">
-                                <a href="#">여행지 찾기</a>
-                                <div class="search_wrap w-50 me-3">
+      <div class="d-flex align-items-center">
+        <div class="gnb_wrap">
+          <a href="#" class="p-2">여행만들기</a>
+          <a href="#" class="p-2">여행지모아모아</a>
+        </div>
+        <div class="search_wrap w-50 m-3">
+          <form role="search" onsubmit="searchPlaces(); return false;" >
+            <input type="text" class="form-control" value="" placeholder="원하는 장소를 입력하세요✈️" id="keyword" size="15" aria-label="Search">
+            <button type="submit"><i class="bi bi-search"></i></button>
+          </form>
+          <div id="menu_wrap" class="bg_white">
+            <ul id="placesList"></ul>
+            <div id="pagination"></div>
+          </div>
+        </div>
 
-                                        <form role="search" onsubmit="searchPlaces(); return false;" >
-                                                <input type="text" class="form-control" value="" placeholder="원하는 장소를 입력하세요✈️" id="keyword" size="15" aria-label="Search">
-                                                <button type="submit"><i class="bi bi-search"></i></button>
-                                        </form>
-                                  <div id="menu_wrap" class="bg_white">
-                                    <ul id="placesList"></ul>
-                                    <div id="pagination"></div>
-                                  </div>
-                                </div>
 
+        <div class="user_info flex-shrink-0 dropdown">
+          <a href="#" class="link-dark text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
+            <p class="profile_image_wrap">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false}" th:src="'/upload/member/' + ${session.userT.profile}" src="https://github.com/mdo.png"  th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == true}" th:src="${session.userT.profile}" src="https://github.com/mdo.png"  th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="rounded-circle">
+              <img sec:authorize="isAnonymous()" src="/img/profile_img.png" alt="유저이미지" class="rounded-circle">
+            </p>
+            <i class="bi bi-arrow-down-short"></i>
 
-                                <div class="flex-shrink-0 dropdown">
-                                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                                        </a>
-                                        <ul class="dropdown-menu text-small shadow">
-                                                <li><a class="dropdown-item" href="#">New project...</a></li>
-                                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item" href="#">Sign out</a></li>
-                                        </ul>
-                                </div>
-                        </div>
-                </div>
-        </header>
+          </a>
+          <div class="dropdown-menu text-small shadow">
+            <ul sec:authorize="isAnonymous()">
+              <li class="p-3 txt">
+                소중한 여행을 계획하고 기록해보세요. ✏️
+              </li>
+              <li class="border-top pt-2">
+                <a class="dropdown-item" th:href="@{/loginForm}">로그인</a>
+                <a class="dropdown-item" th:href="@{/join}">회원가입</a>
+              </li>
+            </ul>
+            <ul sec:authorize="isAuthenticated()">
+              <li><a class="dropdown-item" href="#">내 여행</a></li>
+              <li><a class="dropdown-item" href="#">찜리스트</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" th:href="@{/logout}" href="/logout">로그아웃</a>
+                <a class="dropdown-item" th:href="@{/mypage}">마이페이지</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
 </th:block>
 </html>

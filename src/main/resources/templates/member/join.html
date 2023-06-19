@@ -3,12 +3,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-  <div class="container-fluid mt-5" th:object="${userTravel}" >
+  <div class="container-fluid mt-5"  >
     <div>
       <h2 class="tit text-center mb-4">회원가입</h2>
 
-      <form id="joinForm" th:action="@{/join}" th:method="post" class="box content_box" >
-
+      <form id="joinForm" th:action="@{/join}" th:object="${userTravel}" enctype="multipart/form-data" th:method="post" class="box content_box" >
+        <input th:type="hidden" name="idCheckValue" id="idCheckValue" value="false">
+        <input th:type="hidden" name="emailCheckValue" id="emailCheckValue" value="false">
+        <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="hidden">
         <table>
           <colgroup>
             <col style="width:100px">
@@ -22,29 +24,57 @@
               </label>
             </th>
             <td>
-              <input th:field="*{userId}"  name="userId" id="userId" class="form-control id"
+              <div class="x_auto">
+                <input th:field="*{userId}" name="userId" id="userId" class="form-control id"
                      th:errorclass="err" type="text" placeholder="아이디를 입력하세요.">
+                <button type="button" id="btnIdCheck" class="btn btn-dark btn-sm ml-2">확인</button>
+              </div>
+              <p class="check-msg-id txt_info mt-1"></p>
             </td>
           </tr>
           <tr>
             <th>비밀번호 <span class="txt_info ck">*</span></th>
             <td>
-              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="비밀번호를 입력하세요.">
+              <input th:field="*{password}" name="password" id="password" type="password" class="form-control" placeholder="영어와 숫자로 포함해서 6~12자리 이내로 입력해주세요.">
             </td>
           </tr>
           <tr>
-            <th>이름 <span class="txt_info ck">*</span></th>
-            <td><input th:field="*{userName}"  name="userName" id="userName" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
+            <th><label for="name">이름 <span class="txt_info ck">*</span></label></th>
+            <td><input th:field="*{name}"  name="name" id="name" class="form-control" type="text" placeholder="이름을 입력하세요."></td>
           </tr>
           <tr>
             <th>생년월일 <span class="txt_info ck">*</span></th>
-            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" placeholder="생년월일 6자리를 입력하세요."></td>
+            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="생년월일 6자리를 입력하세요." maxlength="6"></td>
           </tr>
 
           <tr>
-            <th>이메일 <span class="txt_info ck">*</span></th>
+            <th><label for="userEmail1">이메일 <span class="txt_info ck">*</span></label></th>
             <td>
-              <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="text" placeholder="이메일을 입력하세요.">
+
+              <div class="input-group">
+                <input type="text" class="form-control" name="userEmail1" id="userEmail1" placeholder="이메일" >
+                <select class="form-select select" name="userEmail2" id="userEmail2" >
+                  <option>@naver.com</option>
+                  <option>@daum.net</option>
+                  <option>@gmail.com</option>
+                  <option>@hanmail.com</option>
+                  <option>@yahoo.co.kr</option>
+                </select>
+                <div class="input-group-addon">
+                  <button type="button" class="btn btn-dark" id="mail-Check-Btn" >본인인증</button>
+                </div>
+              </div>
+              <div class="x_auto mt-1 mail-check-wrap" style="display:none;">
+                <div class="mail-check-box">
+                  <input class="form-control mail-check-input" placeholder="인증번호 8자리를 입력해주세요!" disabled="disabled" maxlength="8">
+                  <p id="timerUp">
+                    <span id="timer" class="point-color"></span>
+                    <i class='bi bi-clock point-color'></i>
+                  </p>
+                </div>
+                <button id="mailCheckPw" class="btn btn-danger btn-sm ml-2" type="button">인증확인</button>
+              </div>
+              <p class="mail-check-warn check-msg-email txt_info mt-1"></p>
             </td>
           </tr>
 
@@ -55,16 +85,16 @@
           <tr>
             <th>주소  <span class="txt_info ck">*</span></th>
             <td class="address_wrap">
-              <div class="address_post">
+              <div class="address_post x_auto">
                 <input type="text" id="addressPostcode" th:field="*{addressPostcode}" placeholder="우편번호" class="form-control">
-                <input type="button" onclick="addressPostcodes()" value="우편번호 찾기" class="btn btn-dark btn-sm">
+                <input type="button" onclick="addressPostcodes()" value="우편번호 찾기" class="btn btn-dark btn-sm ml-2">
               </div>
               <div class="address_info">
                 <input type="text" id="address" th:field="*{address}" placeholder="주소" class="form-control">
               </div>
-              <div class="address_detail">
+              <div class="address_detail x_auto">
                 <input type="text" id="addressDetail" th:field="*{addressDetail}" placeholder="상세주소" class="form-control">
-                <input type="text" id="addressExtra" th:field="*{addressExtra}" placeholder="참고항목" class="form-control">
+                <input type="text" id="addressExtra" th:field="*{addressExtra}" placeholder="참고항목" class="form-control ml-2">
               </div>
 
 
@@ -91,7 +121,7 @@
                 <label for="userImg" class="btn btn-dark btn-sm ">
                   👆프로필 선택하기👆
                 </label>
-                <input type="file" th:field="*{userImg}"  name="userImg" id="userImg" accept="image/*">
+                <input type="file" th:field="*{userImg}"  name="" id="userImg" accept="image/*" multiple="multiple">
               </div>
             </td>
           </tr>
@@ -113,11 +143,12 @@
 
 
     <!-- Modal -->
-    <script type="text/javascript" th:if="${#fields.hasErrors()} or *{idCk}">
+    <script type="text/javascript" th:if="${#fields.hasErrors()}">
         $(document).ready(function (){
             $('#modalJoin').modal("show");
         })
     </script>
+
     <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -127,28 +158,29 @@
           </div>
           <div class="modal-body">
             <p class="modal-message">
-              <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">
-              아이디 변경 : 이미 존재하는 아이디 입니다.
-               </span>
-              <br />
+
+<!--              <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">-->
+<!--              아이디 변경 : 이미 존재하는 아이디 입니다.-->
+<!--               </span>-->
+<!--              <br />-->
               <span th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></span>
               <br />
               <span th:if="${#fields.hasErrors('userBirthday')}" th:errors="*{userBirthday}"></span>
               <br />
               <span th:if="${#fields.hasErrors('userPhone')}" th:errors="*{userPhone}"></span>
               <br />
-              <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+              <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
               <br />
-              <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+              <!--
+              <span th:if="${#fields.hasErrors('getUserId')}" th:errors="*{getUserId}"></span>
+              -->
             </p>
           </div>
         </div>
       </div>
     </div>
 
-
   </div>
-
 
 
 
@@ -224,12 +256,216 @@
   </script>
   <!-- end 주소 팝업 -->
 
-  <!-- start 폼 저장 및 모달 -->
-  <script type="text/javascript">
-      // 아이디 확인
+
+
+
+
+  <!-- 회원가입 기능 폼 저장 및 모달-->
+  <script>
+     // strart :아이디 유효 확인 및 이메일 인증
+
+      //아이디 체크
+      let idInput = $("#userId"); // 아이디
+      let idCheckValue = $("#idCheckValue"); // 아이디가능 성공여부
+
+      //이메일 체크
+      let emailValue = $('#userEmail'); // 이메일
+      let emailCheckValue = $('#emailCheckValue'); // 이메일인증 성공여부
+      let  formSubmit = $('#mailCheckPw');
+      let checkInput = $('.mail-check-input') // 인증번호 입력하는곳
+      let msg = "";
+
+      // 인증코드 유효시간 카운트다운 및 화면 출력
+      let timer; //카운트 다운
+      let isRunning = false; //인증 코드 유효
+
+      // 타이머 함수 실행
+      function sendAuthNum(){
+          // 남은 시간(초)
+          let leftSec = 60,
+              display = document.querySelector('#timer');
+          // 이미 타이머가 작동중이면 중지
+          if (isRunning){
+              clearInterval(timer);
+          }
+          startTimer(leftSec, display);
+      }
+
+      function startTimer(count, display) {
+          let minutes, seconds;
+          timer = setInterval(function () {
+              minutes = parseInt(count / 60, 10);
+              seconds = parseInt(count % 60, 10);
+              minutes = minutes < 10 ? "0" + minutes : minutes;
+              seconds = seconds < 10 ? "0" + seconds : seconds;
+              display.textContent = minutes + ":" + seconds;
+              // 타이머 종료
+              if (--count < 0) {
+                  clearInterval(timer);
+                  display.textContent = "";
+                  code = null;
+                  isRunning = false;
+              }
+          }, 1000);
+          isRunning = true;
+      }
+
+      function emailSendNot(email){
+          //console.log(email);
+
+          msg  += "<div class='text-center'>";
+          msg  += "<b class='border box-gray p-2 mb-3 mt-3' style='display:inline-block'>"+email+"</b>";
+          msg  += "<p>이미 인증번호가 위 이메일로 전송되었습니다.</p>";
+          msg  += "</div>";
+
+          $('#modalJoin .modal-title').html("회원인증");
+          $('#modalJoin .modal-message').html(msg);
+          $('#modalJoin').modal("show");
+      }
+
+      function emailSend(email){
+          //console.log("email : {}",email);
+
+          $.ajax({
+              type : 'get',
+              url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+              success : function (data) {
+                  //console.log("data : {}",data);
+                  msg  += "<div class='text-center'>";
+                  msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";
+                  msg  += "<b class='border box-gray p-2 mb-3 mt-3' style='display:inline-block'>"+email+"</b>";
+                  msg  += "<p class='point-color info'>1분 이내로 입력해주세요.</p>";
+                  msg  += "<p>인증번호가 위 이메일로 전송되었습니다.</p>";
+                  msg  += "</div>";
+
+                  //alert('인증번호가 전송되었습니다.');
+                  $('#modalJoin .modal-title').html("회원인증");
+                  $('#modalJoin .modal-message').html(msg);
+                  $('#modalJoin').modal("show");
+
+                  $(".mail-check-wrap").show();
+                  checkInput.attr('disabled',false);
+
+                  code = data;
+                  sendAuthNum(); //타이머 추가
+              }
+          }); // end ajax
+
+      }
+      $(function(){
+          //본인인증 버튼 클릭
+          $('#mail-Check-Btn').click(function() {
+              const email = $('#userEmail1').val() + $('#userEmail2').val(); // 이메일 주소값 얻어오기!
+              $.ajax({
+                 type:'get',
+                 url:'user/emailCheck?userEmail='+email,
+                 success:function (data){
+                    if (data){
+                        msg = "<span>이미 존재하는 이메일입니다.<br />회원 확인을 해주세요.</span>"
+                        $("#modalJoin").modal("show");
+                        $(".modal-message").html(msg);
+                    }else{
+                        if (isRunning){
+                            msg = "";
+                            emailSendNot(email);
+                        }else{
+                            msg = "";
+                            emailValue.val(email);
+                            emailSend(email);
+                        }
+                    }
+                 },
+                  error:function (request,status,error){
+
+                  },
+                  complete:function (data) {
+
+                  }
+              });
+
+
+          }); // end send eamil
+
+          // 인증번호 비교
+          formSubmit.click(function () {
+              let checkInputVal = checkInput.val(); // 인증번호 값
+              const resultMsg = $('.mail-check-warn');
+              //console.log("checkInputVal : "+checkInputVal);
+              msg = "";
+              if(checkInputVal === code){
+                  msg += "<span class='point-color'>인증번호가 일치합니다.</span>";
+
+                  resultMsg.html(msg);
+                  resultMsg.css('color','red');
+                  emailCheckValue.val(true);
+                  $('#userEmail1, #userEmail2, #mail-Check-Btn').attr('disabled',true);
+                  $('#timerUp').hide();
+                  checkInput.attr('disabled',true);
+              }else{
+                  msg += "<span class='point-err'>인증번호가 불일치 합니다. 다시 확인해주세요!.</span>";
+                  resultMsg.html(msg);
+                  resultMsg.css('color','red');
+                  emailCheckValue.val(false);
+              }
+          });
+
+
+
+
+
+          // 아이디 확인
+          $("#btnIdCheck").on('click',function(){
+
+              let id = idInput.val();
+              if (id == null || id == ""){ //값이 없으면 막기
+                  return false;
+              }
+              // 값이 있을때 실행
+              $.ajax({
+                  type : 'get',
+                  url: 'user/idCheck?id='+id,
+                  success:function (data){
+                      //console.log(data);
+                      msg="";
+                      if (data){
+                          $("#userId").removeClass("err");
+                          msg += "<span class='point-color'>사용가능한 아이디 입니다.</span>";
+                          idCheckValue.val(true);
+
+                      }else{
+                          $("#userId").addClass("err");
+                          msg += "<span class='point-err'>이미 존재하는 아이디 입니다. </span>";
+                          idCheckValue.val(false);
+                      }
+                      $(".check-msg-id").html(msg);
+                  }
+              });
+
+
+          });
+
+
+          $("#userId").on('change changed',function (){
+              $(this).removeClass("err");
+              idCheckValue.val(false);
+              $(".check-msg-id").html("");
+          });
+
+      });
+
+
+
+
+     // end :아이디 유효 확인 및 이메일 인증
+
+
+
+     // start 폼 저장 및 모달
+
 
       $(function(){
-          $('input.err').on("change",function (){
+
+          $('input.err').on("change changed",function (){
               $(this).removeClass("err");
               if($('input.err').hasClass("id")){
                   $('.err_txt').hide();
@@ -239,63 +475,81 @@
       });
 
       function joinForm(){
-          if(document.getElementById("userId").value==''){
+          //console.log($("#idCheckValue").val());
+          //console.log("idCheckValue" + idCheckValue.val());
+
+            if(document.getElementById("userId").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('아이디를 입력해주세요.');
+                $("#userId").addClass('err');
+
+                return false;
+            }
+            if (document.getElementById("idCheckValue").value == 'false'){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('사용 가능한 아이디를 확인을 해주세요.');
+                $("#userId").addClass('err');
+                return false
+            }
+
+            if(document.getElementById("password").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('비밀번호를 입력해주세요.');
+                $("#password").addClass('err');
+
+                return false;
+            }
+
+            if(document.getElementById("name").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('이름을 입력해주세요.');
+                $("#name").addClass('err');
+
+
+                return false;
+            }
+            if(document.getElementById("userEmail").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('이메일을 입력해주세요.');
+                $("#userEmail1").addClass('err');
+                return false;
+            }
+
+          if (document.getElementById("emailCheckValue").value == 'false'){
               $('#modalJoin').modal("show");
-              $('.modal-message').html('아이디를 입력해주세요.');
-              $("#userId").addClass('err');
-
-              return false;
-          }
-          if(document.getElementById("password").value==''){
-              $('#modalJoin').modal("show");
-              $('.modal-message').html('비밀번호를 입력해주세요.');
-              $("#password").addClass('err');
-
-              return false;
+              $('.modal-message').html('이메일 인증을 해주세요.');
+              $("#userEmail1").addClass('err');
+              return false
           }
 
-          if(document.getElementById("userName").value==''){
-              $('#modalJoin').modal("show");
-              $('.modal-message').html('이름을 입력해주세요.');
-              $("#userName").addClass('err');
 
+            if(document.getElementById("userPhone").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('연락처를 입력해주세요.');
+                $("#userPhone").addClass('err');
+                return false;
+            }
 
-              return false;
-          }
-          if(document.getElementById("userEmail").value==''){
-              $('#modalJoin').modal("show");
-              $('.modal-message').html('이메일을 입력해주세요.');
-              $("#userEmail").addClass('err');
-              return false;
-          }
+            if(document.getElementById("address").value==''){
+                $('#modalJoin').modal("show");
+                $('.modal-message').html('주소를 입력해주세요.');
+                $("#address").addClass('err');
+                return false;
+            }
 
-          if(document.getElementById("userPhone").value==''){
-              $('#modalJoin').modal("show");
-              $('.modal-message').html('연락처를 입력해주세요.');
-              $("#userPhone").addClass('err');
-              return false;
-          }
+            if(document.getElementById("userBirthday").value==''){
+                $('#modalJoin').modal("show");
+                let html = "<div>생년월일 6자리를 입력해주세요.<div>"
+                + "<br>ex. 230423";
+                $('.modal-message').html(html);
+                $("#userBirthday").addClass('err');
+                return false;
+            }
 
-          if(document.getElementById("address").value==''){
-              $('#modalJoin').modal("show");
-              $('.modal-message').html('주소를 입력해주세요.');
-              $("#address").addClass('err');
-              return false;
-          }
-
-          if(document.getElementById("userBirthday").value==''){
-              $('#modalJoin').modal("show");
-              let html = "<div>생년월일 6자리를 입력해주세요.<div>"
-              + "<br>ex. 230423";
-              $('.modal-message').html(html);
-              $("#userBirthday").addClass('err');
-              return false;
-          }
-
-          if ( ! $('input[name=userAgree]:checked').val()) {
-              alert('개인정보 활용에 동의해주세요.');
-              return false;
-          }
+            if ( ! $('input[name=userAgree]:checked').val()) {
+                alert('개인정보 활용에 동의해주세요.');
+                return false;
+            }
 
           document.getElementById('joinForm').submit();
       }
