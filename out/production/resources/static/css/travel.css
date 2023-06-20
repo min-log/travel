@@ -2,7 +2,7 @@
 .travel_add_box .search_boxes {display: flex}
 .travel_add_box .search_boxes select + select {margin-left: 10px;}
 
-
+input[readonly]{border:0;cuser:none;outline: none}
 /*회원가입*/
 .x_auto {display: flex;}
 .err {outline: 2px solid var(--color-err);}

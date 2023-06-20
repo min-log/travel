@@ -96,11 +96,13 @@
             </li>
           </ul>
         </div>
-
-
       </div>
     </div>
   </div>
+
+  <script th:if="${msg}">
+    alert("회원정보 수정이 완료되었습니다.")
+  </script>
 
 </th:block>
 </html>

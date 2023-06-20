@@ -54,17 +54,6 @@ class UserTravelServiceTest {
     @Test
     @DisplayName("3. user 정보 수정")
     public void test3(){
-        UserDTO dto = UserDTO.builder()
-                .userNo(1L)
-                .userEmail("admin@gmail.com")
-                .password("admin")
-                .name("수정 관리자")
-                .userPhone("010-2333-2333")
-                .address("경기도")
-                .build();
-
-        UserDTO result = userService.userModitfy(dto);
-        System.out.println(result);
 
     }
 

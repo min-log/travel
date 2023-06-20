@@ -147,31 +147,65 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Transactional
     @Override
-    public UserDTO userModitfy(UserDTO userSaveDTO) {
-        log.info("회원정보 수정 =====================");
-        UserDTO dto = UserDTO.builder()
-                .userNo(userSaveDTO.getUserNo())
-                .userId(userSaveDTO.getUserId())
-                .userEmail(userSaveDTO.getUserEmail())
-                .password(userSaveDTO.getPassword())
-                .name(userSaveDTO.getName())
-                .userBirthday(userSaveDTO.getUserBirthday())
-                .userGender(userSaveDTO.getUserGender())
-                .userPhone(userSaveDTO.getUserPhone())
-                .address(userSaveDTO.getAddress())
-                .addressPostcode(userSaveDTO.getAddressPostcode())
-                .addressDetail(userSaveDTO.getAddressDetail())
-                .addressExtra(userSaveDTO.getAddressExtra())
-                .userImg(userSaveDTO.getUserImg())
-                .build();
+    public boolean userModitfy(UserDTO userSaveDTO) {
 
-        log.info("dto : {}",dto);
-        UserTravel entity = dtoToEntity(dto);
-        log.info("entity : {}",entity);
-        UserTravel entitySave = userRepository.save(entity);
-        log.info("entitySave : {}",entitySave);
-        return entityToDto(entitySave);
+        UserTravel userTravel = userInfo(userSaveDTO);
+        UserResponseDTO userResponseDTO = entityToResponseDto(userTravel);
+        userResponseDTO.setName(userSaveDTO.getName());
+        userResponseDTO.setUserBirthday(userSaveDTO.getUserBirthday());
+        userResponseDTO.setUserGender(userSaveDTO.getUserGender());
+        userResponseDTO.setUserPhone(userSaveDTO.getUserPhone());
+        userResponseDTO.setAddress(userSaveDTO.getAddress());
+        userResponseDTO.setAddressExtra(userSaveDTO.getAddressExtra());
+        userResponseDTO.setAddressDetail(userSaveDTO.getAddressDetail());
+        userResponseDTO.setAddressPostcode(userSaveDTO.getAddressPostcode());
+        log.info("userResponseDTO : {}",userResponseDTO);
+        if(userSaveDTO.getPassword() != null){
+            userResponseDTO.setPassword(passwordEncoder.encode(userSaveDTO.getPassword()));
+        }
+        UserTravel entity = responseDtoToEntity(userResponseDTO);
+        log.info("============ 저장될 앤티티");
+        log.info(entity);
+        UserTravel result = userRepository.save(entity);
+        log.info("result: {}",result);
+        if (result.getUserId() == entity.getUserId()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    @Transactional
+    @Override
+    public boolean userDelete(String id, String pw) {
+        UserDTO dto = UserDTO.builder().userId(id).build();
+        UserTravel userTravel = userInfo(dto);
+        Long userNo = userTravel.getUserNo();
+        log.info(userNo);
+        String password = userTravel.getPassword();
+        boolean matches = passwordEncoder.matches(pw, password);
+        if (! matches){
+            return false;
+        }
+
+        log.info("존재하는 회원");
+        UserImage userImg = userTravel.getUserImg();
+        log.info(userImg.getId());
+
+       boolean b = userImageRepository.deleteByUserImage(userImg.getId());
+        log.info(2);
+        int result = userRepository.removeUserTravelByUserNo(userNo);
+        log.info(3);
+
+        return  false;
+
+
+
+
     }
 
     //아이디 찾기
@@ -218,11 +252,9 @@ public class UserServiceImpl implements UserService {
             Optional<UserTravel> result = userRepository.getUserPullByUserId(userDTO.getUserId());
 
             if (result.isPresent()) {
-                log.info("!2");
                 UserTravel userTravel = result.get();
                 return userTravel;
             } else {
-                log.info("!3");
                 return null;
             }
         }catch (Exception e){

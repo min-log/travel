@@ -1,19 +1,13 @@
 package com.example.travel.controller.member;
 
-import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
-import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
-import com.example.travel.security.dto.UserTravelDTO;
-import com.example.travel.security.service.UserTravelDetailsService;
 import com.example.travel.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.security.Principal;
+import javax.validation.Valid;
 import java.util.Map;
-import java.util.Optional;
 
 @Log4j2
 @Controller
@@ -35,39 +27,18 @@ import java.util.Optional;
 public class MypageController {
     private final UserService  userService;
     final UserImageRepository userImageRepository;
+
     @GetMapping("")
     public String myPage(@AuthenticationPrincipal UserTravelAdapter user,
                          HttpSession session,
-                         HttpServletRequest request, Model model){
+                         HttpServletRequest request,
+                         Model model){
         log.info("마이페이지");
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
-            model.addAttribute("login",flashMap.get("login"));
+            model.addAttribute("msg",flashMap.get("msg"));
         }
 
-
-
-        //log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
-        if (user != null){
-            log.info("로그인"); String profile = user.getProfile();
-            String img=null;
-
-            Optional<UserImage> byOriginFileName = userImageRepository.findByOriginFileName(profile);
-            if (byOriginFileName.isPresent()){
-                log.info("있음");
-                UserImage userImage = byOriginFileName.get();
-                String path = userImage.getPath();
-                String originFileName = userImage.getOriginFileName();
-                img = "\\upload\\" +path +"\\"+ originFileName;
-                user.setProfile(img);
-            }else {
-                log.info("없음");
-            }
-            session.setAttribute("userT",user);
-        }else{
-            log.info("로그아웃");
-            session.removeAttribute("user");
-        }
 
 
 
@@ -77,7 +48,10 @@ public class MypageController {
 
 
     @GetMapping("/userImageModify")
-    public String userImageModify(Model model,@AuthenticationPrincipal UserTravelAdapter user){
+    public String userImageModify(
+                Model model,
+                @AuthenticationPrincipal UserTravelAdapter user){
+
         String userId = user.getUserId();
         log.info(userId);
         UserTravel userValue = UserTravel.builder()
@@ -114,7 +88,10 @@ public class MypageController {
     }
 
     @GetMapping("/userModify")
-    public String userModify(Model model,@AuthenticationPrincipal UserTravelAdapter user){
+    public String userModify(
+            Model model,
+            @AuthenticationPrincipal UserTravelAdapter user){
+
         log.info("회원정보 수정페이지 이동");
         String userId = user.getUserId();
         log.info(userId);
@@ -128,20 +105,48 @@ public class MypageController {
         return "mypage/userModify";
     }
 
-    @GetMapping("/userPassword")
-    public String userPassword(
-                                @AuthenticationPrincipal UserTravelAdapter user,
-                                @ModelAttribute("userTravel") UserDTO userRe ,
-                               Model model,
-                               RedirectAttributes redirectAttributes){
-        log.info("화면 정보 : "+ user);
+    @PostMapping("/userModifyForm")
+    public String userModify(@Valid @ModelAttribute("userTravel") UserDTO user,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+        log.info("회원정보 수정 로직====================");
+        log.info(user);
+
+        boolean result = userService.userModitfy(user);
+        log.info(result);
+        if (result){
+            log.info("성공");
+            redirectAttributes.addFlashAttribute("msg","회원정보가 수정되었습니다.");
+            return "redirect:/mypage";
+        }else{
+            log.info("실패");
+            redirectAttributes.addFlashAttribute("msg","회원정보가 수정이 실패했습니다.");
+            return "redirect:/mypage/userModify";
+        }
+
+    }
+
+
+    //회원탈퇴
+    @GetMapping("/withdrawal")
+    public String withdrawal(Model model,
+                             @AuthenticationPrincipal UserTravelAdapter user){
+        UserTravel userValue = new UserTravel();
+        model.addAttribute("userTravel",userValue); // 빈 객체 전달 필요
+        return "mypage/withdrawal";
+    }
+
+
+
+    @PostMapping("/withdrawalForm")
+    public String withdrawalForm(@Valid @ModelAttribute("userTravel") UserDTO user){
         String userId = user.getUserId();
-        log.info(userId);
-
-
-
-
-            return "/mypage/userPassword";
+        boolean result = userService.userDelete(user.getUserId(), user.getPassword());
+        if (result){
+            return "redirect:/main";
+        }else{
+            return "redirect:/mypate/withdrawal";
+        }
 
 
     }

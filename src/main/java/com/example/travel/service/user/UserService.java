@@ -19,7 +19,9 @@ public interface UserService {
 
     public String userPasswordModify(UserDTO userDTO); //회원 비밀번호 변경
 
-    public UserDTO userModitfy(UserDTO userSaveDTO); //회원정보 수정
+    public boolean userModitfy(UserDTO userSaveDTO); //회원정보 수정
+
+    public boolean userDelete(String id, String pw);
 
 
     public String userGetName(String name,String email); // 아이디 찾기

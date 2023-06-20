@@ -4,6 +4,7 @@ import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,13 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     
     UserTravel getUserTravelByUserId(String id); // 회원 아이디 유무 확인
     Optional<UserTravel> getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
+
+    @Modifying
+    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query(value = "delete from UserTravel m where m.userNo = :no",
+            nativeQuery = false)
+    int removeUserTravelByUserNo(@Param(value = "no") Long no); //회원탈퇴
+
 
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "select m from UserTravel m where m.userSocial = :social and m.userId = :id",

@@ -28,31 +28,6 @@ class UserServiceImplTest {
         UserTravel entity = userRepository.getUserTravelByUserId("jimin");
         System.out.println(entity.getRoleSet());
 
-//        UserDTO result = UserDTO.builder()
-//                .userNo(jimin.getUserNo())
-//                .userId(jimin.getUserId())
-//                .userEmail(jimin.getUserEmail())
-//                .password(jimin.getPassword())
-//                .name(jimin.getName())
-//                .userBirthday(jimin.getUserBirthday())
-//                .userGender(jimin.getUserGender())
-//                .userPhone(jimin.getUserPhone())
-//                .userImg(jimin.getUserImg())
-//                .address(jimin.getAddress())
-//                .addressPostcode(jimin.getAddressPostcode())
-//                .addressDetail(jimin.getAddressDetail())
-//                .addressExtra(jimin.getAddressExtra())
-//                .build();
-//
-//
-//        Set<UserRole> roleSet = jimin.getRoleSet();
-//        System.out.println(roleSet);
-
-//        roleSet.stream().forEach(i->{
-//            System.out.println(i);
-//        });
-
-
 
     }
 
@@ -68,5 +43,13 @@ class UserServiceImplTest {
                 .build();
         String s = userService.userPasswordModify(dt);
         System.out.println(s);
+    }
+
+
+    @Test
+    @DisplayName("회원탈퇴")
+    public void test3(){
+        boolean b = userService.userDelete("dizel93", "qwert12345");
+        System.out.println();
     }
 }

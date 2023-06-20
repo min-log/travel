@@ -79,11 +79,23 @@ public class UserRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("제거")
+    @Transactional
+    public void delete(){
+
+        int b = userRepository.removeUserTravelByUserNo(1L);
+        System.out.println(b);
+
+
+
+    }
+
 
     @Test
     @DisplayName("1. 회원확인")
     public void test(){
-        String userId = "test222";
+        String userId = "dizel93";
 
         Optional<UserTravel> userByUserIdAndUserSocial = userRepository.getUserByUserIdAndUserSocial(userId, false);
         if (userByUserIdAndUserSocial.isPresent()){
@@ -129,7 +141,7 @@ public class UserRepositoryTest {
             System.out.println("?");
             UserTravel userTravel = result.get();
             System.out.println(userTravel);
-            System.out.println(userTravel.getUserImg().getFileUrl());
+            System.out.println(userTravel.getUserImg());
         }else{
             System.out.println("없음");
         }

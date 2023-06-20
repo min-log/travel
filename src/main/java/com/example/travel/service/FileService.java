@@ -51,7 +51,7 @@ public class FileService {
             uploadFile.transferTo(savePath);
             //화면에 전달할 DTO 생성
             UserImage memberImage = UserImage.builder()
-                    .originFileName(uuid+"_"+originalName)
+                    .originFileName(originalName)
                     .uuid(uuid)
                     .fileName(fileName)
                     .path(folderPath)
