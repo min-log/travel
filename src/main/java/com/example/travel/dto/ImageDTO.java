@@ -1,19 +1,21 @@
 package com.example.travel.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.travel.domain.UserImage;
+import com.example.travel.dto.user.UserDTO;
+import lombok.*;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
 public class ImageDTO {
-
+    private Long id;
+    private String uuid;
     private String fileName;
     private String originFileName;
-    private String uuid;
-    private String fileUrl;
+    private String path; // 폴더 생성 날짜
+
+
 
 }

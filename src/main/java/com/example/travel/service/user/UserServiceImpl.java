@@ -1,5 +1,6 @@
 package com.example.travel.service.user;
 
+import com.example.travel.domain.Image;
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.support.SQLErrorCodes;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +35,11 @@ public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
 
+
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
-
+    private final UserImageService userImageService;
 
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
@@ -55,14 +58,12 @@ public class UserServiceImpl implements UserService {
         System.out.println();
         log.info("getUserImg : " + userDto.getUserImg().getName());
         MultipartFile userImg = userDto.getUserImg();
+
+
         log.info("저장하자");
         UserImage imageDTO = fileService.createImageDTO(userImg);
-
-        if(imageDTO != null) {
-            UserImage save = userImageRepository.save(imageDTO);
-            log.info("저장됨");
-            entity.updateUserImage(save);
-        }
+        UserImage save = userImageRepository.save(imageDTO);
+        entity.updateUserImage(save);
 
         UserTravel result = userRepository.save(entity);
         return result;
@@ -267,28 +268,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public String userProfileImage(UserDTO userDto) {
-        String userId = userDto.getUserId();
-        Optional<UserTravel> userPullByUser = userRepository.getUserPullByUserId(userId);
+        log.info("userProfileImage ----------------------");
+        log.info(0);
+        UserTravel userTravelByUserId = userRepository.getUserTravelByUserId(userDto.getUserId());
+        Long id = userTravelByUserId.getUserImg().getId();
 
-        if (userPullByUser.isPresent()){
-            UserTravel userTravel = userPullByUser.get();
+        UserImage userImage = new UserImage();
+        userImage.setId(id);
+        MultipartFile userImg = userDto.getUserImg();
 
-            if(!(userDto.getUserImg() == null)) {
-                MultipartFile userImg = userDto.getUserImg();
-                log.info("저장하자");
+        //새로운 이미지
+        UserImage image = fileService.createImageDTO(userImg);
+        image.setId(id);
+        log.info("image : {}",image);
+        UserImage save = userImageRepository.save(image);
 
-                UserImage imageDTO = fileService.createImageDTO(userImg);
-                UserImage save = userImageRepository.save(imageDTO);
-                log.info("저장됨");
-                userTravel.updateUserImage(save);
-            }
+        userTravelByUserId.updateUserImage(save);
+        UserTravel result = userRepository.save(userTravelByUserId);
 
-
-            UserTravel result = userRepository.save(userTravel);
-
-            return result.getUserImg().getOriginFileName();
-        }else{
-            return null;
-        }
+        log.info(result);
+        return result.getUserId();
     }
+
 }

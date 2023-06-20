@@ -29,9 +29,8 @@ public class FileService {
         log.info("이미지 저장 ==========================");
         if(uploadFile.getContentType().startsWith("image") == false) {
             log.warn("이미지 파일이 아닙니다.");
-            return null;
+            return UserImage.builder().build();
         }
-
         //2. 경로와 이름을 나눠야함.
         //실제 파일 이름 ie 나 edge는 전체 경로가 전달된다.
         String originalName = uploadFile.getOriginalFilename();

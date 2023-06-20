@@ -10,6 +10,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 @AllArgsConstructor
