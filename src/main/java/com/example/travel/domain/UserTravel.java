@@ -26,7 +26,7 @@ public class UserTravel extends BaseEntity {
     private String userGender;
     private String userPhone;
 
-    @OneToOne(fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
     private UserImage userImg;//프로필 사진
 
     //주소

@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService {
         entity.roleAdd(UserRole.USER); // 권한 추가
 
         System.out.println();
-        log.info("getUserImg : " + userDto.getUserImg());
-        if(!(userDto.getUserImg() == null)) {
-            MultipartFile userImg = userDto.getUserImg();
-            log.info("저장하자");
+        log.info("getUserImg : " + userDto.getUserImg().getName());
+        MultipartFile userImg = userDto.getUserImg();
+        log.info("저장하자");
+        UserImage imageDTO = fileService.createImageDTO(userImg);
 
-            UserImage imageDTO = fileService.createImageDTO(userImg);
+        if(imageDTO != null) {
             UserImage save = userImageRepository.save(imageDTO);
             log.info("저장됨");
             entity.updateUserImage(save);
