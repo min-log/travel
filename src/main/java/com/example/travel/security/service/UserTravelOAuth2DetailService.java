@@ -85,7 +85,7 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
         UserTravel userOAuth = UserTravel.builder()
                 .userId(email)
                 .userEmail(email)
-                .password("1111")
+                .password(passwordEncoder.encode("1111"))
                 .userSocial(true)
                 .build();
         userOAuth.roleAdd(UserRole.USER); // 권한 추가

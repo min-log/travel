@@ -19,6 +19,8 @@ import java.util.Set;
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserImageRepository userImageRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -83,9 +85,12 @@ public class UserRepositoryTest {
     @DisplayName("제거")
     @Transactional
     public void delete(){
-
-        int b = userRepository.removeUserTravelByUserNo(1L);
+        int i = userRepository.deleteByUserRole(1L);
+        System.out.println(i);
+        int b = userRepository.deleteByUserId("dizel93");
         System.out.println(b);
+        int i1 = userImageRepository.deleteByUserImage(1L);
+        System.out.println(i1);
 
 
 

@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Builder
-@ToString(exclude = "roleSet")
+@ToString(exclude = {"roleSet", "userImg"})
 public class UserTravel extends BaseEntity {
 
     @Id
@@ -26,7 +26,7 @@ public class UserTravel extends BaseEntity {
     private String userGender;
     private String userPhone;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
     private UserImage userImg;//프로필 사진
 
     //주소

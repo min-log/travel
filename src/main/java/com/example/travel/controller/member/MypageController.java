@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -26,22 +27,15 @@ import java.util.Map;
 @RequestMapping("/mypage")
 public class MypageController {
     private final UserService  userService;
-    final UserImageRepository userImageRepository;
 
     @GetMapping("")
-    public String myPage(@AuthenticationPrincipal UserTravelAdapter user,
-                         HttpSession session,
-                         HttpServletRequest request,
+    public String myPage(HttpServletRequest request,
                          Model model){
         log.info("마이페이지");
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
             model.addAttribute("msg",flashMap.get("msg"));
         }
-
-
-
-
 
         return "mypage/main";
     }
@@ -130,23 +124,40 @@ public class MypageController {
     //회원탈퇴
     @GetMapping("/withdrawal")
     public String withdrawal(Model model,
+                             HttpServletRequest request,
                              @AuthenticationPrincipal UserTravelAdapter user){
-        UserTravel userValue = new UserTravel();
+        UserTravel userValue = UserTravel.builder().userId(user.getUserId()).build();
+
         model.addAttribute("userTravel",userValue); // 빈 객체 전달 필요
+
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+        if(flashMap!=null) {
+            model.addAttribute("msg",flashMap.get("msg"));
+        }
+
         return "mypage/withdrawal";
     }
 
 
 
+    @Transactional
     @PostMapping("/withdrawalForm")
-    public String withdrawalForm(@Valid @ModelAttribute("userTravel") UserDTO user){
-        String userId = user.getUserId();
+    public String withdrawalForm(@Valid @ModelAttribute("userTravel") UserDTO user,
+                                 RedirectAttributes redirectAttributes){
+        log.info("회원탈퇴 ------------------------------");
         boolean result = userService.userDelete(user.getUserId(), user.getPassword());
+        log.info("회원제거 결과 : {}",result);
         if (result){
-            return "redirect:/main";
+            redirectAttributes.addFlashAttribute("msg","회원탈퇴가 되었습니다.");
+            log.info("성공");
+            return "redirect:/logout";
         }else{
-            return "redirect:/mypate/withdrawal";
+            log.info("실패");
+            redirectAttributes.addFlashAttribute("msg","회원탈퇴가 실패했습니다. 비밀번호를 확인해주세요.");
+            return "redirect:/mypage/withdrawal";
         }
+
+
 
 
     }

@@ -12,6 +12,7 @@ import com.example.travel.repository.UserRepository;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.security.service.UserTravelDetailsService;
 import com.example.travel.service.FileService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,22 +28,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+
 @RequiredArgsConstructor
 @Service
 @Log4j2
 public class UserServiceImpl implements UserService {
 
-    final UserRepository userRepository;
-    final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
-    private final UserImageService userImageService;
 
-    @Value("${spring.servlet.multipart.location}")
-    private String uploadPath;
 
     @Override
     @Transactional
@@ -68,8 +67,6 @@ public class UserServiceImpl implements UserService {
         UserTravel result = userRepository.save(entity);
         return result;
     }
-
-
 
 
 
@@ -185,27 +182,37 @@ public class UserServiceImpl implements UserService {
     public boolean userDelete(String id, String pw) {
         UserDTO dto = UserDTO.builder().userId(id).build();
         UserTravel userTravel = userInfo(dto);
-        Long userNo = userTravel.getUserNo();
+        Long userNo = userTravel.getUserNo(); //user 고유번호
         log.info(userNo);
         String password = userTravel.getPassword();
         boolean matches = passwordEncoder.matches(pw, password);
-        if (! matches){
+        log.info(matches);
+        if (!matches){
             return false;
         }
 
         log.info("존재하는 회원");
+        
         UserImage userImg = userTravel.getUserImg();
+        String originFileName = userImg.getOriginFileName();
+        String uuid = userImg.getUuid();
+        String path = userImg.getPath();
+        String fileName = path + "\\" + uuid + "_" +originFileName;
+
         log.info(userImg.getId());
+        int deleteRole = userRepository.deleteByUserRole(userNo); // user권한제거
+        System.out.println(deleteRole);
+        int deleteUser = userRepository.deleteByUserId(id); // user제거
+        System.out.println(deleteUser);
+        fileService.removeFile(fileName);//실제 이미지 제거
+        int deleteImage = userImageRepository.deleteByUserImage(userNo);// user이미지 제거
+        System.out.println(deleteImage);
 
-       boolean b = userImageRepository.deleteByUserImage(userImg.getId());
-        log.info(2);
-        int result = userRepository.removeUserTravelByUserNo(userNo);
-        log.info(3);
-
-        return  false;
-
-
-
+        if (deleteRole > 0 && deleteUser > 0 && deleteImage > 0){
+            return  true;
+        }else {
+            return  false;
+        }
 
     }
 

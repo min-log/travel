@@ -11,13 +11,12 @@
       <th:block th:replace="layout/navBar::navBar"></th:block>
       <!-- end : navbar -->
       <!-- start : content -->
-      <div class="content ">
+      <div class="content " th:object="${userTravel}">
         <div class="content-tit">
           <h4 class="tit_con mb-3">회원탈퇴</h4>
         </div>
         <p>안녕하세요 . 회원탈퇴 하시겠습니까? <br />
           회원탈퇴 후  Travel Road의 서비스는 이용이 불가합니다.</p>
-
 
         <form id="userModifyForm" class="mt-5" th:action="@{/mypage/withdrawalForm}" th:method="post" >
           <div class="border rounded-3 p-3 ">
@@ -35,7 +34,7 @@
               </th>
               <td>
                 <div class="x_auto">
-                  <input id="userId" type="text" class="form-control" th:value="${session.userT.userId}" readonly>
+                  <input th:field="*{userId}"  th:name="*{userId}" th:id="*{userId}" type="text" class="form-control" th:value="*{userId}" readonly>
                 </div>
                 <p class="check-msg-id txt_info mt-1"></p>
               </td>
@@ -43,7 +42,7 @@
             <tr>
               <th><label >비밀번호 </label></th>
               <td>
-                <input id="password" class="form-control" type="password">
+                <input th:field="*{password}" th:name="*{password}" th:id="*{password}" placeholder="비밀번호를 입력해주세요." class="form-control" type="password">
               </td>
             </tr>
             </tbody>
@@ -51,14 +50,13 @@
           </div>
           <button class="w-100 btn btn-primary mt-4" type="submit">회원탈퇴</button>
         </form>
-
-
       </div>
     </div>
     <!-- end : mypage_wrap-->
+    <script th:if="${msg}">
+      alert("회원 비밀번호를 확인해주세요.");
+    </script>
   </div>
-
-
 </th:block>
 </html>
 

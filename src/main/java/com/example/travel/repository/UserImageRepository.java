@@ -19,5 +19,5 @@ public interface UserImageRepository extends ImageRepository {
 
     @Modifying
     @Query("delete from UserImage u where u.id = :id")
-    boolean deleteByUserImage(@Param(value = "id") Long id);
+    int deleteByUserImage(@Param(value = "id") Long id);
 }

@@ -46,10 +46,10 @@ class UserServiceImplTest {
     }
 
 
+
+
     @Test
-    @DisplayName("회원탈퇴")
-    public void test3(){
-        boolean b = userService.userDelete("dizel93", "qwert12345");
-        System.out.println();
+    void userDelete() {
+        boolean b = userService.userDelete("dizel93", "qwer1234");
     }
 }

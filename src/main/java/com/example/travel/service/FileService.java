@@ -5,12 +5,17 @@ import com.example.travel.dto.ImageDTO;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -84,4 +89,31 @@ public class FileService {
         }
         return folderPath;
     }
+
+
+
+
+   //파일 제거
+    public ResponseEntity<Boolean> removeFile(String fileName){
+        String srcFileName = null;
+
+        try {
+            log.info(fileName);
+
+            srcFileName = URLDecoder.decode(fileName,"utf-8");
+            File file = new File(uploadPath+File.separator+srcFileName);
+            log.info(file);
+            boolean result = file.delete();
+
+            File thumbnail = new File(file.getParent(),"s_"+file.getName());
+            result = thumbnail.delete();
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(false,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }

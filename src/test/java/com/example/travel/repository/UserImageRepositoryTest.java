@@ -19,9 +19,9 @@ class UserImageRepositoryTest {
 //        Image byId = userImageRepository.getById(1L);
 //        Long id = byId.getId();
 //        System.out.println(id);
-        boolean b = userImageRepository.deleteByUserImage(1L);
+        int i = userImageRepository.deleteByUserImage(1L);
         //Image result = userImageRepository.getById(1L);
-        System.out.println(b);
+        System.out.println(i);
 
 
     }

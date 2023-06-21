@@ -20,11 +20,15 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     UserTravel getUserTravelByUserId(String id); // 회원 아이디 유무 확인
     Optional<UserTravel> getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
 
+
+    @Modifying
+    @Query(value = "delete from user_travel_role_set m where m.user_travel_user_no = :no", nativeQuery = true)
+    int deleteByUserRole(@Param(value = "no") Long no);
+
     @Modifying
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query(value = "delete from UserTravel m where m.userNo = :no",
-            nativeQuery = false)
-    int removeUserTravelByUserNo(@Param(value = "no") Long no); //회원탈퇴
+    @Query(value = "delete from UserTravel m where m.userId = :id", nativeQuery = false)
+    int deleteByUserId(@Param(value = "id") String id); //회원탈퇴
 
 
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)

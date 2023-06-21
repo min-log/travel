@@ -41,7 +41,9 @@ public class MainController {
     @GetMapping(value = {"","main"})
     public String main(
             @AuthenticationPrincipal UserTravelAdapter user,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest request,
+            Model model
       ){
 
         //log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
@@ -64,6 +66,12 @@ public class MainController {
         }else{
             log.info("로그아웃");
             session.removeAttribute("user");
+        }
+
+        // 모달 회원 탈퇴 알럿
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
+        if(flashMap!=null) {
+            model.addAttribute("msg",flashMap.get("msg"));
         }
 
 
