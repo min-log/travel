@@ -138,30 +138,6 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <script type="text/javascript" th:if="${msg} == true">
-        $(document).ready(function (){
-            $('#modalJoin').modal("show");
-        })
-    </script>
-
-    <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5">메시지</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="modal-message">
-                        <p th:text="${msg}"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End: Modal -->
-
 </th:block>
 </html>
 

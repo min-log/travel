@@ -58,17 +58,17 @@ public class MainController {
                 String originFileName = userImage.getOriginFileName();
                 String uuid = userImage.getUuid();
                 img = "\\upload\\" +path +"\\"+ uuid +"_"+ originFileName;
+                if (path == null){
+                    img = originFileName;
+                }
+
                 user.setProfile(img);
             }else {
                 log.info("없음");
             }
             session.setAttribute("userT",user);
-        }else{
-            log.info("로그아웃");
-            session.removeAttribute("user");
         }
 
-        // 모달 회원 탈퇴 알럿
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
             model.addAttribute("msg",flashMap.get("msg"));

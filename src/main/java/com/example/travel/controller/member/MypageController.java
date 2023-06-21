@@ -123,17 +123,13 @@ public class MypageController {
 
     //회원탈퇴
     @GetMapping("/withdrawal")
-    public String withdrawal(Model model,
-                             HttpServletRequest request,
-                             @AuthenticationPrincipal UserTravelAdapter user){
+    public String withdrawal(
+            @AuthenticationPrincipal UserTravelAdapter user,
+            Model model,
+             HttpServletRequest request){
+        log.info("회원탈퇴 페이지 이동 ----------------");
         UserTravel userValue = UserTravel.builder().userId(user.getUserId()).build();
-
         model.addAttribute("userTravel",userValue); // 빈 객체 전달 필요
-
-        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
-        if(flashMap!=null) {
-            model.addAttribute("msg",flashMap.get("msg"));
-        }
 
         return "mypage/withdrawal";
     }
@@ -142,7 +138,7 @@ public class MypageController {
 
     @Transactional
     @PostMapping("/withdrawalForm")
-    public String withdrawalForm(@Valid @ModelAttribute("userTravel") UserDTO user,
+    public String withdrawalForm(@ModelAttribute("userTravel") UserDTO user,
                                  RedirectAttributes redirectAttributes){
         log.info("회원탈퇴 ------------------------------");
         boolean result = userService.userDelete(user.getUserId(), user.getPassword());

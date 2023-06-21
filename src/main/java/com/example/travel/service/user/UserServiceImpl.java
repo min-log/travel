@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
