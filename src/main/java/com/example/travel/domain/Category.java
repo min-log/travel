@@ -20,7 +20,8 @@ public class Category extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
     @OneToOne(fetch = FetchType.LAZY)
-    private UserTravel userTravelNo;  //작성자 id
+    private UserTravel userTravelNo;  //작성자 No
+
     private String categoryName; // 카테고리 이름
     private LocalDateTime dateStart;
     private LocalDateTime dateEnd;

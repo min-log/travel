@@ -3,83 +3,146 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-    <div class="content_nav">
+    <div class="content_nav"  th:object="${category}">
         <!-- start : navbar -->
         <th:block th:replace="layout/navBarTravel::navBarTravel"></th:block>
         <div class="content">
-            <h2 class="tit text-center mb-4">Travel Log와 함께 나만의 여행을 만들어보세요.</h2>
-            <form action="" method="post" class="box travel_add_box content_box">
-            <table>
-                <colgroup>
-                    <col style="width:100px">
-                    <col style="width:calc(100% - 100px)">
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th>여행명 <span class="txt_info ck">*</span></th>
-                        <td><input name="" class="form-control" type="text" placeholder="가평 가족여행"></td>
-                    </tr>
-                    <tr>
-                        <th>기간 <span class="txt_info ck">*</span></th>
-                        <td>
-                            <div class="input-group input-daterange">
-                                <input type="text" class="form-control" placeholder="출발 일" readonly>
-                                <input type="text" class="form-control" placeholder="종료 일" readonly>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>지역 <span class="txt_info ck">*</span></th>
-                        <td>
-                            <div class="search_boxes">
-                                <select name="" id="" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
-                                    <option value>시/도 선택</option>
-                                    <option value="general01">강원</option>
-                                    <option value="general02">경기</option>
-                                    <option value="general03">경남</option>
-                                    <option value="general04">경북</option>
-                                    <option value="general05">광주</option>
-                                    <option value="general06">대구</option>
-                                    <option value="general07">대전</option>
-                                    <option value="general08">부산</option>
-                                    <option value="general09">서울</option>
-                                    <option value="general10">울산</option>
-                                    <option value="general11">인천</option>
-                                    <option value="general12">전남</option>
-                                    <option value="general13">전북</option>
-                                    <option value="general14">제주</option>
-                                    <option value="general15">충남</option>
-                                    <option value="general16">충북</option>
-                                </select>
+            <h2 class="tit text-center mb-4">'Travel Road'와 함께 나만의 여행을 만들어보세요.</h2>
+            <form id="categoryForm" th:action="@{/travel/category}" th:method="post" class="box travel_add_box content_box">
+                <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="${session.userT.userNo}" type="text" readonly>
+                <table>
+                    <colgroup>
+                        <col style="width:100px">
+                        <col style="width:calc(100% - 100px)">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>여행명 <span class="txt_info ck">*</span></th>
+                            <td><input th:field="*{categoryName}" th:id="*{categoryName}" th:name="*{categoryName}" class="form-control" type="text" placeholder="가평 가족여행"></td>
+                        </tr>
+                        <tr>
+                            <th>기간 <span class="txt_info ck">*</span></th>
+                            <td>
+                                <div class="input-group input-daterange">
+                                    <input th:field="*{dateStart}" th:id="*{dateStart}" th:name="*{dateStart}" type="text" class="form-control" placeholder="출발 일" readonly>
+                                    <input th:field="*{dateEnd}" th:id="*{dateEnd}" th:name="*{dateEnd}" type="text" class="form-control" placeholder="종료 일" readonly>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>지역 <span class="txt_info ck">*</span></th>
+                            <td>
+                                <div class="search_boxes">
+                                    <select id="categoryArea" name="categoryArea" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
+                                        <option value>시/도 선택</option>
+                                        <option value="general01">강원</option>
+                                        <option value="general02">경기</option>
+                                        <option value="general03">경남</option>
+                                        <option value="general04">경북</option>
+                                        <option value="general05">광주</option>
+                                        <option value="general06">대구</option>
+                                        <option value="general07">대전</option>
+                                        <option value="general08">부산</option>
+                                        <option value="general09">서울</option>
+                                        <option value="general10">울산</option>
+                                        <option value="general11">인천</option>
+                                        <option value="general12">전남</option>
+                                        <option value="general13">전북</option>
+                                        <option value="general14">제주</option>
+                                        <option value="general15">충남</option>
+                                        <option value="general16">충북</option>
+                                    </select>
 
-                                <select name=""  id="state" class="form-select" aria-label="Default select example">
-                                    <option>군/구 선택</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>함께</th>
-                        <td>
-                            <!-- 해시 태그 정보를 저장할 input 태그. (textarea도 지원) -->
-                            <input name='tags' class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="#아이디를 입력하세요...#길동이 #박길동" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                    <select  id="categoryAreaDetails" name="categoryAreaDetails" class="form-select" aria-label="Default select example">
+                                        <option>군/구 선택</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>함께</th>
+                            <td>
+                                <!-- 해시 태그 정보를 저장할 input 태그. (textarea도 지원) -->
+                                <input th:field="*{tags} "th:id="*{tags}" th:name="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="form-check form-switch mt-4 pt-4 border-top">
-                    <label class="form-check-label" for="flexSwitchCheckDefault"> 여행 리스트 함께 공유하기</label>
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label  class="form-check-label" for="flexSwitchCheckDefault"> 여행 리스트 함께 공유하기</label>
+                    <input th:field="*{categoryOpen}" th:id="*{categoryOpen}" th:name="*{categoryOpen}" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 </div>
                 <p class="txt_info mt-2">* '여행지 찾기'메뉴 에서 모두와 공유하고 소통할 수 있어요.</p>
-            <a class="w-100 btn btn-primary mt-4" type="submit" href="javascript:void(0)">일정 만들기</a>
-        </form>
+                <a id="btnCategorySave" href="javascript:void(0)"  class="w-100 btn btn-primary mt-4">일정 만들기</a>
+             </form>
+
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">확인 </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-message"></p>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- end :Modal -->
+
+
+
+    <script  type="text/javascript">
+
+
+          $(function (){
+
+            let form = document.querySelector("#categoryForm");
+            let name = document.querySelector("#categoryName");
+            let dateStart = document.querySelector("#dateStart");
+            let dateEnd = document.querySelector("#dateEnd");
+            let categoryArea = document.querySelector("#categoryArea");
+            let categoryAreaDetails = document.querySelector("#categoryAreaDetails");
+
+            $("#btnCategorySave").on('click',function (){
+
+                if(name.value == ''){
+                    $('.modal-message').text("여행명을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+                if(dateStart.value == ''){
+                    $('.modal-message').text("출발일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+                if(dateEnd.value == ''){
+                    $('.modal-message').text("종료일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+                if(categoryArea.value == ''){
+                    $('.modal-message').text("지역을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+
+                form.submit();
+           })
+        });
+    </script>
+
     <script>
         function categoryChange(e) {
-            const state = document.getElementById("state");
+            const state = document.getElementById("categoryAreaDetails");
 
             const gangwon = ["강릉시","동해시","삼척시","속초시","원주시","춘천시","태백시","고성군","양구군","양양군","영월군","인제군","정선군","철원군","평창군","홍천군","화천군","횡성군"];
             const gyeonggi = ["고양시","과천시","광명시","광주시","구리시","군포시","김포시","남양주시","동두천시","부천시","성남시","수원시","시흥시","안산시","안성시","안양시","양주시","오산시","용인시","의왕시","의정부시","이천시","파주시","평택시","포천시","하남시","화성시","가평군","양평군","여주군","연천군"];
@@ -148,6 +211,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <!-- 달력 -->
     <script type="text/javascript">
+
         $(document).ready(function(){
 
             $('.input-daterange').datepicker({
@@ -155,7 +219,6 @@
                 todayHighlight: true,
                 startDate: '0d'
             });
-
         });
     </script>
 
@@ -165,11 +228,24 @@
     <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
     <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
+    <!-- 해쉬 태그 -->
     <script type="text/javascript">
 
+        let inputElm = document.querySelector('input[name=tags]')
+        let whitelist = [];
 
-        let inputElm = document.querySelector('input[name=tags]'),
-            whitelist = ["A# .NET", "A# (Axiom)", "A-0 System", "A+", "A++", "ABAP", "ABC", "ABC ALGOL", "ABSET", "ABSYS", "ACC", "Accent", "Ace DASL", "ACL2", "Avicsoft", "ACT-III", "Action!", "ActionScript", "Ada", "Adenine", "Agda", "Agilent VEE", "Agora", "AIMMS", "Alef", "ALF", "ALGOL 58", "ALGOL 60", "ALGOL 68", "ALGOL W", "Alice", "Alma-0", "AmbientTalk", "Amiga E", "AMOS", "AMPL", "Apex (Salesforce.com)", "APL", "AppleScript", "Arc", "ARexx", "Argus", "AspectJ", "Assembly language", "ATS", "Ateji PX", "AutoHotkey", "Autocoder", "AutoIt", "AutoLISP / Visual LISP", "Averest", "AWK", "Axum", "Active Server Pages", "ASP.NET", "B", "Babbage", "Bash", "BASIC", "bc", "BCPL", "BeanShell", "Batch (Windows/Dos)", "Bertrand", "BETA", "Bigwig", "Bistro", "BitC", "BLISS", "Blockly", "BlooP", "Blue", "Boo", "Boomerang", "Bourne shell (including bash and ksh)", "BREW", "BPEL", "B", "C--", "C++ – ISO/IEC 14882", "C# – ISO/IEC 23270", "C/AL", "Caché ObjectScript", "C Shell", "Caml", "Cayenne", "CDuce", "Cecil", "Cesil", "Céu", "Ceylon", "CFEngine", "CFML", "Cg", "Ch", "Chapel", "Charity", "Charm", "Chef", "CHILL", "CHIP-8", "chomski", "ChucK", "CICS", "Cilk", "Citrine (programming language)", "CL (IBM)", "Claire", "Clarion", "Clean", "Clipper", "CLIPS", "CLIST", "Clojure", "CLU", "CMS-2", "COBOL – ISO/IEC 1989", "CobolScript – COBOL Scripting language", "Cobra", "CODE", "CoffeeScript", "ColdFusion", "COMAL", "Combined Programming Language (CPL)", "COMIT", "Common Intermediate Language (CIL)", "Common Lisp (also known as CL)", "COMPASS", "Component Pascal", "Constraint Handling Rules (CHR)", "COMTRAN", "Converge", "Cool", "Coq", "Coral 66", "Corn", "CorVision", "COWSEL", "CPL", "CPL", "Cryptol", "csh", "Csound", "CSP", "CUDA", "Curl", "Curry", "Cybil", "Cyclone", "Cython", "Java", "Javascript", "M2001", "M4", "M#", "Machine code", "MAD (Michigan Algorithm Decoder)", "MAD/I", "Magik", "Magma", "make", "Maple", "MAPPER now part of BIS", "MARK-IV now VISION:BUILDER", "Mary", "MASM Microsoft Assembly x86", "MATH-MATIC", "Mathematica", "MATLAB", "Maxima (see also Macsyma)", "Max (Max Msp – Graphical Programming Environment)", "Maya (MEL)", "MDL", "Mercury", "Mesa", "Metafont", "Microcode", "MicroScript", "MIIS", "Milk (programming language)", "MIMIC", "Mirah", "Miranda", "MIVA Script", "ML", "Model 204", "Modelica", "Modula", "Modula-2", "Modula-3", "Mohol", "MOO", "Mortran", "Mouse", "MPD", "Mathcad", "MSIL – deprecated name for CIL", "MSL", "MUMPS", "Mystic Programming L"];
+        // 회원 아이디 리스트
+        $(document).ready(function (){
+            $.ajax({
+                type : 'get',
+                url : '/user/tag',
+                success : function (data) {
+                    whitelist = data;
+                }
+            });
+        });
+
+
 
 
         // initialize Tagify on the above input node reference
@@ -214,10 +290,17 @@
             console.log("onRemoveTag:", e.detail, "tagify instance value:", tagify.value)
         }
 
+
+
         // on character(s) added/removed (user is typing/deleting)
         function onInput(e){
 
             console.log("onInput: ", e.detail);
+            console.log("onInput value: ", e.detail.value);
+
+
+
+
             tagify.settings.whitelist.length = 0; // reset current whitelist
             tagify.loading(true).dropdown.hide.call(tagify) // show the loader animation
 
@@ -229,7 +312,6 @@
                     // replace tagify "whitelist" array values with new values
                     // and add back the ones already choses as Tags
                     tagify.settings.whitelist.push(...result, ...tagify.value)
-
                     // render the suggestions dropdown.
                     tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
                 })

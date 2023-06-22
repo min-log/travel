@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -294,6 +295,12 @@ public class UserServiceImpl implements UserService {
 
         log.info(result);
         return result.getUserId();
+    }
+
+    @Override
+    public List<String> userList() {
+        List<String> userTravelList = userRepository.getUserTravelList();
+        return userTravelList;
     }
 
 }

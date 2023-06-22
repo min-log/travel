@@ -2,6 +2,7 @@ package com.example.travel.repository;
 
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,6 +20,10 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     
     UserTravel getUserTravelByUserId(String id); // 회원 아이디 유무 확인
     Optional<UserTravel> getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
+
+    //전체 회원 아이디 리스트
+    @Query(value = "select m.user_id from user_travel m", nativeQuery = true)
+    List<String> getUserTravelList();
 
 
     @Modifying

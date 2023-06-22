@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class UserApi {
         return matches;
     }
 
-    @GetMapping("idCheck")
+    @GetMapping("/idCheck")
     public Boolean idCheck(@RequestParam("id") String id){
         int i = userService.userGetId(id);
         log.info(i);
@@ -50,10 +52,18 @@ public class UserApi {
     }
 
 
-    @GetMapping("emailCheck")
+    @GetMapping("/emailCheck")
     public Boolean emailCheck(@RequestParam("userEmail") String userEmail){
         boolean result = userService.userGetEmail(userEmail);
         return result;
 
     }
+
+    @GetMapping("/tag")
+    public List<String> tagList(){
+        log.info("회원 아이디 리스트 전달");
+        List<String> tagList = userService.userList();
+        return tagList;
+    }
+
 }

@@ -153,4 +153,12 @@ public class UserRepositoryTest {
 
     }
 
+    @Test
+    void getUserTravelList() {
+        List<String> userTravelList = userRepository.getUserTravelList();
+
+        for (int i=0;i < userTravelList.size();i++){
+            System.out.println(userTravelList.get(i));
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.example.travel.security.dto.UserTravelDTO;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 
 public interface UserService {
@@ -35,6 +36,8 @@ public interface UserService {
     //회원 프로필 변경
     public String userProfileImage(UserDTO userDTO);
 
+    //고객 리스트
+    public List<String> userList();
 
     //entity - dto  : 받는 값
     default UserTravel dtoToEntity(UserDTO dto){
