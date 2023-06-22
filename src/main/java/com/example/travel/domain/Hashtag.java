@@ -6,19 +6,21 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "categoryId,userNo")
+@ToString(exclude = "categoryId,userId")
 @Getter
 @Entity
-public class People {
+public class Hashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long peopleId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    private Long hashId;
+    @OneToOne(fetch = FetchType.LAZY)
     private Category categoryId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserTravel userTravelNo;
+    private Tag tag;
 
 }

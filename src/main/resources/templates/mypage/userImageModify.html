@@ -4,8 +4,12 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-  <div class="container-fluid mt-5">
-    <div class="content_box" th:object="${userTravel}">
+
+  <div class="content_nav">
+    <!-- start : navbar -->
+    <th:block th:replace="layout/navBar::navBar"></th:block>
+
+    <div class="content" th:object="${userTravel}">
       <h2 class="tit text-center mb-4">회원 프로필 수정하기</h2>
 
       <form th:action="@{/mypage/userImageModify}" method="post" enctype="multipart/form-data">

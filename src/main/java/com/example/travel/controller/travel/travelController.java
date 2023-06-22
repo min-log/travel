@@ -1,4 +1,4 @@
-package com.example.travel.controller;
+package com.example.travel.controller.travel;
 
 
 import org.springframework.stereotype.Controller;
@@ -8,16 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/travel")
-public class ItemController {
+public class travelController {
 
     @GetMapping("")
     public String main(){
-        return "pages/travel";
+        return "travel/travel";
     }
-    @PostMapping("")
-    public void mainList(){
+
+    @GetMapping("/map")
+    public String travelMap(){
+        return "travel/travelMap";
+    }
 
 
-    }
 
 }

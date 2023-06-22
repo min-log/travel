@@ -4,14 +4,14 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-  <div class="container container-fluid" th:object="${userTravel}">
-    <h2 class="tit text-center mt-5 mb-5">마이페이지</h2>
-    <div class="mypage_wrap content_nav">
+  <div class="" th:object="${userTravel}" style="height:100%">
+    <div class="content_nav">
       <!-- start : navbar -->
       <th:block th:replace="layout/navBar::navBar"></th:block>
       <!-- end : navbar -->
       <!-- start : content -->
       <div class="content ">
+        <h2 class="tit text-center mb-5">마이페이지</h2>
         <div class="content-tit">
           <h4 class="tit_con mb-3">회원 정보수정</h4>
         </div>

@@ -2,7 +2,7 @@
 .travel_add_box .search_boxes {display: flex}
 .travel_add_box .search_boxes select + select {margin-left: 10px;}
 
-input[readonly]{border:0;cuser:none;outline: none}
+/*input[type=text][readonly]{border:0;cuser:none;outline: none}*/
 /*회원가입*/
 .x_auto {display: flex;}
 .err {outline: 2px solid var(--color-err);}
@@ -37,3 +37,109 @@ input.err {}
 .mail-check-box #timerUp #timer {vertical-align: middle;}
 
 /*mypage*/
+
+
+
+/*일정*/
+.input-daterange input[type=text] {text-align:left;}
+.input-daterange input:first-child {border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;}
+.input-daterange input:last-child {border-top-right-radius: .375rem;border-bottom-right-radius: .375rem;}
+/*달력*/
+.datepicker {
+    width: 250px;
+    background-color: #fff;
+    border: none;
+    border-radius: 0 !important;
+    border: 1px solid #dadada;
+    padding:0!important;
+}
+
+.datepicker .datepicker-dropdown {
+    top: 0;
+    left: 0;
+}
+
+.datepicker table tr td.today, span.focused {
+    border-radius: 50% !important;
+    background: #5F5F5F !important;
+    color: #fff !important;
+}
+
+.datepicker table tr td.today.range {
+    background-image: linear-gradient(#eeeeee, #eeeeee) !important;
+    border-radius: 0 !important;
+}
+
+/*Weekday title*/
+.datepicker thead tr:nth-child(3) th {
+    font-weight: bold !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+
+.datepicker .dow,
+.datepicker .old-day,
+.datepicker .day,
+.datepicker .new-day {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 0px !important;
+    font-size: 12px;
+    box-sizing: border-box;
+    line-height: 35px !important;
+    padding: 0;
+}
+
+.datepicker .old-day:hover,
+.datepicker .day:hover,
+.datepicker .new-day:hover,
+.datepicker .month:hover,
+.datepicker .year:hover,
+.datepicker .decade:hover,
+.datepicker .century:hover {
+    border-radius: 50% !important;
+    background-color: #eee;
+}
+
+.datepicker .active {
+    border-radius: 50% !important;
+    background-image: linear-gradient(#90CAF9, #64B5F6) !important;
+    color: #fff !important;
+}
+
+.datepicker .range-start,
+.datepicker .range-end {
+    border-radius: 50% !important;
+    background:var(--color-main) !important;
+}
+
+.datepicker .prev,
+.datepicker .next,
+.datepicker .datepicker-switch {
+    border-radius: 0 !important;
+    padding: 10px 10px 10px 10px !important;
+    text-transform: uppercase;
+    font-size: 12px;
+    opacity: 0.8;
+}
+.datepicker .prev,
+.datepicker .next {font-size:20px;}
+
+.datepicker .prev:hover,
+.datepicker .next:hover,
+.datepicker .datepicker-switch:hover {
+    background-color: inherit !important;
+    opacity: 1;
+}
+
+.datepicker .btn-black {
+    background-color: #37474F !important;
+    color: #fff !important;
+    width: 100%;
+}
+
+.datepicker .btn-black:hover {
+    color: #fff !important;
+    background-color: #000 !important;
+}

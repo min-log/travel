@@ -3,11 +3,25 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
-    <div class="container-fluid pb-3">
-        <h2>Travel Log와 함께 나만의 여행을 만들어보세요.</h2>
-        <p><input type="text" placeholder="이번 여행의 이름을 적어주세요."></p>
-        <p><input type="text" placeholder="함께하는 사람들을 적어주세요."></p>
-        <a href="#">일정 만들기</a>
+    <div class="container-fluid ">
+        <div class="d-grid gap-2" style="grid-template-columns: 2fr 1fr;">
+            <div class="bg-body-tertiary border rounded-3" style="overflow: hidden">
+                <div class="map_wrap">
+                    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                </div>
+            </div>
+
+            <!-- map_wrap -->
+            <!-- content -->
+            <div class="travel_list bg-body-tertiary border rounded-3">
+                <h2>Travel Log</h2>
+                <a href="#">상세 보기 +</a>
+                <ul>
+
+                </ul>
+
+            </div>
+        </div>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
