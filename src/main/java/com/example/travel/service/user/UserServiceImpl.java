@@ -1,31 +1,20 @@
 package com.example.travel.service.user;
 
-import com.example.travel.domain.Image;
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.ImageDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
-import com.example.travel.repository.UserImageRepository;
-import com.example.travel.repository.UserRepository;
-import com.example.travel.security.dto.UserTravelDTO;
-import com.example.travel.security.service.UserTravelDetailsService;
+import com.example.travel.repository.member.UserImageRepository;
+import com.example.travel.repository.member.UserRepository;
 import com.example.travel.service.FileService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.support.SQLErrorCodes;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 

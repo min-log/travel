@@ -1,4 +1,4 @@
-package com.example.travel.repository;
+package com.example.travel.repository.member;
 
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;

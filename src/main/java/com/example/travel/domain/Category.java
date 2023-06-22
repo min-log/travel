@@ -1,10 +1,7 @@
 package com.example.travel.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,11 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "items")
 @Getter
+@Builder
 @Entity
 public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long categoryNo;
     @OneToOne(fetch = FetchType.LAZY)
     private UserTravel userTravelNo;  //작성자 No
 

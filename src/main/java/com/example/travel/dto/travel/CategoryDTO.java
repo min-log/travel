@@ -19,8 +19,8 @@ import java.util.List;
 public class CategoryDTO {
     private Long userTravelNo;  //작성자 아이디
     private String categoryName; // 카테고리 이름
-    private LocalDateTime dateStart;
-    private LocalDateTime dateEnd;
+    private String dateStart;
+    private String dateEnd;
 
     private String categoryArea; // 시/도
     private String categoryAreaDetails; // 군구

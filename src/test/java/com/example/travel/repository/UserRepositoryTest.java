@@ -3,6 +3,8 @@ package com.example.travel.repository;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
+import com.example.travel.repository.member.UserImageRepository;
+import com.example.travel.repository.member.UserRepository;
 import com.example.travel.service.user.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

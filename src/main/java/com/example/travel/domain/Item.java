@@ -1,9 +1,6 @@
 package com.example.travel.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +8,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @ToString(exclude = "userNo, categoryId")
 @Getter
+@Builder
 @Entity
 public class Item extends BaseEntity {
     @Id

@@ -1,9 +1,6 @@
 package com.example.travel.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(exclude = "categoryId,userId")
 @Getter
+@Builder
 @Entity
 public class Hashtag {
     @Id
@@ -20,7 +18,7 @@ public class Hashtag {
     @OneToOne(fetch = FetchType.LAZY)
     private Category categoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Tag> tag;
 
 }

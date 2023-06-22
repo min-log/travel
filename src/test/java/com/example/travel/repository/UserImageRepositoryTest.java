@@ -1,12 +1,9 @@
 package com.example.travel.repository;
 
-import com.example.travel.domain.Image;
+import com.example.travel.repository.member.UserImageRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserImageRepositoryTest {

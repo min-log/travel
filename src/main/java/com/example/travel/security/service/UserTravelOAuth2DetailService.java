@@ -3,17 +3,13 @@ package com.example.travel.security.service;
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.ImageDTO;
-import com.example.travel.dto.user.UserDTO;
-import com.example.travel.repository.UserImageRepository;
-import com.example.travel.repository.UserRepository;
+import com.example.travel.repository.member.UserImageRepository;
+import com.example.travel.repository.member.UserRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
-import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,13 +17,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service

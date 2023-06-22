@@ -8,8 +8,8 @@
         <th:block th:replace="layout/navBarTravel::navBarTravel"></th:block>
         <div class="content">
             <h2 class="tit text-center mb-4">'Travel Road'와 함께 나만의 여행을 만들어보세요.</h2>
-            <form id="categoryForm" th:action="@{/travel/category}" th:method="post" class="box travel_add_box content_box">
-                <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="${session.userT.userNo}" type="text" readonly>
+            <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
+                <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden" readonly>
                 <table>
                     <colgroup>
                         <col style="width:100px">
@@ -33,24 +33,24 @@
                             <th>지역 <span class="txt_info ck">*</span></th>
                             <td>
                                 <div class="search_boxes">
-                                    <select id="categoryArea" name="categoryArea" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
+                                    <select  id="categoryArea" name="categoryArea" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
                                         <option value>시/도 선택</option>
-                                        <option value="general01">강원</option>
-                                        <option value="general02">경기</option>
-                                        <option value="general03">경남</option>
-                                        <option value="general04">경북</option>
-                                        <option value="general05">광주</option>
-                                        <option value="general06">대구</option>
-                                        <option value="general07">대전</option>
-                                        <option value="general08">부산</option>
-                                        <option value="general09">서울</option>
-                                        <option value="general10">울산</option>
-                                        <option value="general11">인천</option>
-                                        <option value="general12">전남</option>
-                                        <option value="general13">전북</option>
-                                        <option value="general14">제주</option>
-                                        <option value="general15">충남</option>
-                                        <option value="general16">충북</option>
+                                        <option value="강원" data-sub="general01">강원</option>
+                                        <option value="경기">경기</option>
+                                        <option value="경남">경남</option>
+                                        <option value="경북">경북</option>
+                                        <option value="광주">광주</option>
+                                        <option value="대구">대구</option>
+                                        <option value="대전">대전</option>
+                                        <option value="부산">부산</option>
+                                        <option value="서울">서울</option>
+                                        <option value="울산">울산</option>
+                                        <option value="인천">인천</option>
+                                        <option value="전남">전남</option>
+                                        <option value="전북">전북</option>
+                                        <option value="제주">제주</option>
+                                        <option value="충남">충남</option>
+                                        <option value="충북">충북</option>
                                     </select>
 
                                     <select  id="categoryAreaDetails" name="categoryAreaDetails" class="form-select" aria-label="Default select example">
@@ -69,11 +69,11 @@
                     </tbody>
                 </table>
                 <div class="form-check form-switch mt-4 pt-4 border-top">
-                    <label  class="form-check-label" for="flexSwitchCheckDefault"> 여행 리스트 함께 공유하기</label>
+                    <label  class="form-check-label" th:for="*{categoryOpen}"> 여행 리스트 함께 공유하기</label>
                     <input th:field="*{categoryOpen}" th:id="*{categoryOpen}" th:name="*{categoryOpen}" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 </div>
                 <p class="txt_info mt-2">* '여행지 찾기'메뉴 에서 모두와 공유하고 소통할 수 있어요.</p>
-                <a id="btnCategorySave" href="javascript:void(0)"  class="w-100 btn btn-primary mt-4">일정 만들기</a>
+                <button id="btnCategorySave" type="button"  class="w-100 btn btn-primary mt-4">일정 만들기</button>
              </form>
 
         </div>
@@ -98,48 +98,7 @@
 
     <!-- end :Modal -->
 
-
-
-    <script  type="text/javascript">
-
-
-          $(function (){
-
-            let form = document.querySelector("#categoryForm");
-            let name = document.querySelector("#categoryName");
-            let dateStart = document.querySelector("#dateStart");
-            let dateEnd = document.querySelector("#dateEnd");
-            let categoryArea = document.querySelector("#categoryArea");
-            let categoryAreaDetails = document.querySelector("#categoryAreaDetails");
-
-            $("#btnCategorySave").on('click',function (){
-
-                if(name.value == ''){
-                    $('.modal-message').text("여행명을 입력하세요.");
-                    $('#modalJoin').modal("show");
-                    return false;
-                }
-                if(dateStart.value == ''){
-                    $('.modal-message').text("출발일을 입력하세요.");
-                    $('#modalJoin').modal("show");
-                    return false;
-                }
-                if(dateEnd.value == ''){
-                    $('.modal-message').text("종료일을 입력하세요.");
-                    $('#modalJoin').modal("show");
-                    return false;
-                }
-                if(categoryArea.value == ''){
-                    $('.modal-message').text("지역을 입력하세요.");
-                    $('#modalJoin').modal("show");
-                    return false;
-                }
-
-                form.submit();
-           })
-        });
-    </script>
-
+    <!-- 장소 -->
     <script>
         function categoryChange(e) {
             const state = document.getElementById("categoryAreaDetails");
@@ -161,37 +120,37 @@
             const chungbuk = ["제천시","청주시","충주시","괴산군","단양군","보은군","영동군","옥천군","음성군","증평군","진천군","청원군"];
 
 
-            if (e.value == "general01") {
+            if (e.value == "강원") {
                 add = gangwon;
-            } else if (e.value == "general02") {
+            } else if (e.value == "경기") {
                 add = gyeonggi;
-            } else if (e.value == "general03") {
+            } else if (e.value == "경남") {
                 add = gyeongsangnam;
-            } else if (e.value == "general04") {
+            } else if (e.value == "경북") {
                 add = gyeongsangbuk;
-            } else if (e.value == "general05") {
+            } else if (e.value == "광주") {
                 add = gwangju;
-            } else if (e.value == "general06") {
+            } else if (e.value == "대구") {
                 add = daegu;
-            } else if (e.value == "general07") {
+            } else if (e.value == "대전") {
                 add = daejeon;
-            } else if (e.value == "general08") {
+            } else if (e.value == "부산") {
                 add = busan;
-            } else if (e.value == "general09") {
+            } else if (e.value == "서울") {
                 add = seoul;
-            } else if (e.value == "general10") {
+            } else if (e.value == "울산") {
                 add = ulsan;
-            } else if (e.value == "general11") {
+            } else if (e.value == "인천") {
                 add = incheon;
-            } else if (e.value == "general12") {
+            } else if (e.value == "전남") {
                 add = jeonnam;
-            } else if (e.value == "general13") {
+            } else if (e.value == "전북") {
                 add = jeonbuk;
-            } else if (e.value == "general14") {
+            } else if (e.value == "제주") {
                 add = jeju;
-            } else if (e.value == "general15") {
+            } else if (e.value == "충남") {
                 add = chungnam;
-            } else if (e.value == "general16") {
+            } else if (e.value == "충북") {
                 add = chungbuk;
             }
 
@@ -207,9 +166,8 @@
         }
     </script>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <!-- 달력 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript">
 
         $(document).ready(function(){
@@ -341,6 +299,42 @@
         }
     </script>
 
+
+    <!-- 폼저장 -->
+    <script type="text/javascript">
+        $(function (){
+
+            let form = document.querySelector("#categoryForm");
+            let name = document.querySelector("#categoryName");
+            let dateStart = document.querySelector("#dateStart");
+            let dateEnd = document.querySelector("#dateEnd");
+            let categoryArea = document.querySelector("#categoryArea");
+            let categoryAreaDetails = document.querySelector("#categoryAreaDetails");
+
+            $("#btnCategorySave").on('click',function (){
+
+                if(name.value == ''){
+                    $('.modal-message').text("여행명을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(dateStart.value == ''){
+                    $('.modal-message').text("출발일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(dateEnd.value == ''){
+                    $('.modal-message').text("종료일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(categoryArea.value == ''){
+                    $('.modal-message').text("지역을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+
+                form.submit();
+            })
+        });
+    </script>
 
 </th:block>
 </html>

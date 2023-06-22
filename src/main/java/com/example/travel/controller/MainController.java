@@ -1,28 +1,19 @@
 package com.example.travel.controller;
 
 import com.example.travel.domain.UserImage;
-import com.example.travel.dto.user.UserDTO;
-import com.example.travel.repository.UserImageRepository;
+import com.example.travel.repository.member.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.net.URLDecoder;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 

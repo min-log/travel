@@ -1,7 +1,8 @@
-package com.example.travel.repository;
+package com.example.travel.repository.member;
 
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserTravel;
+import com.example.travel.repository.ImageRepository;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

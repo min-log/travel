@@ -2,7 +2,6 @@ package com.example.travel.controller.member;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
-import com.example.travel.repository.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.service.user.UserService;
 import lombok.AllArgsConstructor;

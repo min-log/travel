@@ -1,23 +1,17 @@
 package com.example.travel.security.service;
 
 import com.example.travel.domain.UserTravel;
-import com.example.travel.dto.user.UserResponseDTO;
-import com.example.travel.repository.UserImageRepository;
-import com.example.travel.repository.UserRepository;
+import com.example.travel.repository.member.UserImageRepository;
+import com.example.travel.repository.member.UserRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
-import com.example.travel.security.dto.UserTravelDTO;
-import com.example.travel.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service
