@@ -15,12 +15,14 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Category categoryId;
 
-    private String itemDay; //여행 DAY
+    private int itemDay; //여행 DAY
+    private int itemNumber; // DAY 안에서 순서
+
     private int itemAccount; // 비용
+
     private String itemContent; //내용
 
     //kakao api

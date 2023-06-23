@@ -6,7 +6,7 @@
   <div class="navbar">
     <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
     </button>
-    <div class="navbar_wrap">
+    <div class="navbar_wrap scrollBar">
       <div class="profile_card ">
         <p class="profile_image_wrap border">
           <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false}" th:src="${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="">
@@ -41,20 +41,6 @@
       </ul>
     </div>
   </div>
-  <script type="text/javascript">
-      $(function (){
-          let navBox = $(".navbar");
-          $(".btn_navbar").on('click',function (){
-            if (navBox.hasClass("close")){
-                navBox.removeClass("close");
-            }else {
-                navBox.addClass("close");
-            }
-
-
-          });
-      })
-  </script>
 
 </th:block>
 </html>

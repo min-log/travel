@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="navBarTravelMap">
+  <div class="navbar">
+    <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
+    </button>
+    <div class="navbar_wrap scrollBar">
+      <div class="flex-column ">
+          <div class="top">
+              <h4><i class="bi bi-map-fill"></i> 여행명</h4>
+              <p class="mt-2"> 날짜</p>
+              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
+                일정선택</h4>
+              <p class="txt_info mt-1">※ 일정을 완성하면 저장을 꼭 눌러주세요!</p>
+              <div class="day_select flex-column flex-lg-row mt-3" style="display: flex;">
+                <select class="form-select" aria-label="Default select example">
+                  <option selected>DAY</option>
+                  <option>1DAY</option>
+                  <option>2DAY</option>
+                  <option>3DAY</option>
+                </select>
+                <a class="ms-3" href="">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
+                  </svg>
+                </a>
+              </div>
+
+
+              <div class="day_wrap mt-2 border box-gray p-3 rounded-2">
+                <form>
+                  <input id="categoryId" value="카테고리 아이디" type="hidden">
+                  <input id="itemDay" value="여행일" type="hidden">
+                  <input id="itemNumber" value="저장된 순서" type="hidden">
+                  <input id="id" value="장소 id" type="hidden">
+                  <table>
+                    <colgroup>
+                      <col style="width:60px">
+                      <col style="width:auto">
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th><label>장소명</label></th>
+                        <td><input id="placeName" class="form-control form-control-sm" type="text"></td>
+                      </tr>
+                      <tr>
+                        <th><label>주소</label></th>
+                        <td>
+                          <input id="addressName" class="form-control form-control-sm" placeholder="지번주소" type="text">
+                          <input id="roadAddressName" class="form-control form-control-sm mt-2" placeholder="도로명주소" type="text">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><label>연락처</label></th>
+                        <td><input id="phone" class="form-control form-control-sm" type="text"></td>
+                      </tr>
+                      <tr>
+                        <th><label>URL</label></th>
+                        <td><input id="placeUrl" class="form-control form-control-sm" type="text"></td>
+                      </tr>
+                      <tr>
+                        <th><label>비용</label></th>
+                        <td><input id="itemAccount" class="form-control form-control-sm" type="text"></td>
+                      </tr>
+                      <tr>
+                        <th><label>운영시간</label></th>
+                        <td><input id="placeTime" class="form-control form-control-sm" type="text"></td>
+                      </tr>
+                      <tr>
+                        <th><label>도착시간</label></th>
+                        <td>
+                          <div class="form-group">
+                            <div class='input-group date' id='datetimepicker3'>
+                                          <input type='text' class="form-control" />
+                                          <span class="input-group-addon">
+                                   <span class="glyphicon glyphicon-time"></span>
+                                   </span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><label>내용</label></th>
+                        <td><textarea id="itemContent" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="mt-3 overflow-hidden">
+                    <div class="btn-group float-end">
+                      <a href="" class="btn btn-outline-secondary btn-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                        </svg>
+                      </a>
+                      <a href="" class="btn btn-dark btn-sm">저장</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            <!-- end : day_wrap -->
+
+              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> 하루 리스트</h4>
+              <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
+              <ul id="sortable" class="item_wrap  list-group mt-3">
+                <li class="ui-state-default list-group-item lh-sm">
+                  <a href="javascript:void(0)">Item 1</a>
+                  <i class="bi bi-chevron-expand"></i>
+                </li>
+                <li class="ui-state-default list-group-item lh-sm">
+                  <a href="javascript:void(0)">Item 2</a>
+                  <i class="bi bi-chevron-expand"></i>
+                </li>
+                <li class="ui-state-default list-group-item lh-sm">
+                  <a href="javascript:void(0)">Item 3</a>
+                  <i class="bi bi-chevron-expand"></i>
+                </li>
+              </ul>
+              <!-- end : sortable -->
+
+          </div>
+          <!-- end : top -->
+          <div class="bottom mt-5">
+
+
+            <div class="btn-group">
+              <a class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+              <a class="btn btn-primary" type="button" style="width:100%">저장</a>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 시간-->
+
+  <script type="text/javascript">
+      $(function () {
+          $('#datetimepicker3').datetimepicker({
+              format: 'LT'
+          });
+      });
+  </script>
+
+  <script>
+      $( function() {
+          $( "#sortable" ).sortable();
+      } );
+  </script>
+
+</th:block>
+</html>

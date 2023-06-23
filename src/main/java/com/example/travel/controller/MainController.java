@@ -31,7 +31,7 @@ public class MainController {
     @GetMapping("/security-login")
     public String securityLogin(@AuthenticationPrincipal UserTravelAdapter user,
                                 HttpSession session){
-        log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
+        log.info("회원 로그인 여부에 따른 세션");
         if (user != null){
             log.info("로그인"); String profile = user.getProfile();
             String img=null;
@@ -52,7 +52,7 @@ public class MainController {
             }
             session.setAttribute("userT",user);
         }else{
-            log.info("user 정보 제거");
+            log.info("로그아웃");
             session.removeAttribute("userT");
         }
         return "redirect:/main";
@@ -60,13 +60,9 @@ public class MainController {
 
     @GetMapping(value = {"","main"})
     public String main(
-            @AuthenticationPrincipal UserTravelAdapter user,
-            HttpSession session,
             HttpServletRequest request,
             Model model
       ){
-
-
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {

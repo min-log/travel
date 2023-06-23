@@ -36,20 +36,20 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/mypage").hasRole("USER")
-                //.antMatchers("/travel").hasRole("USER")
+                .antMatchers("/travel").hasRole("USER")
                 .antMatchers("/admin").hasRole("ADMIN")
         ;
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/security-login") // 회원정보 저장
+                .defaultSuccessUrl("/security-login", true) // 회원정보 저장:  두번째 인자가 true일경우 무조건 로그인시 해당 페이지 이동
                 //.defaultSuccessUrl("/")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
 
         //소셜 로그인 구글 / 네이버 / 카카오
         http.oauth2Login()
-                .defaultSuccessUrl("/security-login"); // 회원정보 저장; //소셜 로그인 구글 추가
+                .defaultSuccessUrl("/security-login" ,true); // 회원정보 저장; //소셜 로그인 구글 추가
 
         // 자동 로그인
         http.rememberMe()
