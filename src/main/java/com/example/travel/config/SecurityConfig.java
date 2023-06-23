@@ -1,6 +1,5 @@
 package com.example.travel.config;
 
-import com.example.travel.security.handler.UsrCustomLoginSuccessHandler;
 import com.example.travel.security.service.CustomAuthFailureHandler;
 import com.example.travel.security.service.UserTravelDetailsService;
 import lombok.RequiredArgsConstructor;
