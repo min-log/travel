@@ -28,7 +28,10 @@ input.err {}
 .btn_social.google {background: #1b17ffcc; color:#fff}
 .btn_social.kakao {background: #ffe900; }
 .btn_social.kakao img {width:35px;margin-right:0;}
-/*ID 찾기*/
+.btn_social.naver {background:#1dc800;color:#fff;}
+.btn_social.naver img {width:32px;}
+
+    /*ID 찾기*/
 #mail-Check-Btn {border-top-left-radius:0;border-bottom-left-radius: 0;}
 .mail-check-box {position:relative;}
 .mail-check-box .mail-check-input {padding-right:80px;text-overflow: ellipsis;overflow: hidden;word-wrap: break-word;white-space: inherit;}

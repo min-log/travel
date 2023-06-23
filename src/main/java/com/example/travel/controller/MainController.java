@@ -58,6 +58,8 @@ public class MainController {
                 log.info("없음");
             }
             session.setAttribute("userT",user);
+        }else{
+            session.removeAttribute("userT");
         }
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지

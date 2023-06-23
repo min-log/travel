@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserTravelAdapter extends UserTravelDTO implements Serializable {
     private UserTravel userTravel;
+
     public UserTravelAdapter(
             UserTravel userTravel
     ) {

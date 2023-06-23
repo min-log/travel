@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Log4j2
@@ -28,10 +29,8 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
     private final PasswordEncoder passwordEncoder;
 
     // 이미지 관련 추가
-    private final FileService fileService;
     private final UserImageRepository userImageRepository;
-    @Value("${spring.servlet.multipart.location}")
-    private String uploadPath;
+
 
     @Transactional
     @Override
@@ -51,16 +50,36 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
         // 1. 이메일 추출
         String email = null;
         String picture = null;
+        String name = null;
+        String mobile = null;
 
         if (clientName.equals("Google")){
             email = oAuth2User.getAttribute("email");
             picture =oAuth2User.getAttribute("picture");
+
+
+        }else if(clientName.equals("Naver")){
+            log.info("네이버");
+            Map map = (Map) oAuth2User.getAttributes().get("response");
+            email =(String)map.get("email");
+            picture =(String)map.get("profile_image");
+            name = (String)map.get("name");
+            mobile = (String)map.get("mobile");
+        }else if(clientName.equals("Kakao")){
+            log.info("카카오");
+            Map kakaoAccount = (Map)oAuth2User.getAttributes().get("kakao_account");
+            Map profile = (Map) kakaoAccount.get("profile");
+
+            email =(String)kakaoAccount.get("email");
+            picture =(String)profile.get("profile_image_url");
+            name = (String)profile.get("nickname");
         }
+
+
         log.info("email : {}",email);
         log.info("picture : {}",picture);
 
         Optional<UserTravel> userByUserIdAndUserSocial = userRepository.getUserByUserIdAndUserSocial(email, true);
-
 
         if (userByUserIdAndUserSocial.isPresent()){
             log.info("OAuth 유저가 있을 경우");
@@ -71,15 +90,19 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
 
         }
 
+
         // 2. 회원가입 로직
-       log.info("userOAuth 회원가입 로직 ===============");
+        log.info("userOAuth Google 회원가입 로직 ===============");
         UserTravel userOAuth = UserTravel.builder()
-                .userId(email)
                 .userEmail(email)
+                .userId(email)
+                .name(name)
+                .userPhone(mobile)
                 .password(passwordEncoder.encode("1111"))
                 .userSocial(true)
                 .build();
         userOAuth.roleAdd(UserRole.USER); // 권한 추가
+
         UserImage build = UserImage.builder().build(); //저장할 이미지
         if (picture != null){ // 이미지가 있을경우
             log.info("이미지가 존재");
@@ -88,9 +111,10 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
             log.info("이미지가 없음");
         }
 
-        UserImage ImageSaveResult = userImageRepository.save(build);
+
+        UserImage ImageSaveResult = userImageRepository.save(build); // 이미지 저장
         userOAuth.updateUserImage(ImageSaveResult);
-        UserTravel save = userRepository.save(userOAuth);  //저장
+        UserTravel save = userRepository.save(userOAuth);  // 회원 저장
         UserTravelAdapter userTravelAdapter = new UserTravelAdapter(save, oAuth2User.getAttributes());
         userTravelAdapter.setProfile(ImageSaveResult.getOriginFileName());
         return userTravelAdapter;
