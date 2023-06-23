@@ -28,16 +28,10 @@ public class MainController {
     final UserImageRepository userImageRepository;
 
 
-
-    @GetMapping(value = {"","main"})
-    public String main(
-            @AuthenticationPrincipal UserTravelAdapter user,
-            HttpSession session,
-            HttpServletRequest request,
-            Model model
-      ){
-
-        //log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
+    @GetMapping("/security-login")
+    public String securityLogin(@AuthenticationPrincipal UserTravelAdapter user,
+                                HttpSession session){
+        log.info("회원 로그인 성공 여부에 따른 쿠키 제거");
         if (user != null){
             log.info("로그인"); String profile = user.getProfile();
             String img=null;
@@ -52,15 +46,27 @@ public class MainController {
                 if (path == null){
                     img = originFileName;
                 }
-
                 user.setProfile(img);
             }else {
-                log.info("없음");
+                log.info("이미지 없음");
             }
             session.setAttribute("userT",user);
         }else{
+            log.info("user 정보 제거");
             session.removeAttribute("userT");
         }
+        return "redirect:/main";
+    }
+
+    @GetMapping(value = {"","main"})
+    public String main(
+            @AuthenticationPrincipal UserTravelAdapter user,
+            HttpSession session,
+            HttpServletRequest request,
+            Model model
+      ){
+
+
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {

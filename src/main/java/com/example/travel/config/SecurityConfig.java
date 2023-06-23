@@ -1,5 +1,6 @@
 package com.example.travel.config;
 
+import com.example.travel.security.handler.UsrCustomLoginSuccessHandler;
 import com.example.travel.security.service.CustomAuthFailureHandler;
 import com.example.travel.security.service.UserTravelDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +43,14 @@ public class SecurityConfig {
         http.formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/security-login") // 회원정보 저장
+                //.defaultSuccessUrl("/")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
 
+        //소셜 로그인 구글 / 네이버 / 카카오
+        http.oauth2Login()
+                .defaultSuccessUrl("/security-login"); // 회원정보 저장; //소셜 로그인 구글 추가
 
         // 자동 로그인
         http.rememberMe()
@@ -56,9 +61,9 @@ public class SecurityConfig {
 
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/security-login");
 
-        http.oauth2Login(); //소셜 로그인 구글 추가
+
         
         return http.build();
     }
@@ -71,5 +76,8 @@ public class SecurityConfig {
         firewall.setAllowUrlEncodedSlash(true);
         return firewall;
     }
+
+
+
 
 }
