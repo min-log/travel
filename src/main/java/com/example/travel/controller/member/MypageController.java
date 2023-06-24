@@ -64,6 +64,7 @@ public class MypageController {
         log.info("프로필 이미지 변경==============================");
         log.info(userDto.getUserId());
         log.info(userDto.getUserImg().getName());
+        log.info(userDto.getUserImg());
         String profileImage = userService.userProfileImage(userDto);
         log.info(profileImage);
 
@@ -72,7 +73,9 @@ public class MypageController {
             redirectAttributes.addFlashAttribute("modal","이미지가 변경되었습니다.");
             log.info("변경된 이미지 명 : {}",profileImage);
             user.setProfile(profileImage);
+            user.setPath("true");
             session.setAttribute("userT",user);
+
             return "redirect:/mypage";
         }else{
             redirectAttributes.addFlashAttribute("modal","이미지 변경이 실패 했습니다.");

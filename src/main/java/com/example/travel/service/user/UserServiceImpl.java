@@ -10,6 +10,7 @@ import com.example.travel.repository.member.UserRepository;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
 
         log.info("저장하자");
-        UserImage imageDTO = fileService.createImageDTO(userImg);
+        UserImage imageDTO = fileService.createImageDTO(userImg,"profile");
         UserImage save = userImageRepository.save(imageDTO);
         entity.updateUserImage(save);
 
@@ -267,14 +268,23 @@ public class UserServiceImpl implements UserService {
         log.info("userProfileImage ----------------------");
         log.info(0);
         UserTravel userTravelByUserId = userRepository.getUserTravelByUserId(userDto.getUserId());
-        Long id = userTravelByUserId.getUserImg().getId();
-
+        Long id = userTravelByUserId.getUserImg().getId(); //새로운 이미지 저장을 위한 이미지 고유 번호
+        // 변경전 이미지 제거 --------------
+        if (userTravelByUserId.getUserImg().getUuid() != null){ // 실제 이미지 경로가 존재하면
+            log.info("기존 이미지 제거");
+            String uuid = userTravelByUserId.getUserImg().getUuid();
+            String path = userTravelByUserId.getUserImg().getPath();
+            String originFileName = userTravelByUserId.getUserImg().getOriginFileName();
+            String fileName = path + "\\"+originFileName;
+            fileService.removeFile(fileName);//실제 이미지 제거
+        }
+        // 변경전 이미지 제거 --------------
         UserImage userImage = new UserImage();
         userImage.setId(id);
         MultipartFile userImg = userDto.getUserImg();
 
         //새로운 이미지
-        UserImage image = fileService.createImageDTO(userImg);
+        UserImage image = fileService.createImageDTO(userImg,"profile");
         image.setId(id);
         log.info("image : {}",image);
         UserImage save = userImageRepository.save(image);
@@ -283,7 +293,11 @@ public class UserServiceImpl implements UserService {
         UserTravel result = userRepository.save(userTravelByUserId);
 
         log.info(result);
-        return result.getUserId();
+
+        String path = result.getUserImg().getPath();
+        String uuid = result.getUserImg().getUuid();
+        String originFileName = result.getUserImg().getOriginFileName();
+        return originFileName;
     }
 
     @Override

@@ -29,9 +29,11 @@
         <div class="user_info flex-shrink-0 dropdown">
           <a href="#" class="link-dark text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
             <p class="profile_image_wrap">
-              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false}" th:src="${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
-              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == true}" th:src="${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="rounded-circle">
               <img sec:authorize="isAnonymous()" src="/img/profile_img.png" alt="유저이미지" class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false && session.userT.path == null}" src="/img/profile_img.png" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == false && session.userT.path != null}" th:src="'\\upload\\profile\\'+${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == true && session.userT.path != null}" th:src="'\\upload\\profile\\s_'+${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="rounded-circle">
+              <img sec:authorize="isAuthenticated()" th:if="${session.userT != null && session.userT.userSocial == true && session.userT.path == null}" th:src="${session.userT.profile}" th:alt="${session.userT.userId} + '님의 프로필 이미지'" class="rounded-circle">
             </p>
             <i class="bi bi-arrow-down-short"></i>
 

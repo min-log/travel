@@ -30,6 +30,7 @@ public class UserTravelAdapter extends UserTravelDTO implements Serializable {
                 userTravel.getUserSocial(),
                 userTravel.getUserNo(),
                 userTravel.getUserImg().getOriginFileName(),
+                userTravel.getUserImg().getPath(),
                 userTravel.getRoleSet().stream().map( i-> new SimpleGrantedAuthority("ROLE_"+i.name())).collect(Collectors.toSet()));
         this.userTravel = userTravel;
     }
@@ -41,6 +42,7 @@ public class UserTravelAdapter extends UserTravelDTO implements Serializable {
                 userTravel.getUserSocial(),
                 userTravel.getUserNo(),
                 userTravel.getUserImg().getOriginFileName(),
+                userTravel.getUserImg().getPath(),
                 userTravel.getRoleSet().stream().map( i-> new SimpleGrantedAuthority("ROLE_"+i.name())).collect(Collectors.toSet())
                 , attr);
     }

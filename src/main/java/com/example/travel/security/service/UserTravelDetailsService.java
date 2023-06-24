@@ -48,7 +48,6 @@ public class UserTravelDetailsService implements UserDetailsService {
     private UserTravelAdapter userS(String userId) {
         Optional<UserTravel> result = userRepository.getUserPullByUserId(userId);
         if (result.isPresent()){
-            System.out.println("?");
             UserTravel userTravel1 = result.get();
             System.out.println(userTravel1);
             System.out.println(userTravel1.getUserImg().getOriginFileName());

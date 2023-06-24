@@ -24,6 +24,7 @@ public class UserTravelDTO extends User implements OAuth2User {
     private Long userNo;
     private String name;
     private String profile;
+    private String path;
 
     private Map<String,Object> attr; //OAuth2User 정보
 
@@ -32,12 +33,14 @@ public class UserTravelDTO extends User implements OAuth2User {
                          Boolean userSocial,
                          Long userNo,
                          String profile,
+                         String path,
                          Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = username;
         this.password = password;
         this.userSocial = userSocial;
         this.profile = profile;
+        this.path = path;
         this.userNo = userNo;
     }
 
@@ -46,10 +49,11 @@ public class UserTravelDTO extends User implements OAuth2User {
                          Boolean userSocial,
                          Long userNo,
                          String profile,
+                         String path,
                          Collection<? extends GrantedAuthority> authorities,
                          Map<String,Object> attr
     ) {
-        this(username,password,userSocial,userNo,profile,authorities); // 기존생성자
+        this(username,password,userSocial,userNo,profile,path,authorities); // 기존생성자
         this.attr = attr; //OAuth2User 정보
     }
 
