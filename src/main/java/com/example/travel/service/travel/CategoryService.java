@@ -4,6 +4,7 @@ import com.example.travel.domain.Category;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.List;
 
 public interface CategoryService {
     boolean categorySave(CategoryDTO categoryDTO);
+    int categoryDays(String start, String end);
+
+
+
 
 
     default Category dtoToEntity(CategoryDTO categoryDTO){

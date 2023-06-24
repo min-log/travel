@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
 
 <th:block th:fragment="navBarTravelMap">
   <div class="navbar">
@@ -8,20 +9,32 @@
     </button>
     <div class="navbar_wrap scrollBar">
       <div class="flex-column ">
-          <div class="top">
-              <h4><i class="bi bi-map-fill"></i> 여행명</h4>
-              <p class="mt-2"> 날짜</p>
+          <div class="top" th:object="${category}">
+              <form th:action="@{/travel/categorySave}" th:method="post">
+                <h4 class="text-center">
+                  <span th:text="*{categoryName}"></span>
+                </h4>
+                <div class="mt-2 d-flex flex-column flex-lg-row">
+                  <input th:field="*{dateStart}" th:id="*{dateStart}" th:name="*{dateStart}" th:value="*{dateStart}" class="border-0 text-center" readonly>
+                   <span class="ml-2"> - </span>
+                  <input th:field="*{dateEnd}" th:id="*{dateEnd}" th:name="*{dateEnd}" th:value="*{dateEnd}" class="border-0 text-center ml-2" readonly>
+                </div>
+                <input th:field="*{categoryName}" th:id="*{categoryName}" th:name="*{categoryName}" th:value="*{categoryName}" type="hidden"  readonly>
+                <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden" readonly>
+                <input th:field="*{categoryAreaDetails}" th:id="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" th:value="*{categoryAreaDetails}" type="hidden" readonly>
+                <input th:field="*{categoryOpen}" th:id="*{categoryOpen}" th:name="*{categoryOpen}" th:value="*{categoryOpen}" type="hidden" readonly>
+              </form>
+
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
                 일정선택</h4>
               <p class="txt_info mt-1">※ 일정을 완성하면 저장을 꼭 눌러주세요!</p>
               <div class="day_select flex-column flex-lg-row mt-3" style="display: flex;">
                 <select class="form-select" aria-label="Default select example">
-                  <option selected>DAY</option>
-                  <option>1DAY</option>
-                  <option>2DAY</option>
-                  <option>3DAY</option>
+                  <th:block th:each="list, i : ${days}">
+                    <option th:text="|D -${i.index + 1}|" th:value="${i.index + 1}"></option>
+                  </th:block>
                 </select>
-                <a class="ms-3" href="">
+                <a class="ms-3" href="javascript:void(0);">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
                   </svg>
@@ -72,18 +85,13 @@
                         <th><label>도착시간</label></th>
                         <td>
                           <div class="form-group">
-                            <div class='input-group date' id='datetimepicker3'>
-                                          <input type='text' class="form-control" />
-                                          <span class="input-group-addon">
-                                   <span class="glyphicon glyphicon-time"></span>
-                                   </span>
-                            </div>
+                            <input id="itemTime"  type='text' class="form-control" />
                           </div>
                         </td>
                       </tr>
                       <tr>
                         <th><label>내용</label></th>
-                        <td><textarea id="itemContent" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
+                        <td><textarea id="itemInfo" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
                       </tr>
                     </tbody>
                   </table>
@@ -134,15 +142,6 @@
     </div>
   </div>
 
-
-  <!-- 시간-->
-  <script type="text/javascript">
-      $(function () {
-          $('#datetimepicker3').datetimepicker({
-              format: 'LT'
-          });
-      });
-  </script>
 
   <script>
       $( function() {

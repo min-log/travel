@@ -28,9 +28,7 @@ public class Category extends BaseEntity{
     private boolean categorySave; // 임시저장 여부  최종 저장 전에는 false -> true
     private boolean categoryOpen; // 카테고리 외부 공개 여부
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "category_id")
-    private List<Item> items;
+
 
 
 

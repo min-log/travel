@@ -3,6 +3,7 @@ package com.example.travel.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +21,10 @@ public class Item extends BaseEntity {
 
     private int itemDay; //여행 DAY
     private int itemNumber; // DAY 안에서 순서
-
     private int itemAccount; // 비용
-
-    private String itemContent; //내용
+    private String itemInfo; // 정보 내용
+    private String itemContent; // 회원 컨텐츠
+    private LocalDateTime itemTime; // 도착 시간
 
     //kakao api
     private String id; // 장소 ID

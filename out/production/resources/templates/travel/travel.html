@@ -7,7 +7,9 @@
         <!-- start : navbar -->
         <th:block th:replace="layout/navBarTravel::navBarTravel"></th:block>
         <div class="content">
-            <h2 class="tit text-center mb-4">'Travel Road'와 함께 나만의 여행을 만들어보세요.</h2>
+            <h2 class="tit text-center mb-4">
+                나만의 여행을 만들어보세요.
+            </h2>
             <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
                 <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden" readonly>
                 <table>
@@ -34,7 +36,7 @@
                             <td>
                                 <div class="search_boxes">
                                     <select  id="categoryArea" name="categoryArea" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
-                                        <option value>시/도 선택</option>
+                                        <option value="null">시/도 선택</option>
                                         <option value="강원" data-sub="general01">강원</option>
                                         <option value="경기">경기</option>
                                         <option value="경남">경남</option>
@@ -54,7 +56,7 @@
                                     </select>
 
                                     <select  id="categoryAreaDetails" name="categoryAreaDetails" class="form-select" aria-label="Default select example">
-                                        <option>군/구 선택</option>
+                                        <option value="null">군/구 선택</option>
                                     </select>
                                 </div>
                             </td>
@@ -69,7 +71,7 @@
                     </tbody>
                 </table>
                 <div class="form-check form-switch mt-4 pt-4 border-top">
-                    <label  class="form-check-label" th:for="*{categoryOpen}"> 여행 리스트 함께 공유하기</label>
+                    <label  class="form-check-label" th:for="*{categoryOpen}"> 여행 함께 공유하기</label>
                     <input th:field="*{categoryOpen}" th:id="*{categoryOpen}" th:name="*{categoryOpen}" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 </div>
                 <p class="txt_info mt-2">* '여행지'게시판 에서 모두와 공유하고 소통할 수 있어요.</p>

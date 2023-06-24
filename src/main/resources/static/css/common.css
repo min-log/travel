@@ -5,6 +5,10 @@
     font-style: normal;
 }
 
+input:focus, select:focus, option:focus, textarea:focus, button:focus{
+    outline: none;
+}
+.w-auto {width:auto}
 .ml-2 {margin-left: 0.5rem!important}
 
 * {font-family: S-CoreDream-3Light !important;color:#333;font-size:14px;line-height:1.4em !important;}
