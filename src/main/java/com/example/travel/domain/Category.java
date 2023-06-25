@@ -2,6 +2,7 @@ package com.example.travel.domain;
 
 
 import lombok.*;
+import org.springframework.data.jpa.repository.Modifying;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,8 +18,8 @@ public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryNo;
-    @OneToOne(fetch = FetchType.LAZY)
-    private UserTravel userTravelNo;  //작성자 No
+
+    private Long userTravelNo;  //작성자 No
 
     private String categoryName; // 카테고리 이름
     private LocalDateTime dateStart;

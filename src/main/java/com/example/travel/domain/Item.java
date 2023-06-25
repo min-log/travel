@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private Long itemNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Category categoryId;
+    private Category categoryNo;
 
     private int itemDay; //여행 DAY
     private int itemNumber; // DAY 안에서 순서

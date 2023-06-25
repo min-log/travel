@@ -11,31 +11,77 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
+
+
     @Override
-    public boolean categorySave(CategoryDTO categoryDTO) {
+    public List<CategoryDTO> getCategoryTemList(Long no) {
+        log.info("임시 저장된 내용 전달");
+        List<CategoryDTO> result = new ArrayList<>();
+        try{
+            List<Category> userTravelNo = categoryRepository.getCategoryTemList(no);
+            if (userTravelNo.isEmpty()){
+                log.info("없으면 null");
+                return result;
+            }
+            log.info("있으면 리스트 전달");
+            log.info(userTravelNo);
+            result = userTravelNo.stream().map(item -> categoryEntityToDto(item)).collect(Collectors.toList());            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    @Override
+    public CategoryDTO categorySave(CategoryDTO categoryDTO) {
+        log.info("카테고리 임시저장 로직-----------");
+        Long userTravelNo = categoryDTO.getUserTravelNo();
+        log.info(userTravelNo);
         // 카테고리저장
         // 해쉬태그 저장
         // 태그 저장
+        List<CategoryDTO> categoryTemList = getCategoryTemList(categoryDTO.getUserTravelNo());
+        int size = categoryTemList.size();
+        if (size > 4){
+            log.info("5개 이상 리스트가 있으면");
+            return null;
+        }
+        categoryDTO.setCategorySave(false); //초기 임시저장
+        Category category = categoryDtoToEntity(categoryDTO);
+        log.info("저장된 category : {}",category);
 
-        Category category = dtoToEntity(categoryDTO);
-        categoryRepository.save(category);
+        Category result = categoryRepository.save(category);
+        CategoryDTO dto = categoryEntityToDto(result);
 
+        return dto;
+    }
 
-        return false;
+    @Override
+    public boolean categoryDelete(Long no) {
+        Optional<Category> categorys = categoryRepository.findById(no);
+        if (!categorys.isPresent()){
+            return false;
+        }
+        Category category = categorys.get();
+        categoryRepository.delete(category);
+
+        return true;
     }
 
     @Override
     public int categoryDays(String start, String end) {
         log.info("D-day 계산");
-
-        // 포맷터
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         // 문자열
         start = start + " 00:00:00.000";

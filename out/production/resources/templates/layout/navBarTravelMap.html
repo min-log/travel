@@ -14,11 +14,14 @@
                 <h4 class="text-center">
                   <span th:text="*{categoryName}"></span>
                 </h4>
-                <div class="mt-2 d-flex flex-column flex-lg-row">
-                  <input th:field="*{dateStart}" th:id="*{dateStart}" th:name="*{dateStart}" th:value="*{dateStart}" class="border-0 text-center" readonly>
-                   <span class="ml-2"> - </span>
-                  <input th:field="*{dateEnd}" th:id="*{dateEnd}" th:name="*{dateEnd}" th:value="*{dateEnd}" class="border-0 text-center ml-2" readonly>
+                <div class="mt-2 text-center">
+                  <span th:text="*{dateStart}"></span>
+                  <span class="ml-2"> - </span>
+                  <span class="ml-2" th:text="*{dateEnd}"></span>
                 </div>
+
+                <input th:field="*{dateStart}" th:id="*{dateStart}" th:name="*{dateStart}" th:value="*{dateStart}" class="border-0 text-center" type="hidden" readonly>
+                <input th:field="*{dateEnd}" th:id="*{dateEnd}" th:name="*{dateEnd}" th:value="*{dateEnd}" class="border-0 text-center ml-2" type="hidden" readonly>
                 <input th:field="*{categoryName}" th:id="*{categoryName}" th:name="*{categoryName}" th:value="*{categoryName}" type="hidden"  readonly>
                 <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden" readonly>
                 <input th:field="*{categoryAreaDetails}" th:id="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" th:value="*{categoryAreaDetails}" type="hidden" readonly>
@@ -28,21 +31,20 @@
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
                 일정선택</h4>
               <p class="txt_info mt-1">※ 일정을 완성하면 저장을 꼭 눌러주세요!</p>
-              <div class="day_select flex-column flex-lg-row mt-3" style="display: flex;">
+              <div class="day_select flex-lg-row mt-3" style="display: flex;">
                 <select class="form-select" aria-label="Default select example">
                   <th:block th:each="list, i : ${days}">
-                    <option th:text="|D -${i.index + 1}|" th:value="${i.index + 1}"></option>
+                    <option th:text="|D -${i.index + 1}|" th:value="${i.index + 1}" th:data-cnt="${startDay + i.index}" th:selected="${i.index} == 0"></option>
                   </th:block>
                 </select>
-                <a class="ms-3" href="javascript:void(0);">
+                <a id="btnSelectDay" class="ms-3" href="javascript:void(0);">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z"/>
                   </svg>
                 </a>
               </div>
 
-
-              <div class="day_wrap mt-2 border box-gray p-3 rounded-2">
+              <div class="day_wrap mt-2 border box-gray p-3 rounded-2" style="display: none;">
                 <form>
                   <input id="categoryId" value="카테고리 아이디" type="hidden">
                   <input id="itemDay" value="여행일" type="hidden">
@@ -142,6 +144,32 @@
     </div>
   </div>
 
+  <script type="text/javascript">
+      let itemNum = 0; //아이템 순서를 결정
+
+      // 아이템 생성
+      let btnSelectDay = $("#btnSelectDay");
+      let daySelect = $(".day_select .form-select");
+      let dayContent = $(".day_wrap");
+
+      $(function () {
+          btnSelectDay.on('click', function () {
+              let dayVal = daySelect.find("option:selected").val();
+              let dayCnt = daySelect.find("option:selected").data("cnt");
+              $("#itemDay").val(dayCnt); // 날짜
+              $("#itemNumber").val(itemNum); // 생성 순서
+
+              dayContent.slideDown(1000);
+              alert("D-" + dayVal + " : " + dayCnt + "일 일정을 추가합니다.");
+              //alert(dayVal);
+
+              // $.ajax(){
+              //
+              // }
+          });
+      })
+
+  </script>
 
   <script>
       $( function() {

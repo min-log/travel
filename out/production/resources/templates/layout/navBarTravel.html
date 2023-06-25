@@ -9,33 +9,15 @@
     <div class="navbar_wrap scrollBar">
       <div class="flex-column">
           <div class="top">
-            <div>
+            <div id="categoryTemWrap" style="display:none;">
               <h4><i class="bi bi-list-ul"></i> 임시 저장 리스트</h4>
               <p class="txt_info">※ 최대 5개 이상의 임시 저장은 할 수 없습니다.</p>
-              <ul class="list-storage mt-3">
-                <li>
-                  <a class="txt" href="javascript:void(0)">제목 -------</a>
-                  <a class="btn_remove" href="javascript:void(0)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a class="txt" href="javascript:void(0)">제목 -------</a>
-                  <a class="btn_remove" href="javascript:void(0)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                      <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
-                    </svg>
-                  </a>
-                </li>
-              </ul>
+              <ul class="list-storage mt-3"></ul>
             </div>
-
           </div>
           <div class="bottom">
             <div class="">
-              <a class="btn btn-outline-secondary mt-3" type="button" style="width:100%"><i class="bi bi-list-ul"></i>
+              <a id="btnCategoryTemWrap" class="btn btn-outline-secondary mt-3" type="button" style="width:100%"><i class="bi bi-list-ul"></i>
                  임시 저장 리스트</a>
             </div>
             <ul class="list-group mt-3">
@@ -54,8 +36,78 @@
       </div>
     </div>
   </div>
+  <script>
+
+    let btnTem = $("#btnCategoryTemWrap");
+    let conTem = $("#categoryTemWrap");
+    let conTemList = $(".list-storage");
+    let con = '';
 
 
+    $(function (){
+      btnTem.on('click',function (){
+        let temVel = $("input[name=userTravelNo]").val();
+
+        categoryTemList(temVel);
+
+
+      });
+    });
+
+    function categoryTemList(data){
+        con = '';
+        $.ajax({
+            type : 'get',
+            url : 'board/categoryTemList?tem='+data,
+            success:function (data){
+                if(data.length == 0){
+                    conTem.hide();
+                    alert("임시 저장 리스트가 없습니다.");
+                    return false;
+                }
+                for(var i=0 in data){
+                    con +='<li>';
+                    con +=    '   <a class="txt" href="javascript:void(0)">'+ data[i].categoryName +'</a>';
+                    con +='   <a class="btn_remove" href="javascript:categoryDelete('+ data[i].categoryNo +')">';
+                    con +='     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">\n' +
+                        '       <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>\n' +
+                        '      </svg>\n' +
+                        '    </a>\n' +
+                        '</li>';
+                    conTemList.html(con);
+                }
+                conTem.show();
+            },
+            error:function (){
+                alert("리스트 불러오기가 실패했습니다.");
+            }
+        });
+    }
+
+
+    function categoryDelete(date){
+        let temVel = $("input[name=userTravelNo]").val();
+        if (confirm("삭제 하시겠습니까?") == true){
+            //true는 확인버튼을 눌렀을 때 코드 작성
+            $.ajax({
+                type : 'get',
+                url : 'board/categoryDelete?no='+date,
+                success:function (data){
+                    categoryTemList(temVel);
+                },
+                error:function (){
+                    alert("삭제가 실패했습니다.");
+                }
+            });
+            console.log("완료되었습니다.");
+        }else{
+            // false는 취소버튼을 눌렀을 때, 취소됨
+            console.log("취소되었습니다");
+        }
+
+
+    }
+  </script>
 
 </th:block>
 </html>

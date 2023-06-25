@@ -1,6 +1,7 @@
 package com.example.travel.dto.travel;
 
 
+import com.example.travel.domain.Category;
 import lombok.*;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDTO {
+
+    private Long categoryNo;
 
     // item
     private int itemDay; //여행 DAY
