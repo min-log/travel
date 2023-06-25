@@ -44,7 +44,7 @@ public interface CategoryService {
     default Category categoryDtoToEntity(CategoryDTO categoryDTO){
         // 문자열
         String start = categoryDTO.getDateStart() + " 00:00:00.000";
-        String end = categoryDTO.getDateStart() + " 00:00:00.000";
+        String end = categoryDTO.getDateEnd() + " 00:00:00.000";
         LocalDateTime startDate = LocalDateTime.parse(start, formatter);
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 

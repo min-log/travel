@@ -66,7 +66,7 @@ public class TravelController {
         int days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         int[] arr = new int[days];
 
-        model.addAttribute("category",categoryDTO);
+        model.addAttribute("category",result);
         model.addAttribute("days",arr);
         model.addAttribute("startDay",dayOfMonth); //시작 날짜
 
