@@ -2,7 +2,9 @@ package com.example.travel.controller.travel;
 
 
 import com.example.travel.domain.Category;
+import com.example.travel.domain.Item;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.ItemDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -71,12 +73,16 @@ public class TravelController {
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
 
+        ItemDTO item = ItemDTO.builder().categoryId(no).build();
+
         model.addAttribute("category",categoryDTO);
-        model.addAttribute("days",days);
+        model.addAttribute("days",arr);
         model.addAttribute("startDay",dayOfMonth);
+        model.addAttribute("item",item);
 
         return "travel/travelMap";
     }
+
 
 
 

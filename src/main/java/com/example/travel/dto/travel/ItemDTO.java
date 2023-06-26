@@ -14,7 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemDTO {
 
-    private Long categoryNo;
+    private Long itemNo; //여행 DAY
+    private Long categoryId;
+
 
     // item
     private int itemDay; //여행 DAY
@@ -27,10 +29,14 @@ public class ItemDTO {
     //kakao api
     private String id; // 장소 ID
     private String placeName; // 장소 명
-    private String phone; // 전화번호
+    private String placeTime; // 운영 시간
     private String placeUrl; //url
+    private String phone; // 전화번호
     private String addressName; // 지번 주소
     private String roadAddressName; // 도로명 주소
+    private String x; //x 좌표값
+    private String y; // y 좌표값
+    private String distance; // 중심좌표까지의 거리
 
 
 

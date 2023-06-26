@@ -2,10 +2,12 @@ package com.example.travel.service.travel;
 
 import com.example.travel.domain.Category;
 import com.example.travel.domain.Hashtag;
+import com.example.travel.domain.Item;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.repository.travel.HashtagRepository;
+import com.example.travel.repository.travel.ItemRepository;
 import com.example.travel.repository.travel.TagRepository;
 import groovyjarjarpicocli.CommandLine;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
     final CategoryRepository categoryRepository;
     final HashtagRepository hashtagRepository;
     final TagRepository tagRepository;
+    final ItemRepository itemRepository;
 
 
     @Override
@@ -113,21 +116,33 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean categoryDelete(Long no) {
         log.info("카테고리 제거 로직 ---------------");
 
+
         Optional<Category> categorys = categoryRepository.findById(no);
         Category category = categorys.get();
-        categoryRepository.delete(category); //3. 카테고리제거
+
+        //아이템 제거
+        List<Item> itemByCategory = itemRepository.findItemByCategory(category);
+        if(!itemByCategory.isEmpty()){
+            log.info("item 이 있으면");
+            for(int i=0;i<itemByCategory.size();i++){
+                log.info("item : {}",itemByCategory.get(i));
+                itemRepository.delete(itemByCategory.get(i));
+            }
+        }
+
 
         // 1. 태그 제거
         // 2. 해쉬태그 제거
-        // 3. 카테고리 제거
+        // 3. 해쉬태그 중간 맵핑 제거
+        // 4. 카테고리 제거
         log.info(no); // 카테고리 번호
         Optional<Hashtag> hashtag = hashtagRepository.findById(no);
         log.info("hashtag : {}",hashtag);
 
         if (hashtag.isPresent()){
+            log.info("해시태그 .isPresent()");
             log.info("카테고리 연관 해시태그, 태그 제거 로직 -------------");
             Hashtag hashtagResult = hashtag.get();
-            Long categoryId = hashtagResult.getCategoryId(); // 카테고리 번호
 
             List<Tag> tag = hashtagResult.getTag();
             if (!tag.isEmpty()){ // 리스트가 존재하면 제거 
@@ -142,12 +157,12 @@ public class CategoryServiceImpl implements CategoryService {
             } else {
                 hashtagRepository.delete(hashtagResult); // 3. 해쉬태그 제거
             }
-            return true;
         } // 해쉬태그, 태그 제거 end
 
+        categoryRepository.delete(category); //4. 카테고리제거
 
         log.info("카테고리가 없으면 false 반환");
-        return false;
+        return true;
     }
 
     @Override

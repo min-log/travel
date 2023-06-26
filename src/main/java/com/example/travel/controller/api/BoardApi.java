@@ -2,17 +2,16 @@ package com.example.travel.controller.api;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.ItemDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.service.travel.CategoryService;
+import com.example.travel.service.travel.ItemService;
 import com.example.travel.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +21,7 @@ import java.util.List;
 @RequestMapping("/board")
 public class BoardApi {
     final CategoryService categoryService;
+    final ItemService itemService;
 
     @GetMapping("/categoryTemList")
     public List<CategoryDTO> categoryTemList(@RequestParam("tem") Long temVel){
@@ -42,6 +42,18 @@ public class BoardApi {
         return result;
     }
 
+
+    @PostMapping("/itemSave")
+    public boolean itemSave(@ModelAttribute(value = "item") ItemDTO itemDTO){
+        log.info("아이템 저장 -----------------");
+        log.info(itemDTO);
+        ItemDTO itemDTO1 = itemService.itemSave(itemDTO);
+        if (itemDTO1 == null){
+            return false;
+        }
+
+        return true;
+    }
 
 
 
