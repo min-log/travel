@@ -3,6 +3,7 @@ package com.example.travel.service.travel;
 import com.example.travel.domain.Category;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -13,13 +14,14 @@ import java.util.List;
 public interface CategoryService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    List<CategoryDTO> getCategoryTemList(Long no);
+    List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트 
 
-    CategoryDTO categorySave(CategoryDTO categoryDTO);
+    CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 저장
+    CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
 
     boolean categoryDelete(Long no);
     int categoryDays(String start, String end);
-
+    
 
 
     default CategoryDTO categoryEntityToDto(Category category){
@@ -62,5 +64,5 @@ public interface CategoryService {
         return result;
     }
 
-
+    
 }

@@ -11,10 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -47,37 +44,40 @@ public class TravelController {
         return "travel/travel";
     }
 
-    @Transactional
+
     @PostMapping("/category")
-    public String categorySave(@ModelAttribute("category") CategoryDTO categoryDTO, Model model,
+    public String categorySave(@ModelAttribute("category") CategoryDTO categoryDTO,
                                RedirectAttributes redirectAttributes) {
-
         log.info(" 아이템 생성 페이지 --------------------");
-        log.info(categoryDTO);
-        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
-        int dayOfMonth = localDate.getDayOfMonth();
-
         CategoryDTO result = categoryService.categorySave(categoryDTO);
         if (result == null){
             redirectAttributes.addFlashAttribute("msg","임시저장은 5개 까지 가능합니다.");
             return "redirect:/travel";
         }
+        redirectAttributes.addAttribute("no",result.getCategoryNo());
+        return "redirect:/travel/category";
+    }
+
+    @GetMapping("/category")
+    public String categoryMap(
+            @RequestParam(value = "no") long no,
+            Model model
+    ){
+        log.info(no);
+        CategoryDTO categoryDTO = categoryService.getCategory(no);
 
         int days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         int[] arr = new int[days];
+        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
+        int dayOfMonth = localDate.getDayOfMonth();
 
-        model.addAttribute("category",result);
-        model.addAttribute("days",arr);
-        model.addAttribute("startDay",dayOfMonth); //시작 날짜
-
+        model.addAttribute("category",categoryDTO);
+        model.addAttribute("days",days);
+        model.addAttribute("startDay",dayOfMonth);
 
         return "travel/travelMap";
     }
 
-    @GetMapping("/map")
-    public String travelMapSave(){
-        return "travel/travelMap";
-    }
 
 
 

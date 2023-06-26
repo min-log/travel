@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
         return result;
     }
 
-    @Transactional
+
     @Override
     public CategoryDTO categorySave(CategoryDTO categoryDTO) {
         log.info("카테고리 임시저장 로직-----------");
@@ -92,7 +92,20 @@ public class CategoryServiceImpl implements CategoryService {
 
 
         CategoryDTO dto = categoryEntityToDto(result);
+        log.info("111 : {}",result);
+        log.info("222 : {}",dto);
         return dto;
+    }
+
+    @Override
+    public CategoryDTO getCategory(long no) {
+        Optional<Category> categorys = categoryRepository.findById(no);
+        if (categorys.isEmpty()){
+            return null;
+        }
+        Category category = categorys.get();
+        CategoryDTO categoryDTO = categoryEntityToDto(category);
+        return categoryDTO;
     }
 
     @Transactional
