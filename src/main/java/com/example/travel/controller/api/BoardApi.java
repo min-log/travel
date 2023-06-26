@@ -55,6 +55,12 @@ public class BoardApi {
         return true;
     }
 
-
-
+    @GetMapping("/itemList")
+    public List<ItemDTO> itemList(@RequestParam("itemDay") int itemDay,@RequestParam("cateNo") Long category){
+        log.info(itemDay);
+        log.info(category);
+        List<ItemDTO> itemDTOS = itemService.itemList(itemDay, category);
+        log.info(itemDTOS);
+        return itemDTOS;
+    }
 }

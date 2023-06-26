@@ -6,10 +6,13 @@ import com.example.travel.dto.travel.ItemDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 public interface ItemService {
 
     ItemDTO itemSave(ItemDTO itemDTO);
+    List<ItemDTO> itemList(int itemDay,Long categoryNo);
 
     default Item itemDtoToEntity(ItemDTO item){
 

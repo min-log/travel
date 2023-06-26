@@ -113,7 +113,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public boolean categoryDelete(Long no) {
+    public boolean categoryDelete(Long no) { // no = 카테고리 번호
         log.info("카테고리 제거 로직 ---------------");
 
 
@@ -130,15 +130,11 @@ public class CategoryServiceImpl implements CategoryService {
             }
         }
 
-
         // 1. 태그 제거
         // 2. 해쉬태그 제거
         // 3. 해쉬태그 중간 맵핑 제거
         // 4. 카테고리 제거
-        log.info(no); // 카테고리 번호
         Optional<Hashtag> hashtag = hashtagRepository.findById(no);
-        log.info("hashtag : {}",hashtag);
-
         if (hashtag.isPresent()){
             log.info("해시태그 .isPresent()");
             log.info("카테고리 연관 해시태그, 태그 제거 로직 -------------");
