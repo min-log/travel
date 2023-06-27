@@ -19,7 +19,11 @@
                   <span class="ml-2"> - </span>
                   <span class="ml-2" th:text="*{dateEnd}"></span>
                 </div>
+                <p class="txt_info mt-1 text-center">※ 순서 변경 · 일정을 완성하면 하단의 </p>
+                <p class="txt_info mt-1 text-center"><span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
+
                 <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
+
               </div>
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
@@ -113,7 +117,6 @@
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> 하루 리스트</h4>
               <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
-              <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
               <ul id="sortable" class="item_wrap list-group mt-3">
 
               </ul>
@@ -125,8 +128,8 @@
 
 
             <div class="btn-group">
-              <a class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
-              <a class="btn btn-primary" type="button" style="width:100%">저장</a>
+              <a id="btnStorageSave" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+              <a id="btnTotalSave" class="btn btn-primary" type="button" style="width:100%">저장</a>
             </div>
           </div>
       </div>
@@ -138,7 +141,6 @@
       let modalMsg =$('#modalMsg .modal-message');
       let msg='';
 
-      let itemNum = 0; //아이템 순서를 결정
 
       // 아이템 생성
       let itemForm =$("#itemForm");
@@ -164,6 +166,7 @@
               $('#modalMsg').modal("show");
               $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + "일 일정을 불러옵니다.");
               btnItemAdd.show();
+              dayContent.hide();
               itemList(dayVal); // 리스트 변경하기
               //btnItemAdd.hide();
 
@@ -185,7 +188,6 @@
                    dataType: 'json', // 전송 데이터 형식
                    success:function (data){
                        if(data){
-                           itemNum +=1;
                            btnItemAdd.show();
                            dayContent.hide();
                            $('#modalMsg').modal("show");
@@ -224,6 +226,8 @@
               itemList(1);
           })
 
+
+
           function itemList(e){
               let itemListWrap = $("#sortable");
               let category = $('input[name=categoryId]').val();
@@ -238,23 +242,21 @@
                       for(var i=0 in data){
                           //alert(data[i].placeName);
                           itemListCon +='<li class="list-group-item lh-sm">';
-                          itemListCon +=  '<a href="javascript:void(0)">'+ data[i].placeName +'</a>';
+                          itemListCon +=  '<a href="javascript:void(0)"; data-number="'+data[i].itemNo+'">'+ data[i].placeName +'</a>';
                           itemListCon +=  '<i class="bi bi-chevron-expand"></i>';
                           itemListCon += '</li>';
-
                       }
                       itemListWrap.html(itemListCon);
+                      reorder();
                   }
-              })
+              });
+
           }
 
 
-      });
 
-  </script>
 
-  <script>
-      $( function() {
+          // 아이템 순서 변경 기능
           $( "#sortable" ).sortable({
               start:function (event,ui){
                   ui.item.data('start_pos',ui.item.index());
@@ -265,12 +267,47 @@
                   reorder();
               }
           });
+
+          // 아이템 순서 data-index
           function reorder(){
               $("#sortable .list-group-item").each(function (i,box){
                   $(box).attr('data-index',i);
                   console.log(box)
-              })
+              });
+
+
+
+
+              $("#sortable .list-group-item a").on('click',function () {
+                  let e = $(this).data('number');
+                  console.log(e);
+                  $.ajax({
+                      url:'/board/itemGet?no='+e,
+                      type:'get',
+                      success:function (data) {
+                        alert(data.placeName);
+                      },
+                      error:function (data){
+                          alert("상세보기가 실패했습니다.")
+                      }
+
+                  })
+              });
           }
+
+
+          let BtntotalSave = $("#btnTotalSave");
+          let BtnStorageSave = $("#btnStorageSave");
+          // 전체 저장 -- 리스트 순서 및 카테고리 저장으로 변경
+          BtntotalSave.on('click',function (){
+
+          });
+
+          // 임시 저장 -- 리스트 순서 저장
+          BtntotalSave.on('click',function (){
+
+          });
+
       } );
   </script>
 

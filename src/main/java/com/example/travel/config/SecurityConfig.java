@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login_proc")
                 .defaultSuccessUrl("/security-login", true) // 회원정보 저장:  두번째 인자가 true일경우 무조건 로그인시 해당 페이지 이동
-                //.defaultSuccessUrl("/")
                 .failureUrl("/loginForm")
                 .failureHandler(loginFailHandler);
 

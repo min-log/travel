@@ -1,5 +1,6 @@
 package com.example.travel.controller.api;
 
+import com.example.travel.domain.Item;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
@@ -62,5 +63,12 @@ public class BoardApi {
         List<ItemDTO> itemDTOS = itemService.itemList(itemDay, category);
         log.info(itemDTOS);
         return itemDTOS;
+    }
+
+    @GetMapping("/itemGet")
+    public ItemDTO itemGet(@RequestParam("no") Long no){
+        log.info(no);
+        ItemDTO item = itemService.findItem(no);
+        return item;
     }
 }

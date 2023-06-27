@@ -13,6 +13,7 @@ public interface ItemService {
 
     ItemDTO itemSave(ItemDTO itemDTO);
     List<ItemDTO> itemList(int itemDay,Long categoryNo);
+    ItemDTO findItem(Long itemNo);
 
     default Item itemDtoToEntity(ItemDTO item){
 
