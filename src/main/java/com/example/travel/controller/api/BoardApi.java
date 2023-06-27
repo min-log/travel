@@ -63,4 +63,22 @@ public class BoardApi {
         log.info(itemDTOS);
         return itemDTOS;
     }
+
+
+    @GetMapping("/itemGet")
+    public ItemDTO itemGet(@RequestParam("no") Long no){
+        log.info(no);
+        ItemDTO itemDTO = itemService.itemGet(no);
+        log.info("itemDTO : {}",itemDTO);
+        return itemDTO;
+    }
+
+    @GetMapping("/itemDelete")
+    public boolean itemDelete(@RequestParam("no") Long no){
+        log.info("번호:{}",no);
+        boolean result = itemService.itemDelete(no);
+        
+        return result;
+    }
+
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -35,5 +36,23 @@ public class ItemServiceImpl implements ItemService{
         List<Item> itemList = itemRepository.findItemList(itemDay, categoryNo);
         List<ItemDTO> itemDTOList = itemList.stream().map(i -> itemEntityToDto(i)).collect(Collectors.toList());
         return itemDTOList;
+    }
+
+    @Override
+    public ItemDTO itemGet(Long itemNo) {
+        Optional<Item> itemList = itemRepository.findById(itemNo);
+        if (itemList.isPresent()){
+            Item item = itemList.get();
+            ItemDTO itemDTO = itemEntityToDto(item);
+            return itemDTO;
+        }else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean itemDelete(Long itemNo) {
+        itemRepository.deleteById(itemNo);
+        return true;
     }
 }
