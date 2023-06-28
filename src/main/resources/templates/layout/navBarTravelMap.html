@@ -97,8 +97,8 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="mt-3 overflow-hidden">
-                    <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm">
+                  <div class="mt-3 overflow-hidden" style="text-align: right">
+                    <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm me-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                         <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
                       </svg>
@@ -113,24 +113,20 @@
                 </form>
               </div>
 
-            <!-- end : day_wrap -->
+             <!-- end : day_wrap -->
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> 하루 리스트</h4>
               <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
               <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
-              <ul id="sortable" class="item_wrap list-group mt-3">
-
-              </ul>
+              <ul id="sortable" class="item_wrap list-group mt-3"></ul>
               <!-- end : sortable -->
 
           </div>
           <!-- end : top -->
           <div class="bottom mt-5">
-
-
             <div class="btn-group">
-              <a class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
-              <a class="btn btn-primary" type="button" style="width:100%">저장</a>
+              <a id="btnTotalStorageSave" href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+              <a id="btnTotalSave"  href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">저장</a>
             </div>
           </div>
       </div>
@@ -146,6 +142,7 @@
 
       // 아이템 생성
       let itemForm =$("#itemForm");
+      let itemListWrap = $("#sortable");
       let btnSelectDay = $("#btnSelectDay");
       let btnItemAdd = $("#btnItemAdd");
       let daySelect = $(".day_select .form-select");
@@ -159,11 +156,17 @@
 
 
 
+      //최종 저장
+      let btnTotalStorageSave = $("#btnTotalStorageSave");
+      let btnTotalSave = $("#btnTotalSave");
+
+
 
       $(function () {
           function itemBoxClose(){
               btnItemAdd.show();
               dayContent.hide();
+              btnItemDelete.hide();
               itemForm.each(function (){
                   this.reset();
               });
@@ -184,7 +187,6 @@
               btnItemAdd.hide();
               dayContent.slideDown(800);
           })
-
           btnItemSave.on('click',function (){
               let dayVal = daySelect.find("option:selected").val();
               let item = $("#itemForm").serialize();
@@ -213,13 +215,9 @@
 
               });
           });
-
-
           btnItemClose.on('click',function (){
               itemBoxClose();
-
           });
-
           btnItemDelete.on('click',function (){
               let itemNo = $("input[name=itemNo]").val();
               let itemDay = $("input[name=itemDay]").val();
@@ -241,8 +239,15 @@
           });
 
 
+          btnTotalStorageSave.on('click',function () {
+              let saveList = [];
+              itemListWrap.find("li").each(function (){
+
+              });
+
+          })
+
           function itemList(e){
-              let itemListWrap = $("#sortable");
               let category = $('input[name=categoryId]').val();
               let itemListCon='';
               $.ajax({
@@ -254,8 +259,8 @@
                   success:function (data){
                       for(var i=0 in data){
                           //alert(data[i].placeName);
-                          itemListCon +='<li class="list-group-item lh-sm">';
-                          itemListCon +=  '<a href="javascript:void(0)" data-no="' + data[i].itemNo + '">'+ data[i].placeName +'</a>';
+                          itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '">';
+                          itemListCon +=  '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
                           itemListCon +=  '<i class="bi bi-chevron-expand"></i>';
                           itemListCon += '</li>';
                       }
@@ -266,7 +271,7 @@
           }
 
 
-          $( "#sortable" ).sortable({
+          itemListWrap.sortable({
               start:function (event,ui){
                   ui.item.data('start_pos',ui.item.index());
               },
@@ -281,7 +286,7 @@
                   $(box).attr('data-index',i);
               });
 
-              $("#sortable .list-group-item a").on('click',function () {
+              $("#sortable .list-group-item").on('click',function () {
                   let dayNo = $(this).data("no");
                   $.ajax({
                       type: 'get',
@@ -308,6 +313,7 @@
                           $("input[name=roadAddressName]").val(arr.roadAddressName);
                           btnItemAdd.hide();
                           dayContent.show();
+                          btnItemDelete.show();
                       },
                       error:function (){
                           alert("내용을 불러오는 것을 실패했습니다.");

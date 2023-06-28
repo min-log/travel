@@ -200,3 +200,6 @@ input.err {}
 
 .travel_list {min-width:300px;}
 .infobtn {color: #fff;border-radius:5px;padding:2px 5px;margin:0 2px;}
+#btnItemClose {color:#333;}
+#btnItemClose:hover,
+#btnItemDelete:hover path {color: #fff}
