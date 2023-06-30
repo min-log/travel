@@ -55,4 +55,17 @@ public class ItemServiceImpl implements ItemService{
         itemRepository.deleteById(itemNo);
         return true;
     }
+
+    @Override
+    public void itemListOrderBySet(List<ItemDTO> itemList) {
+        for(int i= 0; i<itemList.size();i++){
+            Item item = itemRepository.getOne(itemList.get(i).getItemNo());
+            log.info("item : {}",item);
+            ItemDTO itemDTO = itemEntityToDto(item);
+            itemDTO.setItemNumber(itemList.get(i).getItemNumber());
+            log.info("itemDTO : {}",itemDTO);
+            Item result = itemDtoToEntity(itemDTO);
+            Item save = itemRepository.save(result);
+        }
+    }
 }

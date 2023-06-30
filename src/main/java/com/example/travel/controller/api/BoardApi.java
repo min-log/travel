@@ -1,17 +1,16 @@
 package com.example.travel.controller.api;
 
-import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
-import com.example.travel.dto.user.UserDTO;
 import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.travel.ItemService;
-import com.example.travel.service.user.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -80,5 +79,29 @@ public class BoardApi {
         
         return result;
     }
+
+
+    @GetMapping("/StorageSave")
+    public boolean itemStorageSave(@RequestParam("jsonData") String itemString){
+        log.info("임시 저장--------------------- ");
+        log.info(itemString);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<ItemDTO> itemList = objectMapper.readValue(itemString, new TypeReference<List<ItemDTO>>() {});
+            itemService.itemListOrderBySet(itemList);
+            for (ItemDTO item : itemList) {
+                System.out.println("itemNo: " + item.getItemNo());
+                System.out.println("itemNumber: " + item.getItemNumber());
+                System.out.println();
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+        return true;
+    }
+
 
 }

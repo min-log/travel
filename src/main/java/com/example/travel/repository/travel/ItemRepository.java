@@ -14,7 +14,6 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item,Long> {
     List<Item> findItemByCategory(Category category);
 
-    //
-    @Query(value = "select i from Item i left join Category c on i.category=c where i.category.categoryNo=:cNo and i.itemDay=:iDay" ,nativeQuery = false)
+    @Query(value = "select i from Item i left join Category c on i.category=c where i.category.categoryNo=:cNo and i.itemDay=:iDay order by i.itemNumber" ,nativeQuery = false)
     List<Item> findItemList(@Param("iDay") int itemNo,@Param("cNo") Long categoryNo);
 }

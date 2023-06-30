@@ -16,6 +16,11 @@ public interface ItemService {
     ItemDTO itemGet(Long itemNo);
     boolean itemDelete(Long itemNo);
 
+    //아이템 리스트 순서 변경
+    void itemListOrderBySet(List<ItemDTO> itemList);
+
+
+    // entity <-> dto
     default Item itemDtoToEntity(ItemDTO item){
 
         Category category = Category.builder().categoryNo(item.getCategoryId()).build();

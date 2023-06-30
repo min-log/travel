@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemDTO {
 
-    private Long itemNo; //여행 DAY
+    private Long itemNo; //고유번호
     private Long categoryId;
 
 
