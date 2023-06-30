@@ -184,6 +184,9 @@
           btnSelectDay.on('click', function () {});
 
           btnItemAdd.on('click',function () {
+              itemNum = itemListWrap.find("li").length;
+              $("input[name=itemNumber]").val(itemNum);
+              $("input[name=itemNo]").val(''); //고유값 지우기
               btnItemAdd.hide();
               dayContent.slideDown(800);
           })
@@ -197,7 +200,6 @@
                    dataType: 'json', // 전송 데이터 형식
                    success:function (data){
                        if(data){
-                           itemNum +=1;
                            itemBoxClose();
                            $('#modalMsg').modal("show");
                            $('#modalMsg .modal-message').html("저장되었습니다.");
