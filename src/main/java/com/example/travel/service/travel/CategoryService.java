@@ -16,12 +16,14 @@ public interface CategoryService {
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트 
 
-    CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 저장
+    CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
 
-    boolean categoryDelete(Long no);
+    boolean categoryDelete(long no);
     int categoryDays(String start, String end);
-    
+
+    boolean categoryTotalSave(long no); //실제 저장
+
 
 
     default CategoryDTO categoryEntityToDto(Category category){

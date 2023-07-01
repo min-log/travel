@@ -154,11 +154,16 @@ public class MypageController {
             redirectAttributes.addFlashAttribute("msg","회원탈퇴가 실패했습니다. 비밀번호를 확인해주세요.");
             return "redirect:/mypage/withdrawal";
         }
-
-
-
-
     }
+
+    //내 여행 리스트
+    @GetMapping("/boardList")
+    public String myBoardList(){
+        return "/mypage/boardList";
+    }
+
+
+
 
 
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+  <div class="content_nav">
+    <!-- start : navbar -->
+    <th:block th:replace="layout/navBar::navBar"></th:block>
+    <!-- end : navbar -->
+    <!-- start : content -->
+    <div class="content">
+      <h2 class="tit text-center mb-5">마이페이지</h2>
+      <div class="content-tit">
+        <h4 class="tit_con mb-3">👀 현재 계획 중인 여행</h4>
+        <span class="num">2</span>
+        <a class="btn btn-sm btn-outline-secondary" href="">더보기 +</a>
+      </div>
+      <div class="board_wrap">
+        <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">
+          <li class="col">
+            <div class="card">
+              <p class="img">
+                <img src="" alt="여행썸내일">
+              </p>
+              <div class="card-body">
+                <h5 class="card-title">동물농장 여행</h5>
+                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
+                <p class="travel_date">2023-08-11 - 2023-08-20</p>
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar" style="width: 10%"></div>
+                </div>
+              </div>
+              <a href="#" class="btn border-top">상세 보기 +</a>
+            </div>
+          </li>
+          <li class="col">
+            <div class="card">
+              <p class="img">
+                <img src="" alt="여행썸내일">
+              </p>
+              <div class="card-body">
+                <h5 class="card-title">동물농장 여행</h5>
+                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
+                <p class="travel_date">2023-08-11 - 2023-08-20</p>
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar" style="width: 10%"></div>
+                </div>
+              </div>
+              <a href="#" class="btn border-top">상세 보기 +</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="content-tit mt-5 border-top pt-5">
+        <h4 class="tit_con mb-3">⭐ 찜리스트</h4>
+        <span class="num">10</span>
+        <a class="btn btn-sm btn-outline-secondary" href="">더보기 +</a>
+      </div>
+      <div class="board_wrap">
+        <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">
+          <li class="col">
+            <div class="card">
+              <p class="img">
+                <img src="" alt="여행썸내일">
+              </p>
+              <div class="card-body">
+                <h5 class="card-title">동물농장 여행</h5>
+                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
+                <p class="travel_date">2023-08-11 - 2023-08-20</p>
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar" style="width: 10%"></div>
+                </div>
+              </div>
+              <a href="#" class="btn border-top">상세 보기 +</a>
+            </div>
+          </li>
+          <li class="col">
+            <div class="card">
+              <p class="img">
+                <img src="" alt="여행썸내일">
+              </p>
+              <div class="card-body">
+                <h5 class="card-title">동물농장 여행</h5>
+                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
+                <p class="travel_date">2023-08-11 - 2023-08-20</p>
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar" style="width: 10%"></div>
+                </div>
+              </div>
+              <a href="#" class="btn border-top">상세 보기 +</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <script th:if="${msg}">
+    alert("회원정보 수정이 완료되었습니다.")
+  </script>
+
+</th:block>
+</html>
+

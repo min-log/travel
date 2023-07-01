@@ -83,7 +83,7 @@ public class BoardApi {
 
     @GetMapping("/StorageSave")
     public boolean itemStorageSave(@RequestParam("jsonData") String itemString){
-        log.info("임시 저장--------------------- ");
+        log.info("리스트 저장--------------------- ");
         log.info(itemString);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -102,6 +102,34 @@ public class BoardApi {
 
         return true;
     }
+
+
+
+
+    @GetMapping("/StorageTotalSave")
+    public boolean itemStorageTotalSave(@RequestParam("jsonData") String itemString,
+                                        @RequestParam("categoryNo") long categoryNo){
+        log.info("리스트 및 카테고리 저장--------------------- ");
+        log.info(itemString);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<ItemDTO> itemList = objectMapper.readValue(itemString, new TypeReference<List<ItemDTO>>() {});
+            itemService.itemListOrderBySet(itemList);
+            for (ItemDTO item : itemList) {
+                System.out.println("itemNo: " + item.getItemNo());
+                System.out.println("itemNumber: " + item.getItemNumber());
+                System.out.println();
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        boolean result = categoryService.categoryTotalSave(categoryNo);
+        return result;
+    }
+
+
 
 
 }

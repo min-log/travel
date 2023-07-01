@@ -113,7 +113,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public boolean categoryDelete(Long no) { // no = 카테고리 번호
+    public boolean categoryDelete(long no) { // no = 카테고리 번호
         log.info("카테고리 제거 로직 ---------------");
 
 
@@ -180,5 +180,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info("days : {}",days);
         return days;
+    }
+
+    @Override
+    public boolean categoryTotalSave(long no) {
+        Category category = categoryRepository.getOne(no);
+        CategoryDTO categoryDTO = categoryEntityToDto(category);
+        categoryDTO.setCategorySave(true);
+        Category result = categoryDtoToEntity(categoryDTO);
+        categoryRepository.save(result);
+
+        return true;
     }
 }

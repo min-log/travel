@@ -11,9 +11,8 @@
       <div class="flex-column ">
           <div class="top" >
               <div th:object="${category}">
-                <h4 class="text-center">
-                  <span th:text="*{categoryName}"></span>
-                </h4>
+                <h3 class="text-center" th:text="*{categoryName}">
+                </h3>
                 <div class="mt-2 text-center">
                   <span th:text="*{dateStart}"></span>
                   <span class="ml-2"> - </span>
@@ -24,6 +23,7 @@
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
                 일정선택</h4>
+            <p class="txt_info mt-1">* <span class="point-color">지도에서 검색</span> 후 일정 추가하기를 클릭하시면 더 편리하게 장소 정보를 추가 할 수 있어요~</p>
               <div class="day_select flex-lg-row mt-3" style="display: flex;">
                 <select class="form-select" aria-label="Default select example">
                   <th:block th:each="list, i : ${days}">
@@ -138,6 +138,7 @@
       let modalMsg =$('#modalMsg .modal-message');
       let msg='';
 
+      let categoryTitle = $("h3").text();
       let itemNum = 0; //아이템 순서를 결정
 
       // 아이템 생성
@@ -159,6 +160,7 @@
       //최종 저장
       let btnTotalStorageSave = $("#btnTotalStorageSave");
       let btnTotalSave = $("#btnTotalSave");
+
 
 
 
@@ -241,7 +243,7 @@
           });
 
 
-          btnTotalStorageSave.on('click',function () {
+          function storageSave(){
               let data = [];
               itemListWrap.find("li").each(function (index, item){
                   index = {
@@ -253,6 +255,11 @@
                   data.push(index);
               });
               var jsonData = JSON.stringify(data);
+              return jsonData;
+          }
+
+          btnTotalStorageSave.on('click',function () {
+              let jsonData = storageSave();
               console.log(jsonData);
               $.ajax({
                   url:'/board/StorageSave',
@@ -268,6 +275,33 @@
                   }
               });
           })
+
+          btnTotalSave.on('click',function () {
+              let categoryNo = $("input[name=categoryNo]").val();
+              let msg='';
+              let jsonData = storageSave();
+              console.log(jsonData);
+              console.log(categoryNo);
+              $.ajax({
+                  url:'/board/StorageTotalSave',
+                  type:'get',
+                  dataType: 'json',
+                  data: {"jsonData" : jsonData,"categoryNo":categoryNo},
+                  success:function (data){
+                      $('#modalMsg').modal("show");
+                      msg+="<p>" + categoryTitle +"가 저장되었습니다.</p>";
+                      msg+="<div class='btn-group mt-5' style='width:100%'>";
+                      msg+="<button type='button' data-bs-dismiss='modal' aria-label='Close' class='btn btn-sm btn-outline-secondary' >더 수정하기</button><a href='/mypage/boardList' class='btn btn-primary btn-sm'>내 일정목록 확인하기</a>";
+                      msg+="</div>";
+                      $('#modalMsg .modal-message').html(msg);
+                  },
+                  error:function (data){
+                      alert("오류")
+                  }
+              });
+
+          });
+
 
           function itemList(e){
               let category = $('input[name=categoryId]').val();
