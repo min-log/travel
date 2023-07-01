@@ -62,7 +62,7 @@
                     <tbody>
                       <tr>
                         <th><label>장소명</label></th>
-                        <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text"></td>
+                        <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text" placeholder="장소 명을 입력해주세요."></td>
                       </tr>
                       <tr>
                         <th><label>주소</label></th>
@@ -73,26 +73,24 @@
                       </tr>
                       <tr>
                         <th><label>연락처</label></th>
-                        <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text"></td>
+                        <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text" placeholder="000-000-000"></td>
                       </tr>
                       <tr>
                         <th><label>URL</label></th>
-                        <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" type="text"></td>
+                        <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" placeholder="홈페이지나 참고 링크를 남겨주세요." type="text"></td>
                       </tr>
                       <tr>
                         <th><label>비용</label></th>
-                        <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" id="itemAccount" class="form-control form-control-sm" type="text"></td>
+                        <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" value="" id="itemAccount" class="form-control form-control-sm" type="number" placeholder="필요 경비를 적어주세요."></td>
                       </tr>
                       <tr>
                         <th><label>운영시간</label></th>
-                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text"></td>
+                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00"></td>
                       </tr>
                       <tr>
                         <th><label>도착시간</label></th>
                         <td>
-                          <div class="form-group">
-                            <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control" />
-                          </div>
+                            <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control form-control-sm" placeholder="24:00" />
                         </td>
                       </tr>
                       <tr>
@@ -222,6 +220,18 @@
                            $('#modalMsg .modal-message').html("저장이 실패했습니다.");
                        }
                        itemList(dayVal);
+
+
+                       infowindow.close(); // 지도 선택 후 저장에 성공 시
+
+                       var keyword = document.getElementById('keyword').value;
+
+                       if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                           ps.keywordSearch(categoryArea, placesSearchCB);
+                       } else {
+                           ps.keywordSearch(kwd, placesSearchCB);
+                       }
+
                    },
                   error:function (){
                       $('#modalMsg').modal("show");
