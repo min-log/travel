@@ -18,12 +18,14 @@
                   <span class="ml-2"> - </span>
                   <span class="ml-2" th:text="*{dateEnd}"></span>
                 </div>
+                <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden">
                 <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
               </div>
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
                 일정선택</h4>
-            <p class="txt_info mt-1">* <span class="point-color">지도에서 검색</span> 후 일정 추가하기를 클릭하시면 더 편리하게 장소 정보를 추가 할 수 있어요~</p>
+            <p class="txt_info mt-1"><span class="point-color"><i class="bi bi-search point-color" style="font-size: 14px;"></i> 검색</span> 후 일정에 추가 하고 싶은 마크를 클릭하세요.
+              <br />마크 정보의 <span class="infobtn btn-primary">일정 추가하기</span>를 선택 시 편리하게 정보를 추가 할 수 있어요!</p>
               <div class="day_select flex-lg-row mt-3" style="display: flex;">
                 <select class="form-select" aria-label="Default select example">
                   <th:block th:each="list, i : ${days}">
@@ -50,6 +52,8 @@
                   <input th:field="*{itemDay}" th:name="*{itemDay}" value="1" id="itemDay" type="hidden">
                   <input th:field="*{itemNumber}" th:name="*{itemNumber}" id="itemNumber"  type="hidden">
                   <input th:field="*{id}" th:name="*{id}"  id="id" value="장소 id" type="hidden">
+                  <input th:field="*{x}" th:name="*{x}"  id="x" value="장소 x 위치 값" type="hidden">
+                  <input th:field="*{y}" th:name="*{y}"  id="y" value="장소 y 위치 값" type="hidden">
                   <table>
                     <colgroup>
                       <col style="width:60px">
@@ -138,6 +142,7 @@
       let modalMsg =$('#modalMsg .modal-message');
       let msg='';
 
+      let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
       let categoryTitle = $("h3").text();
       let itemNum = 0; //아이템 순서를 결정
 
@@ -161,7 +166,13 @@
       let btnTotalStorageSave = $("#btnTotalStorageSave");
       let btnTotalSave = $("#btnTotalSave");
 
-
+      function ItemAdd(){
+          itemNum = itemListWrap.find("li").length;
+          $("input[name=itemNumber]").val(itemNum);
+          $("input[name=itemNo]").val(''); //고유값 지우기
+          btnItemAdd.hide();
+          dayContent.slideDown(800);
+      }
 
 
       $(function () {
@@ -185,13 +196,13 @@
           })
           btnSelectDay.on('click', function () {});
 
+
+
           btnItemAdd.on('click',function () {
-              itemNum = itemListWrap.find("li").length;
-              $("input[name=itemNumber]").val(itemNum);
-              $("input[name=itemNo]").val(''); //고유값 지우기
-              btnItemAdd.hide();
-              dayContent.slideDown(800);
-          })
+              ItemAdd();
+          });
+
+
           btnItemSave.on('click',function (){
               let dayVal = daySelect.find("option:selected").val();
               let item = $("#itemForm").serialize();
@@ -315,7 +326,7 @@
                   success:function (data){
                       for(var i=0 in data){
                           //alert(data[i].placeName);
-                          itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '">';
+                          itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'">';
                           itemListCon +=  '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
                           itemListCon +=  '<i class="bi bi-chevron-expand"></i>';
                           itemListCon += '</li>';

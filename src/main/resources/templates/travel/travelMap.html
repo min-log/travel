@@ -7,12 +7,17 @@
         <!-- start : navbar -->
         <th:block th:replace="layout/navBarTravelMap::navBarTravelMap"></th:block>
         <div class="content" style="padding:0;">
-            <div id="mapMenuWrap" class="bg_white scrollBar" style="display:none">
-                <ul id="placesList"></ul>
+            <div id="mapMenuWrap" class="bg_white" style="display:none">
+                <ul id="placesList" class="scrollBar"></ul>
                 <div id="pagination"></div>
             </div>
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                <div class="custom_zoomcontrol radius_border">
+                    <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
+                    <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -26,24 +31,49 @@
     var markers = [];
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-              center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-              level: 3 // 지도의 확대 레벨
-            };
+    mapOption = {
+      center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+      level: 3 // 지도의 확대 레벨
+    };
 
     // 지도를 생성합니다
     var map = new kakao.maps.Map(mapContainer, mapOption);
-// ------------ 내 위치
+
+    // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+    function zoomIn() {
+        map.setLevel(map.getLevel() - 1);
+    }
+
+    // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+    function zoomOut() {
+        map.setLevel(map.getLevel() + 1);
+    }
+
+
+    // 지도 이동
+    function setCenter(y,x) {
+        // 이동할 위도 경도 위치를 생성합니다
+        var moveLatLon = new kakao.maps.LatLng(y, x);
+
+        // 지도 중심을 이동 시킵니다
+        //map.setCenter(moveLatLon);
+        // 지도 중심을 부드럽게 이동시킵니다
+            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        map.panTo(moveLatLon);
+    }
+
+
+
+
+    // ------------ 내 위치
 // ----------- 검색
     // 장소 검색 객체를 생성합니다
     var ps = new kakao.maps.services.Places();
-
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
     var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-
     // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
     $(document).ready(function (){
-        ps.keywordSearch(categoryTitle, placesSearchCB);
+        ps.keywordSearch(categoryArea, placesSearchCB);
     })
 
     //searchPlaces();
@@ -93,7 +123,8 @@
           fragment = document.createDocumentFragment(),
           bounds = new kakao.maps.LatLngBounds(),
           listStr = '';
-        $("#mapMenuWrap").show();
+      //검색 리스트 보여주기
+      $("#mapMenuWrap").show();
 
       // 검색 결과 목록에 추가된 항목들을 제거합니다
       removeAllChildNods(listEl);
@@ -101,9 +132,12 @@
       // 지도에 표시되고 있는 마커를 제거합니다
       removeMarker();
 
+
+
       for ( var i=0; i<places.length; i++ ) {
 
         // 마커를 생성하고 지도에 표시합니다
+
         var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
                 marker = addMarker(placePosition, i),
                 itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
@@ -115,23 +149,27 @@
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
-        (function(marker, title) {
-          kakao.maps.event.addListener(marker, 'click', function() {
-            displayInfowindow(marker, title);
-          });
+          var info = places[i];
+        (function(marker, info) {
+            kakao.maps.event.addListener(marker, 'click', function() {
+                displayInfowindow(marker, info);
+            });
 
-          // kakao.maps.event.addListener(marker, 'mouseout', function() {
-          //   infowindow.close();
-          // });
+            itemEl.onclick = function (){
+                displayInfowindow(marker, info);
+            }
+              // kakao.maps.event.addListener(marker, 'mouseout', function() {
+              //   infowindow.close();
+              // });
 
-          itemEl.onmouseover =  function () {
-            displayInfowindow(marker, title);
-          };
-
-          itemEl.onmouseout =  function () {
-            infowindow.close();
-          };
-        })(marker, places[i].place_name);
+              // itemEl.onmouseover =  function () {
+              //   displayInfowindow(marker, info);
+              // };
+              //
+              // itemEl.onmouseout =  function () {
+              //   infowindow.close();
+              // };
+        })(marker, info);
 
         fragment.appendChild(itemEl);
       }
@@ -155,30 +193,29 @@
           '<div class="info" id="triveItem'+ places.id +'">' +
               '   <h5 class="place_name">' + places.place_name + '</h5>';
                 if (places.road_address_name) {
-                itemStr += '    <span class="road_address_name">' + places.road_address_name + '</span>' +
-                    '   <span class="jibun gray address_name">' +  places.address_name  + '</span>';
+                itemStr += '    <span class="road_address_name">' + places.road_address_name + '</span>';
+                    //+ '   <span class="jibun gray address_name">' +  places.address_name  + '</span>';
                 } else {
                 itemStr += '    <span class="address_name">' +  places.address_name  + '</span>';
                 }
 
-                if (places.place_url) {
-                itemStr += '    <span><a class="place_url" href="' + places.place_url + '" target="_blank">' + places.place_url + '</a></span>' ;
-                }
-
-                itemStr += '  <span class="tel phone">' + places.phone  + '</span>';
-                itemStr += '<button type="button" class="btn btn-dark item-add btn-sm" data-id="'+ places.id +'' +
-                    '" data-bs-toggle="modal" data-bs-target="#staticBackdrop">' +
-                    ' 일정 추가하기 ' +
-                    '</button>' +
-                '</div>';
+                // if (places.place_url) {
+                // itemStr += '    <span><a class="place_url" href="' + places.place_url + '" target="_blank">' + places.place_url + '</a></span>' ;
+                // }
+                //
+                // itemStr += '  <span class="tel phone">' + places.phone  + '</span>';
+                // itemStr += '<button type="button" class="btn btn-dark item-add btn-sm" data-id="'+ places.id +'' +
+                //     '" data-bs-toggle="modal" data-bs-target="#staticBackdrop">' +
+                //     ' 일정 추가하기 ' +
+                //     '</button>' +
+                itemStr +='</div>';
         el.innerHTML = itemStr;
-      el.className = 'item';
-
+        el.className = 'item';
       return el;
     }
 
     // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-    function addMarker(position, idx, title) {
+    function addMarker(position, idx) {
       var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
               imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
               imgOptions =  {
@@ -239,12 +276,37 @@
 
     // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
     // 인포윈도우에 장소명을 표시합니다
-    function displayInfowindow(marker, title ,id) {
-      var content =
-          '<div style="padding:5px;z-index:1;">' + title + '</div>';
+    function displayInfowindow(marker, info) {
+        var iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 
+
+        var content = '<div class="map_mark_info">';
+        content += '<div class="map_mark_top mb-3">';
+        content +=  '   <h5 class="place_name">'+ info.place_name+ '</h5>';
+        content +=  '   <a href="javascript:infowindow.close()" class="btn btn-close"></a>'
+        content += '</div>'
+        if(info.road_address_name) {
+            content += '    <p class="road_address_name">' + info.road_address_name + '</p>' +
+                '   <p class="jibun gray address_name">' +  info.address_name  + '</p>';
+        } else {
+            content += '    <p class="address_name">' +  info.address_name  + '</p>';
+        }
+        if (info.place_url) {
+            content += '    <p><a class="place_url" href="' + info.place_url + '" target="_blank">' + info.place_url + '</a></p>' ;
+        }
+        content += '  <p class="tel phone">' + info.phone  + '</p>';
+        content += '<button onclick="btnItemMapAdd(' + info.id + ')" type="button" class="btn btn-primary item-add btn-sm mt-3" style="width:100%" >' +
+            ' 일정 추가하기 ' +
+            '</button>' ;
+        content += '<p class="map_info_x" style="display:none">'+ info.x +'</p>';
+        content += '<p class="map_info_y" style="display:none">'+ info.y +'</p>';
+        content += '</div>';
+
+        //console.log(info.y +  "  / "+info.x);
+      setCenter(info.y,info.x);
       infowindow.setContent(content);
       infowindow.open(map, marker);
+
     }
 
     // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -254,64 +316,42 @@
       }
     }
 
-    </script>
 
-<script>
-    $(document).on("click", ".item-add", function () {
-        let i = $(this).data('id');
-        let Iitem = "#triveItem" + i;
-        let item = $(Iitem);
+    function btnItemMapAdd(id){
+        console.log(id);
 
-        console.log(item);
-        let item_id = i;
-        let place_name =$(item).find('.place_name').html();
-        let road_address_name =$(item).find('.road_address_name').html();
-        let address_name =$(item).find('.address_name').html();
-        let place_url =$(item).find('.place_url').html();
-        let phone =$(item).find('.phone').html();
+        let roadAddressName,
+        addressName,
+        placeUrl,
+        phone = null;
 
-        $('.modal-body .item_id').val(i);
-        $('.modal-body .place_name').val(place_name);
-        $('.modal-body .road_address_name').val(road_address_name);
-        $('.modal-body .address_name').val(address_name);
-        $('.modal-body .place_url').val(place_url);
-        $('.modal-body .phone').val(phone);
-
-    });
+        let mapMarkInfo =document.querySelector('.map_mark_info');
+        let placeName = mapMarkInfo.querySelector('.place_name').textContent;
+        let x = mapMarkInfo.querySelector('.map_info_x').textContent;
+        let y = mapMarkInfo.querySelector('.map_info_y').textContent;
 
 
+        if (mapMarkInfo.querySelector('.road_address_name') != null) roadAddressName = mapMarkInfo.querySelector('.road_address_name').textContent;
+        if (mapMarkInfo.querySelector('.address_name')!=null) addressName = mapMarkInfo.querySelector('.address_name').textContent;
+        if (mapMarkInfo.querySelector('.place_url')!=null) placeUrl = mapMarkInfo.querySelector('.place_url').textContent;
+        if (mapMarkInfo.querySelector('.phone')!=null) phone = mapMarkInfo.querySelector('.phone').textContent;
+        //input에 값 추가
+        $('input[name=id]').val(id);
+        $('input[name=placeName]').val(placeName);
+        $('input[name=x]').val(x);
+        $('input[name=y]').val(y);
 
-    function itemSave(){
-        let item_id = $('.modal-body .item_id').val();
-        let travel_day = $('.modal-body .travel_day').val();
-        let place_name = $('.modal-body .place_name').val();
-        let road_address_name = $('.modal-body .road_address_name').val();
-        let address_name = $('.modal-body .address_name').val();
-        let place_url = $('.modal-body .place_url').val();
-        let phone = $('.modal-body .phone').val();
-        let travel_content = $('.modal-body .travel_content').val();
+        if (roadAddressName != null) $('input[name=roadAddressName]').val(roadAddressName);
+        if (addressName != null) $('input[name=addressName]').val(addressName);
+        if (placeUrl != null) $('input[name=placeUrl]').val(placeUrl);
+        if (phone != null) $('input[name=phone]').val(phone);
 
-        $.ajax({
-            url : "${contextPath}/main",
-            type : "post",
-            data : {
-                "travel_day" : travel_day,
-                "travelId" : item_id,
-                "travel_content" : travel_content,
-                "place_name" : place_name,
-                "road_address_name":road_address_name,
-                "address_name":address_name,
-                "place_url":place_url,
-                "phone":phone
-            },
-            success : function(result){
-                // 자바에서 결과값 전달 받아서 실행
-                console.log("성공")
-            },
-            error : function(){ alert("error"); }
-        });
+        ItemAdd();
+
     }
-</script>
+
+
+    </script>
 
 
 
