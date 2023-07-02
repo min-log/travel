@@ -3,6 +3,7 @@ package com.example.travel.service.travel;
 import com.example.travel.domain.Category;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.DayInfoDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +21,7 @@ public interface CategoryService {
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
 
     boolean categoryDelete(long no);
-    int categoryDays(String start, String end);
+    DayInfoDTO categoryDays(String start, String end);
 
     boolean categoryTotalSave(long no); //실제 저장
 

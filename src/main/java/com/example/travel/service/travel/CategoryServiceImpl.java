@@ -5,6 +5,7 @@ import com.example.travel.domain.Hashtag;
 import com.example.travel.domain.Item;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.repository.travel.HashtagRepository;
 import com.example.travel.repository.travel.ItemRepository;
@@ -15,12 +16,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -162,7 +166,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int categoryDays(String start, String end) {
+    public DayInfoDTO categoryDays(String start, String end) {
+        // DayInfoDTO 전달 값 객체
+        // 객체 안에 들어가야 하는 것
+            // D-DAY 몇일인지
+            //  처음 날짜 부터 마지막 날짜까지 년,월,일 [];
+
+
         log.info("D-day 계산");
 
         // 문자열
@@ -172,14 +182,31 @@ public class CategoryServiceImpl implements CategoryService {
         LocalDateTime startDate = LocalDateTime.parse(start, formatter);
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
+
         log.info("------------------");
         Period period = Period.between(LocalDate.from(startDate), LocalDate.from(endDate)); // 비교
         int days = period.getDays();
-        log.info(days);
         days = days + 1;
-
         log.info("days : {}",days);
-        return days;
+
+        DayInfoDTO result = DayInfoDTO.builder().day(days).build();
+
+        String[] daysInfo = new String[days];
+        for(int i=0; i < days;i++){
+            LocalDateTime days1 = startDate.plusDays(i);
+            int year = days1.getYear();
+            int month = days1.getMonthValue();
+            int day = days1.getDayOfMonth();
+            DayOfWeek dayOfWeek =days1.getDayOfWeek();
+            String displayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN);
+            String dayResult = year +"-"+ month +"-"+ day + " " + displayName;
+            daysInfo[i] = dayResult;
+            System.out.println(daysInfo[i]);
+        }
+
+        result.setDayInfo(daysInfo);
+
+        return result;
     }
 
     @Override

@@ -19,7 +19,8 @@ public class ItemDTO {
 
 
     // item
-    private int itemDay; //여행 DAY
+    private int itemDay; //여행 D-day
+    private String itemDayName; //여행 날짜
     private int itemNumber; // DAY 안에서 순서
     private int itemAccount; // 비용
     private String itemInfo; // 정보 내용

@@ -4,6 +4,7 @@ package com.example.travel.controller.travel;
 import com.example.travel.domain.Category;
 import com.example.travel.domain.Item;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.ItemDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.service.travel.CategoryService;
@@ -68,15 +69,17 @@ public class TravelController {
         log.info(no);
         CategoryDTO categoryDTO = categoryService.getCategory(no);
 
-        int days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
-        int[] arr = new int[days];
+        DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
+        log.info("days {}" , days.getDay());
+        log.info("days info {}" , days.getDayInfo());
+//        int[] arr = new int[days];
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
         model.addAttribute("category",categoryDTO);
-        model.addAttribute("days",arr);
+        model.addAttribute("days",days);
         model.addAttribute("startDay",dayOfMonth);
         model.addAttribute("item",item);
 
