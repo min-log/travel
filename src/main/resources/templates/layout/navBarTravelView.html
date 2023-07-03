@@ -3,142 +3,122 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/basic}">
 
-<th:block th:fragment="navBarTravelMap">
+<th:block th:fragment="navBarTravelView">
   <div class="navbar">
     <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
     </button>
     <div class="navbar_wrap scrollBar">
       <div class="flex-column ">
-          <div class="top" >
-              <div th:object="${category}">
-                <h3 class="text-center" th:text="*{categoryName}">
-                </h3>
-                <div class="mt-2 text-center">
-                  <span th:text="*{dateStart}"></span>
-                  <span class="ml-2"> - </span>
-                  <span class="ml-2" th:text="*{dateEnd}"></span>
-                </div>
-                <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden">
-                <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
-              </div>
-
-              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
-                날짜선택</h4>
-              <div class="day_select mt-3" style="">
-                <select class="form-select" aria-label="Default select example">
-                  <th:block th:each="list, i : ${days.dayInfo}">
-                    <option th:text="|D-${i.index+1} : ${list}|" th:value="${i.index + 1}" th:data-cnt="${list}" th:selected="${i.index} == 0"></option>
-                  </th:block>
-                </select>
-                <p class="txt_info mt-3">
-                  <span class="point-color"><i class="bi bi-search point-color" style="font-size: 14px;"></i> 상단 검색 바</span>에서  원하는 장소 검색해 보세요.
-                </p>
-                <p class="txt_info mt-2">
-                  원하는 장소를 선택하시면 <span class="infobtn btn-dark">일정 추가하기</span>버튼을 통해 일정을 만들어 갈 수 있어요!
-                </p>
-
-                <!--
-                <a id="btnSelectDay" class="ms-3" href="javascript:void(0);">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16">
-                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                  </svg>
-                </a>
-                -->
-              </div>
-              <p class="mt-3"></p>
-<!--              <a id="btnItemAdd" href="javascript:void(0);" class="btn btn-dark btn-sm w-100">-->
-<!--                일정 추가하기-->
-<!--              </a>-->
-
-              <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
-                <form id="itemForm" method="post" th:action="@{/board/itemSave}">
-                  <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
-                  <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
-                  <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
-                  <input th:field="*{itemDayName}" th:name="*{itemDayName}" id="itemDayName" value="" type="hidden">
-                  <input th:field="*{itemNumber}" th:name="*{itemNumber}" id="itemNumber"  type="hidden">
-                  <input th:field="*{id}" th:name="*{id}"  id="id" value="장소 id" type="hidden">
-                  <input th:field="*{x}" th:name="*{x}"  id="x" value="장소 x 위치 값" type="hidden">
-                  <input th:field="*{y}" th:name="*{y}"  id="y" value="장소 y 위치 값" type="hidden">
-                  <table>
-                    <colgroup>
-                      <col style="width:60px">
-                      <col style="width:auto">
-                    </colgroup>
-                    <tbody>
-                      <tr>
-                        <th><label>장소명</label></th>
-                        <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text" placeholder="장소 명을 입력해주세요."></td>
-                      </tr>
-                      <tr>
-                        <th><label>주소</label></th>
-                        <td>
-                          <input th:field="*{addressName}" th:id="*{addressName}" th:name="*{addressName}" id="addressName" class="form-control form-control-sm" placeholder="지번주소" type="text">
-                          <input th:field="*{roadAddressName}" th:id="*{roadAddressName}" th:name="*{roadAddressName}" id="roadAddressName" class="form-control form-control-sm mt-2" placeholder="도로명주소" type="text">
-                        </td>
-                      </tr>
-                      <tr>
-                        <th><label>연락처</label></th>
-                        <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text" placeholder="000-000-000"></td>
-                      </tr>
-                      <tr>
-                        <th><label>URL</label></th>
-                        <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" placeholder="홈페이지나 참고 링크를 남겨주세요." type="text"></td>
-                      </tr>
-                      <tr>
-                        <th><label>비용</label></th>
-                        <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" value="" id="itemAccount" class="form-control form-control-sm" type="number" placeholder="필요 경비를 적어주세요."></td>
-                      </tr>
-                      <tr>
-                        <th><label>운영시간</label></th>
-                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00"></td>
-                      </tr>
-                      <tr>
-                        <th><label>도착시간</label></th>
-                        <td>
-                            <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control form-control-sm" placeholder="24:00" />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th><label>내용</label></th>
-                        <td><textarea th:field="*{itemInfo}" th:id="*{itemInfo}" th:name="*{itemInfo}"  id="itemInfo" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="mt-3 overflow-hidden" style="text-align: right">
-                    <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm me-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
-                      </svg>
-                    </button>
-                    <div class="btn-group float-end">
-                      <button id="btnItemClose" type="reset" class="btn btn-outline-secondary btn-sm">
-                        닫기
-                      </button>
-                      <a id="btnItemSave" href="javascript:void(0)" class="btn btn-dark btn-sm">저장</a>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-             <!-- end : day_wrap -->
-
-              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
-              <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
-              <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
-              <ul id="sortable" class="item_wrap list-group mt-3"></ul>
-              <!-- end : sortable -->
-
-          </div>
-          <!-- end : top -->
-          <div class="bottom mt-5">
-            <div class="btn-group">
-              <th:block th:if="${category.categorySave != true}">
-                <a id="btnTotalStorageSave" href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
-              </th:block>
-              <a id="btnTotalSave"  href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">저장</a>
+        <div class="top" >
+          <div th:object="${category}">
+            <h3 class="text-center" th:text="*{categoryName}">
+            </h3>
+            <div class="mt-2 text-center">
+              <span th:text="*{dateStart}"></span>
+              <span class="ml-2"> - </span>
+              <span class="ml-2" th:text="*{dateEnd}"></span>
             </div>
+            <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden">
+            <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
           </div>
+
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
+            날짜선택</h4>
+          <div class="day_select mt-3" style="">
+            <select class="form-select" aria-label="Default select example">
+              <th:block th:each="list, i : ${days.dayInfo}">
+                <option th:text="|D-${i.index+1} : ${list}|" th:value="${i.index + 1}" th:data-cnt="${list}" th:selected="${i.index} == 0"></option>
+              </th:block>
+            </select>
+          </div>
+          <p class="mt-3"></p>
+
+          <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
+            <form id="itemForm" method="post" th:action="@{/board/itemSave}">
+              <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
+              <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
+              <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
+              <input th:field="*{itemDayName}" th:name="*{itemDayName}" id="itemDayName" value="" type="hidden">
+              <input th:field="*{itemNumber}" th:name="*{itemNumber}" id="itemNumber"  type="hidden">
+              <input th:field="*{id}" th:name="*{id}"  id="id" value="장소 id" type="hidden">
+              <input th:field="*{x}" th:name="*{x}"  id="x" value="장소 x 위치 값" type="hidden">
+              <input th:field="*{y}" th:name="*{y}"  id="y" value="장소 y 위치 값" type="hidden">
+              <table>
+                <colgroup>
+                  <col style="width:60px">
+                  <col style="width:auto">
+                </colgroup>
+                <tbody>
+                <tr>
+                  <th><label>장소명</label></th>
+                  <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text" placeholder="장소 명을 입력해주세요."></td>
+                </tr>
+                <tr>
+                  <th><label>주소</label></th>
+                  <td>
+                    <input th:field="*{addressName}" th:id="*{addressName}" th:name="*{addressName}" id="addressName" class="form-control form-control-sm" placeholder="지번주소" type="text">
+                    <input th:field="*{roadAddressName}" th:id="*{roadAddressName}" th:name="*{roadAddressName}" id="roadAddressName" class="form-control form-control-sm mt-2" placeholder="도로명주소" type="text">
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>연락처</label></th>
+                  <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text" placeholder="000-000-000"></td>
+                </tr>
+                <tr>
+                  <th><label>URL</label></th>
+                  <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" placeholder="홈페이지나 참고 링크를 남겨주세요." type="text"></td>
+                </tr>
+                <tr>
+                  <th><label>비용</label></th>
+                  <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" value="" id="itemAccount" class="form-control form-control-sm" type="number" placeholder="필요 경비를 적어주세요."></td>
+                </tr>
+                <tr>
+                  <th><label>운영시간</label></th>
+                  <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00"></td>
+                </tr>
+                <tr>
+                  <th><label>도착시간</label></th>
+                  <td>
+                    <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control form-control-sm" placeholder="24:00" />
+                  </td>
+                </tr>
+                <tr>
+                  <th><label>내용</label></th>
+                  <td><textarea th:field="*{itemInfo}" th:id="*{itemInfo}" th:name="*{itemInfo}"  id="itemInfo" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="mt-3 overflow-hidden" style="text-align: right">
+                <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm me-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                  </svg>
+                </button>
+                <div class="btn-group float-end">
+                  <button id="btnItemClose" type="reset" class="btn btn-outline-secondary btn-sm">
+                    닫기
+                  </button>
+                  <a id="btnItemSave" href="javascript:void(0)" class="btn btn-dark btn-sm">저장</a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- end : day_wrap -->
+
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
+          <ul id="sortable" class="item_wrap list-group mt-3"></ul>
+          <!-- end : sortable -->
+
+        </div>
+        <!-- end : top -->
+        <div class="bottom mt-5">
+          <div class="btn-group">
+            <a th:href="@{/travel/category(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">수정</a>
+            <a href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
+            <a href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">기록하기</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -158,7 +138,7 @@
       let itemForm =$("#itemForm");
       let itemListWrap = $("#sortable");
       let btnSelectDay = $("#btnSelectDay");
-     // let btnItemAdd = $("#btnItemAdd");
+      // let btnItemAdd = $("#btnItemAdd");
       let daySelect = $(".day_select .form-select");
       let dayContent = $(".day_wrap");
 
@@ -245,24 +225,24 @@
               let dayVal = daySelect.find("option:selected").val();
               let item = $("#itemForm").serialize();
               $.ajax({
-                   url:"/board/itemSave",
-                   type:'POST',
-                   data: item, // 전송 데이터
-                   dataType: 'json', // 전송 데이터 형식
-                   success:function (data){
-                       if(data){
-                           itemBoxClose();
-                           $('#modalMsg').modal("show");
-                           $('#modalMsg .modal-message').html("저장되었습니다.");
+                  url:"/board/itemSave",
+                  type:'POST',
+                  data: item, // 전송 데이터
+                  dataType: 'json', // 전송 데이터 형식
+                  success:function (data){
+                      if(data){
+                          itemBoxClose();
+                          $('#modalMsg').modal("show");
+                          $('#modalMsg .modal-message').html("저장되었습니다.");
 
-                       }else {
-                           $('#modalMsg').modal("show");
-                           $('#modalMsg .modal-message').html("저장이 실패했습니다.");
-                       }
-                       itemList(dayVal); //
-                       mapReSet(); //지도 재 설정
+                      }else {
+                          $('#modalMsg').modal("show");
+                          $('#modalMsg .modal-message').html("저장이 실패했습니다.");
+                      }
+                      itemList(dayVal); //
+                      mapReSet(); //지도 재 설정
 
-                   },
+                  },
                   error:function (){
                       $('#modalMsg').modal("show");
                       $('#modalMsg .modal-message').html("저장할 수 없습니다. 관리자에게 문의해주세요.");
@@ -423,7 +403,7 @@
                           $("input[name=phone]").val(arr.phone);
                           $("input[name=addressName]").val(arr.addressName);
                           $("input[name=roadAddressName]").val(arr.roadAddressName);
-                         // btnItemAdd.hide();
+                          // btnItemAdd.hide();
                           dayContent.show();
                           btnItemDelete.show();
                           $(".navbar_wrap").animate( { scrollTop : 0 }, 500 );;

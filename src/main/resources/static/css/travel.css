@@ -253,6 +253,14 @@ input.err {}
 
 
 /* 게시판 리스트 */
-.card-body {display: flex;}
-.card-body .img {width:100px;height:100px;}
-.card-body .con {width:calc(100% - 100px);padding:0 20px;box-sizing:border-box;}
+.board_top {text-align:right;}
+.board_top * {display:inline-block}
+.board_top select {width: 150px;}
+.board_content .card {height:100%}
+.board_content .card-body {display: flex;}
+.board_content .card-body .img {width:100px;height:100px;}
+.board_content .card-body .con {width:100%;box-sizing:border-box;}
+.board_content .card-body .img + .con {padding-left:20px;width:calc(100% - 100px);}
+.board_content .card-body .con h5 {font-weight:bold;font-size:18px;}
+.tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
+

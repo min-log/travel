@@ -133,7 +133,9 @@
           <!-- end : top -->
           <div class="bottom mt-5">
             <div class="btn-group">
-              <a id="btnTotalStorageSave" href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+              <th:block th:if="${category.categorySave != true}">
+                <a id="btnTotalStorageSave" href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+              </th:block>
               <a id="btnTotalSave"  href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">저장</a>
             </div>
           </div>

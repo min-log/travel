@@ -2,6 +2,7 @@ package com.example.travel.controller.member;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.security.dto.UserTravelDTO;
@@ -167,21 +168,21 @@ public class MypageController {
     @GetMapping("/boardList")
     public String myBoardList(
             @RequestParam(value = "page",required = false) Integer page,
-            HttpSession session,Model model){
+            @RequestParam(value = "order",required = false) String order,
+            HttpSession session,
+            Model model){
 
+        if(page == null) page= 1;
+        if(order == null) order= "dateStart";
 
-        if(page == null) page=0;
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page);
-        log.info("getTotalElements : {}",categoryPage.getTotalElements());
-        log.info("getTotalPages : {}",categoryPage.getTotalPages());
-        log.info("getNumber : {}",categoryPage.getNumber());
-        log.info("getSize : {}",categoryPage.getSize());
-        log.info("getPageable : {}",categoryPage.getPageable());
-
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page ,order);
+        PageingDTO pageingDTO = new PageingDTO(categoryPage);
+        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
 
         model.addAttribute("categoryPage",categoryPage);
-
+        model.addAttribute("pageing",pageingDTO);
+        model.addAttribute("orderCk",order);
         return "/mypage/boardList";
     }
 

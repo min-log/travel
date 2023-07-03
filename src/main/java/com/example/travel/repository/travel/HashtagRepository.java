@@ -18,4 +18,5 @@ public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
     @Query(value = "delete from hashtag_tag h where h.tag_tag_id = :id",nativeQuery = true)
     int deleteByHashIdAndTag(@Param(value="id") Long id);
 
+    Hashtag findByCategoryId(Long no);
 }

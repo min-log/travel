@@ -33,6 +33,9 @@ public class CategoryDTO {
     private String tags; // 참여자 리스트
 
 
+    private String[] tagList; // 참여자 리스트
+
+
 
 
 

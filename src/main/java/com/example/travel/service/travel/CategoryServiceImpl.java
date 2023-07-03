@@ -64,12 +64,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page) {
+    public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order) {
         log.info("내 카테고리 리스트 전달");
         log.info("page : {}",page);
         PageRequest pageRequest;
 
-        pageRequest = PageRequest.of(page, 5, Sort.by("dateStart").ascending());
+        pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
         Page<Category> result = categoryRepository.findByUserTravelNoAndCategorySave(no,true, pageRequest);
         Page<CategoryDTO> categoryDTOS = convertPage(result);
         log.info("categoryDTOS : {}",categoryDTOS.getContent());
@@ -79,18 +79,35 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-
     Page<CategoryDTO> convertPage(Page<Category> categoryPage) {
 
-        log.info("categoryPage : {}",categoryPage.getContent());
         List<CategoryDTO> categoryDTOList = categoryPage.getContent()
                 .stream()
                 .map(i->categoryEntityToDto(i)
                 ) // Assuming CategoryDTO constructor takes a Category object
                 .collect(Collectors.toList());
 
+        for (int i=0;i<categoryDTOList.size();i++){
+            Long categoryNo = categoryDTOList.get(i).getCategoryNo();
+            Hashtag byCategoryId = hashtagRepository.findByCategoryId(categoryNo);
+            List<Tag> tags = byCategoryId.getTag();
+            String tagInfo="";
+            String[] tagInfoList = new String[tags.size()];
+            for(int j=0;j<tags.size();j++){
+                log.info("tag : {}",tags.get(j).getName());
+                tagInfo += "#" + tags.get(j).getName() + " ";
+                tagInfoList[j] = tags.get(j).getName();
+            }
+            categoryDTOList.get(i).setTagList(tagInfoList);
+            categoryDTOList.get(i).setTags(tagInfo);
+        }
+
+
+
         return new PageImpl<>(categoryDTOList, PageRequest.of(categoryPage.getNumber(), categoryPage.getSize()), categoryPage.getTotalElements());
     }
+
+
 
     @Override
     public CategoryDTO categorySave(CategoryDTO categoryDTO) {

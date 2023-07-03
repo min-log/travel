@@ -71,7 +71,6 @@ public class TravelController {
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
         log.info("days info {}" , days.getDayInfo());
-//        int[] arr = new int[days];
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
 
@@ -86,6 +85,33 @@ public class TravelController {
     }
 
 
+
+
+
+
+    @GetMapping("/view")
+    public String categoryVeiw(
+            @RequestParam(value = "no") long no,
+            Model model
+    ){
+        log.info(no);
+        CategoryDTO categoryDTO = categoryService.getCategory(no);
+
+        DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
+        log.info("days {}" , days.getDay());
+        log.info("days info {}" , days.getDayInfo());
+        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
+        int dayOfMonth = localDate.getDayOfMonth();
+
+        ItemDTO item = ItemDTO.builder().categoryId(no).build();
+
+        model.addAttribute("category",categoryDTO);
+        model.addAttribute("days",days);
+        model.addAttribute("startDay",dayOfMonth);
+        model.addAttribute("item",item);
+
+        return "travel/travelView";
+    }
 
 
 

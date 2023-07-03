@@ -5,12 +5,15 @@ import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public interface CategoryService {
@@ -19,7 +22,7 @@ public interface CategoryService {
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
 
 
-    Page<CategoryDTO> getCategoryMYPage(Long no, Integer page);
+    Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order);
 
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
@@ -29,7 +32,6 @@ public interface CategoryService {
     DayInfoDTO categoryDays(String start, String end);
 
     boolean categoryTotalSave(long no); //실제 저장
-
 
 
     default CategoryDTO categoryEntityToDto(Category category){
