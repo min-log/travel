@@ -23,7 +23,7 @@
               </div>
 
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
-                일정선택</h4>
+                날짜선택</h4>
               <div class="day_select mt-3" style="">
                 <select class="form-select" aria-label="Default select example">
                   <th:block th:each="list, i : ${days.dayInfo}">
@@ -123,7 +123,7 @@
 
              <!-- end : day_wrap -->
 
-              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 리스트</h4>
+              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
               <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
               <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
               <ul id="sortable" class="item_wrap list-group mt-3"></ul>

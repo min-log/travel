@@ -1,8 +1,7 @@
 package com.example.travel.controller.travel;
 
 
-import com.example.travel.domain.Category;
-import com.example.travel.domain.Item;
+
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.ItemDTO;
@@ -12,16 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 
@@ -51,7 +47,10 @@ public class TravelController {
     @PostMapping("/category")
     public String categorySave(@ModelAttribute("category") CategoryDTO categoryDTO,
                                RedirectAttributes redirectAttributes) {
+
         log.info(" 아이템 생성 페이지 --------------------");
+
+        //log.info(tags);
         CategoryDTO result = categoryService.categorySave(categoryDTO);
         if (result == null){
             redirectAttributes.addFlashAttribute("msg","임시저장은 5개 까지 가능합니다.");

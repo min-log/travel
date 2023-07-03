@@ -24,7 +24,6 @@ import java.util.Optional;
 @RequestMapping("/")
 public class MainController {
 
-
     final FileService service;
     final UserImageRepository userImageRepository;
 

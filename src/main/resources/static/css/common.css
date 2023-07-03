@@ -101,6 +101,7 @@ footer {height:85px}
 .navbar_wrap > .flex-column .top {height:auto;}
 .navbar_wrap > .flex-column .bottom .btn-group {width:100%}
 .btn.btn-outline-secondary .bi:before {color:#6c757d}
+.navbar_wrap h3,
 .navbar_wrap h4 {font-weight:bold;}
 .list-storage {}
 .list-storage li {border-bottom:1px #dee2e6 dashed;padding:5px 5px;display:flex;justify-content: space-between;}

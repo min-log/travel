@@ -6,10 +6,14 @@ import com.example.travel.domain.Item;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
+import com.example.travel.dto.travel.TagDTO;
 import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.repository.travel.HashtagRepository;
 import com.example.travel.repository.travel.ItemRepository;
 import com.example.travel.repository.travel.TagRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import groovyjarjarpicocli.CommandLine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -80,15 +84,33 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category result = categoryRepository.save(category);  // 1. 카테고리저장
 
-        //2. 태그저장
-        if (!categoryDTO.getTags().isEmpty()){
-            log.info("tag가 있으면 저장");
-            List<String> tags = categoryDTO.getTags();
-            List<Tag> tagList = tags.stream().map(i -> Tag.builder().name(i).build()).collect(Collectors.toList());
 
-            for(int i=0; i < tagList.size(); i++){
-                tagRepository.save(tagList.get(i)); // 2. 태그 저장
+
+
+
+
+        //2. 태그저장
+        String tags = categoryDTO.getTags();
+        if (tags!=null) {
+//            log.info("tag가 있으면 저장");
+            List<TagDTO> itemList = new ArrayList<>();
+            List<Tag> tagList =new ArrayList<>();
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                String[] arr;
+                itemList = mapper.readValue(tags, new TypeReference<List<TagDTO>>() {
+                });
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
             }
+
+            for (int i = 0; i < itemList.size(); i++) {
+                String name = itemList.get(i).getValue();
+                Tag tag = Tag.builder().name(name).build();
+                tagList.add(tag);
+                tagRepository.save(tag); // 2. 태그 저장
+            }
+
             Hashtag hashtag = Hashtag.builder()
                     .categoryId(result.getCategoryNo())
                     .tag(tagList)
@@ -96,11 +118,7 @@ public class CategoryServiceImpl implements CategoryService {
             hashtagRepository.save(hashtag); // 3. 해쉬태그 저장
         }
 
-
-
         CategoryDTO dto = categoryEntityToDto(result);
-        log.info("111 : {}",result);
-        log.info("222 : {}",dto);
         return dto;
     }
 

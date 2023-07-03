@@ -30,7 +30,8 @@ public class CategoryDTO {
     private boolean categoryOpen; // 카테고리 외부 공개 여부
 
 
-    private List<String> tags; // 참여자 리스트
+    private String tags; // 참여자 리스트
+
 
 
 
