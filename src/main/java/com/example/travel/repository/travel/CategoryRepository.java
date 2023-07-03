@@ -21,4 +21,7 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     @Query(value = "select c from Category c where c.userTravelNo=:no and c.categorySave = true ORDER BY c.createdAt")
     List<Category> getCategoryList(@Param(value = "no") Long no);
 
+    Page<Category> findByUserTravelNoAndCategorySave(Long no,boolean save, Pageable pageable);
+
+
 }

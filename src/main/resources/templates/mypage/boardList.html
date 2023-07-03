@@ -12,10 +12,21 @@
     <div class="content">
       <h2 class="tit text-center mb-5">내 여행</h2>
 
-      <div class="board_wrap" th:object="${categoryList}">
-        <p class="mb-2">총 : 2</p>
+      <div class="board_wrap" th:object="${categoryPage}">
+        <div class="mb-2">
+          <p>
+            총 : <span th:text="${categoryPage.getTotalElements()}">2</span>
+          </p>
+          <p>
+            순서 :
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+              <option selected value="1">여행 시작일</option>
+              <option value="2">작성일</option>
+            </select>
+          </p>
+        </div>
         <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
-          <th:block th:each="list,i:${categoryList}">
+          <th:block th:each="list,i:${categoryPage.getContent()}">
             <li class="col">
               <div class="card">
                 <div class="card-body">
@@ -44,6 +55,11 @@
             </li>
           </th:block>
         </ul>
+        <div class="btn-group mt-5 me-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-outline-secondary"> < </button>
+            <button type="button" class="btn btn-outline-secondary">1</button>
+          <button type="button" class="btn btn-outline-secondary"> > </button>
+        </div>
       </div>
 
 

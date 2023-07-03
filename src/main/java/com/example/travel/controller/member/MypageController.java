@@ -9,6 +9,8 @@ import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -167,10 +169,18 @@ public class MypageController {
             @RequestParam(value = "page",required = false) Integer page,
             HttpSession session,Model model){
 
-        UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
-        List<CategoryDTO> categoryList = categoryService.getCategoryList(userT.getUserNo(),page);
 
-        model.addAttribute("categoryList",categoryList);
+        if(page == null) page=0;
+        UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page);
+        log.info("getTotalElements : {}",categoryPage.getTotalElements());
+        log.info("getTotalPages : {}",categoryPage.getTotalPages());
+        log.info("getNumber : {}",categoryPage.getNumber());
+        log.info("getSize : {}",categoryPage.getSize());
+        log.info("getPageable : {}",categoryPage.getPageable());
+
+
+        model.addAttribute("categoryPage",categoryPage);
 
         return "/mypage/boardList";
     }

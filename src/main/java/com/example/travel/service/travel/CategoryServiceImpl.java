@@ -17,6 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import groovyjarjarpicocli.CommandLine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +30,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -63,25 +64,33 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> getCategoryList(Long no,Integer page) {
-        log.info("저장된 리스트 전달");
-        List<CategoryDTO> result = new ArrayList<>();
-        try{
-            List<Category> userTravelNo = categoryRepository.getCategoryList(no);
-            if (userTravelNo.isEmpty()){
-                log.info("없으면 null");
-                return result;
-            }
-            log.info("있으면 리스트 전달");
-            log.info(userTravelNo);
-            result = userTravelNo.stream().map(item -> categoryEntityToDto(item)).collect(Collectors.toList());            return result;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page) {
+        log.info("내 카테고리 리스트 전달");
+        log.info("page : {}",page);
+        PageRequest pageRequest;
 
-        return result;
+        pageRequest = PageRequest.of(page, 5, Sort.by("dateStart").ascending());
+        Page<Category> result = categoryRepository.findByUserTravelNoAndCategorySave(no,true, pageRequest);
+        Page<CategoryDTO> categoryDTOS = convertPage(result);
+        log.info("categoryDTOS : {}",categoryDTOS.getContent());
+        log.info("categoryDTOS : {}",categoryDTOS.getSize());
+
+        return categoryDTOS;
     }
 
+
+
+    Page<CategoryDTO> convertPage(Page<Category> categoryPage) {
+
+        log.info("categoryPage : {}",categoryPage.getContent());
+        List<CategoryDTO> categoryDTOList = categoryPage.getContent()
+                .stream()
+                .map(i->categoryEntityToDto(i)
+                ) // Assuming CategoryDTO constructor takes a Category object
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(categoryDTOList, PageRequest.of(categoryPage.getNumber(), categoryPage.getSize()), categoryPage.getTotalElements());
+    }
 
     @Override
     public CategoryDTO categorySave(CategoryDTO categoryDTO) {

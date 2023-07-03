@@ -4,6 +4,7 @@ import com.example.travel.domain.Category;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +18,9 @@ public interface CategoryService {
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
 
-    List<CategoryDTO> getCategoryList(Long no,Integer page); //임시 저장 리스트
+
+    Page<CategoryDTO> getCategoryMYPage(Long no, Integer page);
+
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
