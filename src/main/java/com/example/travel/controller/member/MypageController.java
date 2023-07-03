@@ -1,8 +1,11 @@
 package com.example.travel.controller.member;
 
 import com.example.travel.domain.UserTravel;
+import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
+import com.example.travel.security.dto.UserTravelDTO;
+import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -26,6 +30,7 @@ import java.util.Map;
 @RequestMapping("/mypage")
 public class MypageController {
     private final UserService  userService;
+    private final CategoryService categoryService;
 
     @GetMapping("")
     public String myPage(HttpServletRequest request,
@@ -158,7 +163,15 @@ public class MypageController {
 
     //내 여행 리스트
     @GetMapping("/boardList")
-    public String myBoardList(){
+    public String myBoardList(
+            @RequestParam(value = "page",required = false) Integer page,
+            HttpSession session,Model model){
+
+        UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
+        List<CategoryDTO> categoryList = categoryService.getCategoryList(userT.getUserNo(),page);
+
+        model.addAttribute("categoryList",categoryList);
+
         return "/mypage/boardList";
     }
 

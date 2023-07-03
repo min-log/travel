@@ -239,21 +239,7 @@ input.err {}
 #placesList .info .place_url {color:var(--color-main);}
 #placesList .info .tel {color:var(--color-sub);}
 #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url('/img/icon_map_00.png') center no-repeat; background-size:100% auto;}
-/*#placesList .item .marker_1 {background-position: 0 -10px;}*/
-/*#placesList .item .marker_2 {background-position: 0 -56px;}*/
-/*#placesList .item .marker_3 {background-position: 0 -102px}*/
-/*#placesList .item .marker_4 {background-position: 0 -148px;}*/
-/*#placesList .item .marker_5 {background-position: 0 -194px;}*/
-/*#placesList .item .marker_6 {background-position: 0 -240px;}*/
-/*#placesList .item .marker_7 {background-position: 0 -286px;}*/
-/*#placesList .item .marker_8 {background-position: 0 -332px;}*/
-/*#placesList .item .marker_9 {background-position: 0 -378px;}*/
-/*#placesList .item .marker_10 {background-position: 0 -423px;}*/
-/*#placesList .item .marker_11 {background-position: 0 -470px;}*/
-/*#placesList .item .marker_12 {background-position: 0 -516px;}*/
-/*#placesList .item .marker_13 {background-position: 0 -562px;}*/
-/*#placesList .item .marker_14 {background-position: 0 -608px;}*/
-/*#placesList .item .marker_15 {background-position: 0 -654px;}*/
+
 #pagination {margin:10px auto;text-align: center;}
 #pagination a {display:inline-block;margin-right:10px;}
 #pagination .on {font-weight: bold; cursor: default;color:#777;}
@@ -264,3 +250,9 @@ input.err {}
 #btnItemClose {color:#333;}
 #btnItemClose:hover,
 #btnItemDelete:hover path {color: #fff}
+
+
+/* 게시판 리스트 */
+.card-body {display: flex;}
+.card-body .img {width:100px;height:100px;}
+.card-body .con {width:calc(100% - 100px);padding:0 20px;box-sizing:border-box;}

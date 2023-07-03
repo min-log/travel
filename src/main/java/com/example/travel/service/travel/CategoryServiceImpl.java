@@ -62,6 +62,26 @@ public class CategoryServiceImpl implements CategoryService {
         return result;
     }
 
+    @Override
+    public List<CategoryDTO> getCategoryList(Long no,Integer page) {
+        log.info("저장된 리스트 전달");
+        List<CategoryDTO> result = new ArrayList<>();
+        try{
+            List<Category> userTravelNo = categoryRepository.getCategoryList(no);
+            if (userTravelNo.isEmpty()){
+                log.info("없으면 null");
+                return result;
+            }
+            log.info("있으면 리스트 전달");
+            log.info(userTravelNo);
+            result = userTravelNo.stream().map(item -> categoryEntityToDto(item)).collect(Collectors.toList());            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
     @Override
     public CategoryDTO categorySave(CategoryDTO categoryDTO) {
@@ -83,11 +103,6 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("저장된 category : {}",category);
 
         Category result = categoryRepository.save(category);  // 1. 카테고리저장
-
-
-
-
-
 
         //2. 태그저장
         String tags = categoryDTO.getTags();

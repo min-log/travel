@@ -15,7 +15,9 @@ import java.util.List;
 public interface CategoryService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트 
+    List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
+
+    List<CategoryDTO> getCategoryList(Long no,Integer page); //임시 저장 리스트
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
