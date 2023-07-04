@@ -110,6 +110,7 @@ public class TravelController {
         model.addAttribute("startDay",dayOfMonth);
         model.addAttribute("item",item);
 
+
         return "travel/travelView";
     }
 

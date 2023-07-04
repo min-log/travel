@@ -126,7 +126,7 @@
               <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
               <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
               <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
-              <ul id="sortable" class="item_wrap list-group mt-3"></ul>
+              <ul id="sortable" class="item_wrap item_map list-group mt-3"></ul>
               <!-- end : sortable -->
 
           </div>
@@ -344,7 +344,7 @@
                       $('#modalMsg').modal("show");
                       msg+="<p>" + categoryTitle +"가 저장되었습니다.</p>";
                       msg+="<div class='btn-group mt-5' style='width:100%'>";
-                      msg+="<button type='button' data-bs-dismiss='modal' aria-label='Close' class='btn btn-sm btn-outline-secondary' >더 수정하기</button><a href='/mypage/boardList' class='btn btn-primary btn-sm'>내 일정목록 확인하기</a>";
+                      msg+="<button type='button' data-bs-dismiss='modal' aria-label='Close' class='btn btn-sm btn-outline-secondary' >더 수정하기</button><a href='/mypage/boardList' class='btn btn-primary btn-sm'>내 여행 리스트로 이동</a>";
                       msg+="</div>";
                       $('#modalMsg .modal-message').html(msg);
                       mapReSet();

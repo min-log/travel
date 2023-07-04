@@ -9,19 +9,30 @@
     </button>
     <div class="navbar_wrap scrollBar">
       <div class="flex-column ">
-        <div class="top" >
+        <div class="top veiw_top" >
           <div th:object="${category}">
-            <h3 class="text-center" th:text="*{categoryName}">
-            </h3>
-            <div class="mt-2 text-center">
+            <p class="area text-center">
+              <span th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:text="*{categoryArea}"></span>
+              <th:block th:if="*{categoryAreaDetails != 'null'}">  /
+              <span th:field="*{categoryAreaDetails}" th:id="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" th:text="*{categoryAreaDetails}"></span>
+              </th:block>
+            </p>
+            <h3 class="text-center" th:text="*{categoryName}"></h3>
+            <div class="date text-center">
               <span th:text="*{dateStart}"></span>
               <span class="ml-2"> - </span>
               <span class="ml-2" th:text="*{dateEnd}"></span>
             </div>
-            <input th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden">
+            <div class="veiw_info mt-3">
+              <p class="travel_people mt-1">
+                여행 인원 <br />
+                <span class="tag point" th:text="${session.userT.userId}"></span>
+                <span th:each="tagItem,i:${category.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+              </p>
+              <p class="mt-1">작성일 : <span th:field="*{createdAt}" th:id="*{createdAt}" th:name="*{createdAt}" th:text="*{createdAt}"></span></p>
+            </div>
             <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
           </div>
-
           <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
             날짜선택</h4>
           <div class="day_select mt-3" style="">
@@ -107,9 +118,8 @@
           <!-- end : day_wrap -->
 
           <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
-          <ul id="sortable" class="item_wrap list-group mt-3"></ul>
+          <ul id="sortable" class="item_veiw_con item_map mt-3"></ul>
           <!-- end : sortable -->
-
         </div>
         <!-- end : top -->
         <div class="bottom mt-5">
@@ -126,215 +136,31 @@
   <script type="text/javascript">
 
       let modal =$('#modalMsg');
-      let modalMsg =$('#modalMsg .modal-message');
       let msg='';
-
       let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
-      let categoryTitle = $("h3").text();
-      let itemDay = $("#itemDay");
-      let itemNum = 0; //아이템 순서를 결정
 
       // 아이템 생성
-      let itemForm =$("#itemForm");
       let itemListWrap = $("#sortable");
-      let btnSelectDay = $("#btnSelectDay");
-      // let btnItemAdd = $("#btnItemAdd");
       let daySelect = $(".day_select .form-select");
-      let dayContent = $(".day_wrap");
-
-
-      //아이템 저장 / 삭제
-      let btnItemSave = $("#btnItemSave");
-      let btnItemClose = $("#btnItemClose");
-      let btnItemDelete =$("#btnItemDelete");
-
-
-
-      //최종 저장
-      let btnTotalStorageSave = $("#btnTotalStorageSave");
-      let btnTotalSave = $("#btnTotalSave");
-
-
-      function mapReSet(){
-          infowindow.close(); // 지도 선택 후 저장에 성공 시
-          var keyword = document.getElementById('keyword').value;
-
-          if (!keyword.replace(/^\s+|\s+$/g, '')) {
-              ps.keywordSearch(categoryArea, placesSearchCB);
-          } else {
-              ps.keywordSearch(kwd, placesSearchCB);
-          }
-      }
-
-
-      function ItemAdd(){
-          itemNum = itemListWrap.find("li").length;
-          $("input[name=itemNumber]").val(itemNum);
-          $("input[name=itemNo]").val(''); //고유값 지우기
-          //btnItemAdd.hide();
-          dayContent.slideDown(800);
-      }
 
 
       $(function () {
-
           $(document).ready(function (){
               //처음 시작시 1번 일정 불러오기
               itemList(1);
-              itemDay.val(1);
               $("#itemDayName").val($(".dayName").text());
           });
-
-
-
-          function itemBoxClose(){
-              //btnItemAdd.show();
-              dayContent.hide();
-              btnItemDelete.hide();
-              itemForm.each(function (){
-                  this.reset();
-              });
-          }
 
           daySelect.on('change',function(){
               let dayCnt = daySelect.find("option:selected").data("cnt");
               let dayVal = daySelect.find("option:selected").val();
-              itemDay.val(dayVal); // 날짜
 
               $('#modalMsg').modal("show");
               $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
-              itemBoxClose();
+
               // 리스트 변경하기
-              $(".dayName").text(dayCnt);
-              $("#itemDayName").val(dayCnt);
               itemList(dayVal);
-
-              mapReSet();//지도 재 설정
           })
-          btnSelectDay.on('click', function () {});
-
-
-
-          // btnItemAdd.on('click',function () {
-          //     ItemAdd();
-          // });
-
-
-
-          btnItemSave.on('click',function (){
-              let dayVal = daySelect.find("option:selected").val();
-              let item = $("#itemForm").serialize();
-              $.ajax({
-                  url:"/board/itemSave",
-                  type:'POST',
-                  data: item, // 전송 데이터
-                  dataType: 'json', // 전송 데이터 형식
-                  success:function (data){
-                      if(data){
-                          itemBoxClose();
-                          $('#modalMsg').modal("show");
-                          $('#modalMsg .modal-message').html("저장되었습니다.");
-
-                      }else {
-                          $('#modalMsg').modal("show");
-                          $('#modalMsg .modal-message').html("저장이 실패했습니다.");
-                      }
-                      itemList(dayVal); //
-                      mapReSet(); //지도 재 설정
-
-                  },
-                  error:function (){
-                      $('#modalMsg').modal("show");
-                      $('#modalMsg .modal-message').html("저장할 수 없습니다. 관리자에게 문의해주세요.");
-                  }
-
-              });
-          });
-          btnItemClose.on('click',function (){
-              itemBoxClose();
-          });
-          btnItemDelete.on('click',function (){
-              let itemNo = $("input[name=itemNo]").val();
-              let itemDay = $("input[name=itemDay]").val();
-              console.log(itemNo);
-              $.ajax({
-                  url:'/board/itemDelete?no='+itemNo,
-                  type:'get',
-                  success:function (data) {
-                      $('#modalMsg').modal("show");
-                      $('#modalMsg .modal-message').html("일정이 삭제되었습니다.");
-                      itemBoxClose();
-                      itemList(itemDay);
-                      mapReSet();
-                  },
-                  error:function (data){
-                      alert("일정 삭제에 실패했습니다.");
-                  }
-
-              });
-          });
-
-
-          function storageSave(){
-              let data = [];
-              itemListWrap.find("li").each(function (index, item){
-                  index = {
-                      itemNo:'',
-                      itemNumber :''
-                  }
-                  index.itemNo = $(this).data("no");
-                  index.itemNumber =  $(this).data("index");
-                  data.push(index);
-              });
-              var jsonData = JSON.stringify(data);
-              return jsonData;
-          }
-
-          btnTotalStorageSave.on('click',function () {
-              let jsonData = storageSave();
-              console.log(jsonData);
-              $.ajax({
-                  url:'/board/StorageSave',
-                  type:'get',
-                  dataType: 'json',
-                  data: {"jsonData" : jsonData},
-                  success:function (data){
-                      $('#modalMsg').modal("show");
-                      $('#modalMsg .modal-message').html("리스트 순서가 변경되었습니다.");
-                      mapReSet();
-                  },
-                  error:function (data){
-                      alert("오류")
-                  }
-              });
-          })
-
-          btnTotalSave.on('click',function () {
-              let categoryNo = $("input[name=categoryNo]").val();
-              let msg='';
-              let jsonData = storageSave();
-              console.log(jsonData);
-              console.log(categoryNo);
-              $.ajax({
-                  url:'/board/StorageTotalSave',
-                  type:'get',
-                  dataType: 'json',
-                  data: {"jsonData" : jsonData,"categoryNo":categoryNo},
-                  success:function (data){
-                      $('#modalMsg').modal("show");
-                      msg+="<p>" + categoryTitle +"가 저장되었습니다.</p>";
-                      msg+="<div class='btn-group mt-5' style='width:100%'>";
-                      msg+="<button type='button' data-bs-dismiss='modal' aria-label='Close' class='btn btn-sm btn-outline-secondary' >더 수정하기</button><a href='/mypage/boardList' class='btn btn-primary btn-sm'>내 일정목록 확인하기</a>";
-                      msg+="</div>";
-                      $('#modalMsg .modal-message').html(msg);
-                      mapReSet();
-                  },
-                  error:function (data){
-                      alert("오류")
-                  }
-              });
-
-          });
 
 
           function itemList(e){
@@ -349,71 +175,65 @@
                   success:function (data){
                       for(var i=0 in data){
                           //alert(data[i].placeName);
-                          itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
-                          itemListCon += '<span class="markerbg marker_'+ i +'"></span>';
-                          itemListCon +=  '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
-                          itemListCon +=  '<i class="bi bi-chevron-expand"></i>';
+                          itemListCon +='<li class="lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                          itemListCon += '<div class="top">';
+                          itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
+                          itemListCon +=    '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
+                          itemListCon += '</div>';
+                          itemListCon += '<div class="con">';
+                          itemListCon += '</div>';
                           itemListCon += '</li>';
                       }
                       itemListWrap.html(itemListCon);
-                      reorder();
+                      itemMapInfoGet();
                   }
               })
           }
 
 
-          itemListWrap.sortable({
-              start:function (event,ui){
-                  ui.item.data('start_pos',ui.item.index());
-              },
-              stop:function (event,ui){
-                  var spos = ui.item.data('start_pos');
-                  var epos = ui.item.index();
-                  reorder();
-              }
-          });
-          function reorder(){
-              $("#sortable .list-group-item").each(function (i,box){
-                  $(box).attr('data-index',i);
-                  $(box).find('.markerbg').attr('class','markerbg marker_'+i);
-              });
+          function itemMapInfoGet(){
+            $("#sortable li a").on('click',function (index,item) {
+                let itemEl = $(this).parents("li");
+                let dayNo = $(this).parents("li").data("no");
+                let itemCon = itemEl.find(".con");
+                let content = '';
 
-              $("#sortable .list-group-item").on('click',function () {
-                  let dayNo = $(this).data("no");
-                  $.ajax({
-                      type: 'get',
-                      dataType: 'json',
-                      url:'/board/itemGet?no='+dayNo,
-                      success:function (data) {
-                          let arr=[];
-                          arr = data;
-                          console.log(arr)
-                          console.log(arr.itemNo);
-                          $("input[name=itemNo]").val(arr.itemNo);
-                          $("input[name=categoryId]").val(arr.categoryId);
-                          $("input[name=itemDay]").val(arr.itemDay);
-                          $("input[name=itemNumber]").val(arr.itemNumber);
-                          $("input[name=itemAccount]").val(arr.itemAccount);
-                          $("input[name=itemInfo]").val(arr.itemInfo);
-                          $("input[name=itemContent]").val(arr.itemContent);
-                          $("input[name=itemTime]").val(arr.itemTime);
-                          $("input[name=placeName]").val(arr.placeName);
-                          $("input[name=placeTime]").val(arr.placeTime);
-                          $("input[name=placeUrl]").val(arr.placeUrl);
-                          $("input[name=phone]").val(arr.phone);
-                          $("input[name=addressName]").val(arr.addressName);
-                          $("input[name=roadAddressName]").val(arr.roadAddressName);
-                          // btnItemAdd.hide();
-                          dayContent.show();
-                          btnItemDelete.show();
-                          $(".navbar_wrap").animate( { scrollTop : 0 }, 500 );;
-                      },
-                      error:function (){
-                          alert("내용을 불러오는 것을 실패했습니다.");
-                      }
-                  });
-              });
+                if(itemEl.hasClass("action") == false){
+                    $("#sortable li").removeClass("action");
+                    itemEl.addClass("action");
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url:'/board/itemGet?no='+dayNo,
+                        success:function (data) {
+                            let arr=[];
+                            arr = data;
+                            console.log(arr.itemNo);
+
+                            content += '<p>' + arr.addressName + '</p>';
+                            content += '<p>' + arr.roadAddressName + '</p>';
+                            content += '<p>' + arr.phone + '</p>';
+                            content += '<p>' + arr.placeUrl + '</p>';
+                            content += '<p>' + arr.placeTime + '</p>';
+                            content += '<p>' + arr.itemTime + '</p>';
+                            content += '<p>' + arr.itemAccount + '</p>';
+                            content += '<p>' + arr.itemContent + '</p>';
+
+                            itemCon.html(content);
+                        },
+                        error:function (){
+                            alert("내용을 불러오는 것을 실패했습니다.");
+                        }
+                    });
+                }else {
+                    console.log("gggggxxxxx");
+                    itemEl.removeClass("action");
+                }
+
+
+            });
           }
+
 
       });
   </script>

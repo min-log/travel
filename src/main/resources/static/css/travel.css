@@ -165,22 +165,22 @@ input.err {}
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;}
-.item_wrap .list-group-item .markerbg {width:44px; height:37px;background:url('/img/marker_number_blue.png') center no-repeat;background-position: 0 -10px;}
-.item_wrap .list-group-item .marker_0 {background-position: 0 -10px;}
-.item_wrap .list-group-item .marker_1 {background-position: 0 -56px;}
-.item_wrap .list-group-item .marker_2 {background-position: 0 -102px}
-.item_wrap .list-group-item .marker_3 {background-position: 0 -148px;}
-.item_wrap .list-group-item .marker_4 {background-position: 0 -194px;}
-.item_wrap .list-group-item .marker_5 {background-position: 0 -240px;}
-.item_wrap .list-group-item .marker_6 {background-position: 0 -286px;}
-.item_wrap .list-group-item .marker_7 {background-position: 0 -332px;}
-.item_wrap .list-group-item .marker_8 {background-position: 0 -378px;}
-.item_wrap .list-group-item .marker_9 {background-position: 0 -423px;}
-.item_wrap .list-group-item .marker_10 {background-position: 0 -470px;}
-.item_wrap .list-group-item .marker_11 {background-position: 0 -516px;}
-.item_wrap .list-group-item .marker_12 {background-position: 0 -562px;}
-.item_wrap .list-group-item .marker_13 {background-position: 0 -608px;}
-.item_wrap .list-group-item .marker_14 {background-position: 0 -654px;}
+.item_map .markerbg {width:44px; height:37px;background:url('/img/marker_number_blue.png') center no-repeat;background-position: 0 -10px;display:inline-block;}
+.item_map .marker_0 {background-position: 0 -10px;}
+.item_map .marker_1 {background-position: 0 -56px;}
+.item_map .marker_2 {background-position: 0 -102px}
+.item_map .marker_3 {background-position: 0 -148px;}
+item_map .marker_4 {background-position: 0 -194px;}
+item_map .marker_5 {background-position: 0 -240px;}
+item_map .marker_6 {background-position: 0 -286px;}
+item_map .marker_7 {background-position: 0 -332px;}
+item_map .marker_8 {background-position: 0 -378px;}
+item_map .marker_9 {background-position: 0 -423px;}
+item_map .marker_10 {background-position: 0 -470px;}
+item_map .marker_11 {background-position: 0 -516px;}
+item_map .marker_12 {background-position: 0 -562px;}
+item_map .marker_13 {background-position: 0 -608px;}
+item_map .marker_14 {background-position: 0 -654px;}
 
 
 
@@ -263,4 +263,16 @@ input.err {}
 .board_content .card-body .img + .con {padding-left:20px;width:calc(100% - 100px);}
 .board_content .card-body .con h5 {font-weight:bold;font-size:18px;}
 .tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
+.tag.point {background:var(--color-main);color:#fff !important;}
 
+/*게시판 상세페이지*/
+.veiw_top .date {font-weight:bold}
+.veiw_top .area,
+.veiw_top .area span {font-weight:bold;font-size:12px;color:var(--color-main);}
+.veiw_top .veiw_info p *,
+.veiw_top .veiw_info p {color:#5c636a;font-size:12px;}
+.item_veiw_con {position:relative;}
+.item_veiw_con:after {content: '';display:block;border-left:1px solid #000;width:1px;height:100%;position:absolute;top:0;left:14px;z-index: -1;}
+.item_veiw_con li .top {display:flex;align-items: center;}
+.item_veiw_con li .top a {font-weight:bold}
+.item_veiw_con li + li {margin-top:20px;}

@@ -49,6 +49,7 @@ public interface CategoryService {
                 .categoryAreaDetails(category.getCategoryAreaDetails())
                 .categorySave(category.isCategorySave())
                 .categoryOpen(category.isCategoryOpen())
+                .createdAt(category.getCreatedAt())
                 .build();
 
         return result;

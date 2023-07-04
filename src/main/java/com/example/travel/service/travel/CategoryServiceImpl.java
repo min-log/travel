@@ -171,6 +171,22 @@ public class CategoryServiceImpl implements CategoryService {
         }
         Category category = categorys.get();
         CategoryDTO categoryDTO = categoryEntityToDto(category);
+
+
+
+
+        Hashtag byCategoryId = hashtagRepository.findByCategoryId(no);
+        List<Tag> tags = byCategoryId.getTag();
+        String tagInfo="";
+        String[] tagInfoList = new String[tags.size()];
+        for(int j=0;j<tags.size();j++){
+            log.info("tag : {}",tags.get(j).getName());
+            tagInfo += "#" + tags.get(j).getName() + " ";
+            tagInfoList[j] = tags.get(j).getName();
+        }
+        categoryDTO.setTagList(tagInfoList);
+        categoryDTO.setTags(tagInfo);
+
         return categoryDTO;
     }
 

@@ -30,12 +30,11 @@ public class CategoryDTO {
     private boolean categoryOpen; // 카테고리 외부 공개 여부
 
 
-    private String tags; // 참여자 리스트
+    private String tags; // 참여자 리스트 -- 화면에서 받아올때 사용
 
+    private String[] tagList; // 참여자 리스트 - 화면에 전달할때 사용
 
-    private String[] tagList; // 참여자 리스트
-
-
+    private LocalDateTime createdAt;
 
 
 
