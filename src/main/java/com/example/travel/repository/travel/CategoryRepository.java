@@ -24,4 +24,5 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     Page<Category> findByUserTravelNoAndCategorySave(Long no,boolean save, Pageable pageable);
 
 
+
 }

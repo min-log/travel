@@ -79,6 +79,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
+
+    @Override
+    public Page<CategoryDTO> getCategoryInvitedMYPage(
+            String name,
+            Integer page, String order) {
+
+        log.info("내 카테고리 초대 리스트 전달");
+        log.info("page : {}",page);
+        PageRequest pageRequest;
+        pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
+
+
+
+        return null;
+    }
+
+
     Page<CategoryDTO> convertPage(Page<Category> categoryPage) {
 
         List<CategoryDTO> categoryDTOList = categoryPage.getContent()

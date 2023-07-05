@@ -33,13 +33,13 @@
 <!--                    <img src="" alt="여행썸내일">-->
 <!--                  </p>-->
                   <div class="con">
-                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
-                    <p class="mt-1">
-                      <span th:text="${list.categoryArea}">제주도</span>
-                      <th:block th:if="${list.categoryAreaDetails != 'null'}">
-                        ( <span th:text="${list.categoryAreaDetails}">제주도</span> )
+                    <p class="address_info mt-1">
+                      <span class="point-color" th:text="${list.categoryArea}">제주도</span>
+                      <th:block th:if="${list.categoryAreaDetails != ''}">
+                        / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
                       </th:block>
                     </p>
+                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
                     <p class="travel_date mt-1">
                       <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
                        -

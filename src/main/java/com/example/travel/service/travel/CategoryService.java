@@ -24,6 +24,7 @@ public interface CategoryService {
 
     Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order);
 
+    Page<CategoryDTO> getCategoryInvitedMYPage(String name, Integer page, String order);
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기

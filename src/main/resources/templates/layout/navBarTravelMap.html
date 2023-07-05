@@ -91,7 +91,7 @@
                       </tr>
                       <tr>
                         <th><label>운영시간</label></th>
-                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00"></td>
+                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00-24:00"></td>
                       </tr>
                       <tr>
                         <th><label>도착시간</label></th>
@@ -320,7 +320,7 @@
                   data: {"jsonData" : jsonData},
                   success:function (data){
                       $('#modalMsg').modal("show");
-                      $('#modalMsg .modal-message').html("리스트 순서가 변경되었습니다.");
+                      $('#modalMsg .modal-message').html("리스트가 임시저장 되었습니다.");
                       mapReSet();
                   },
                   error:function (data){
@@ -407,15 +407,13 @@
                       success:function (data) {
                           let arr=[];
                           arr = data;
-                          console.log(arr)
                           console.log(arr.itemNo);
                           $("input[name=itemNo]").val(arr.itemNo);
                           $("input[name=categoryId]").val(arr.categoryId);
                           $("input[name=itemDay]").val(arr.itemDay);
                           $("input[name=itemNumber]").val(arr.itemNumber);
                           $("input[name=itemAccount]").val(arr.itemAccount);
-                          $("input[name=itemInfo]").val(arr.itemInfo);
-                          $("input[name=itemContent]").val(arr.itemContent);
+                          $("textarea[name=itemInfo]").text(arr.itemInfo);
                           $("input[name=itemTime]").val(arr.itemTime);
                           $("input[name=placeName]").val(arr.placeName);
                           $("input[name=placeTime]").val(arr.placeTime);

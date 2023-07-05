@@ -262,6 +262,7 @@ item_map .marker_14 {background-position: 0 -654px;}
 .board_content .card-body .con {width:100%;box-sizing:border-box;}
 .board_content .card-body .img + .con {padding-left:20px;width:calc(100% - 100px);}
 .board_content .card-body .con h5 {font-weight:bold;font-size:18px;}
+.board_content .card-body .con .address_info {font-size:12px;color:var(--color-main);font-weight:bold;}
 .tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
 .tag.point {background:var(--color-main);color:#fff !important;}
 
@@ -269,10 +270,31 @@ item_map .marker_14 {background-position: 0 -654px;}
 .veiw_top .date {font-weight:bold}
 .veiw_top .area,
 .veiw_top .area span {font-weight:bold;font-size:12px;color:var(--color-main);}
-.veiw_top .veiw_info p *,
-.veiw_top .veiw_info p {color:#5c636a;font-size:12px;}
-.item_veiw_con {position:relative;}
-.item_veiw_con:after {content: '';display:block;border-left:1px solid #000;width:1px;height:100%;position:absolute;top:0;left:14px;z-index: -1;}
-.item_veiw_con li .top {display:flex;align-items: center;}
-.item_veiw_con li .top a {font-weight:bold}
-.item_veiw_con li + li {margin-top:20px;}
+/*.veiw_top .veiw_info p *,*/
+/*.veiw_top .veiw_info p {color:#5c636a;font-size:12px;}*/
+
+
+.item_veiw_con .top {width:100%;line-height:40px !important;}
+.item_veiw_con .top > * {
+    display: inline-block;
+    vertical-align: top;
+}
+.item_veiw_con .top .place_name {font-weight:bold;width:calc(100% - 58px - 44px);margin-top:10px;}
+.item_veiw_con li{margin-bottom:20px;position:relative;}
+.item_veiw_con li:after {content: '';display:block;border-left:2px dotted #000;width:1px;height:calc(100% + 20px);position:absolute;top:0;left:13px;z-index: -1;transition:1s all;}
+.item_veiw_con li.action:after {border-left:2px solid var(--color-main);}
+.item_veiw_con li:last-child:after {display:none;}
+.item_veiw_con .con {width: calc(100% - 40px);
+    margin-left: 40px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;}
+.item_veiw_con .con p {font-size:14px;}
+.item_veiw_con .con .gray {color:#8a8a8a;}
+.item_veiw_con .con .jibun {font-size:12px;padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+.item_veiw_con .link_zone {float: right;width:58px;margin-top:10px;}
+.item_veiw_con .link_zone .bi {color:#ddd;}
+.item_veiw_con .link_zone .bi.bi-map-fill {color:#000;}
+.item_veiw_con .link_zone .bi:hover {color:var(--color-main) !important;}
+.item_veiw_con .road_address {font-weight:bold}
+.item_veiw_con .address_name {clear:both;}

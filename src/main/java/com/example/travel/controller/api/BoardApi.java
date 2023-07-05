@@ -59,7 +59,7 @@ public class BoardApi {
         log.info(itemDay);
         log.info(category);
         List<ItemDTO> itemDTOS = itemService.itemList(itemDay, category);
-        log.info(itemDTOS);
+        log.info("가져온 아이템 리스트 : {}",itemDTOS);
         return itemDTOS;
     }
 
@@ -130,6 +130,8 @@ public class BoardApi {
     }
 
 
+
+    //상세페이지 아이템 리스트 --------------------------
 
 
 }
