@@ -19,8 +19,8 @@
           </p>
           <p class="ml-2">
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
-              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/mypage/boardList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
-              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/mypage/boardList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
+              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/mypage/boardInvitedList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
+              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/mypage/boardInvitedList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
             </select>
           </p>
         </div>
@@ -45,7 +45,7 @@
                        -
                       <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span>
                     </p>
-                    <p class="travel_people mt-2"><span th:each="tagItem,i:${list.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span></p>
+                    <p class="travel_people mt-2"><span class="tag point" th:text="${list.categoryWriter}"></span><span th:each="tagItem,i:${list.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span></p>
                   </div>
                 </div>
                 <!-- end :card-body -->
@@ -62,13 +62,13 @@
         </ul>
         <div th:object="${pageing}" class="mt-5 text-center">
             <th:block th:if="${pageing.prev}">
-              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
+              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardInvitedList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
             </th:block>
             <th:block th:each="page : ${pageing.pageList}">
-              <a  th:href="@{/mypage/boardList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
+              <a  th:href="@{/mypage/boardInvitedList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
             </th:block>
             <th:block th:if="${pageing.next}">
-              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
+              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardInvitedList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
             </th:block>
         </div>
       </div>

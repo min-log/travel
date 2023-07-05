@@ -18,8 +18,8 @@ public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryNo;
-
     private Long userTravelNo;  //작성자 No
+    private String categoryWriter; //작성자
 
     private String categoryName; // 카테고리 이름
     private LocalDateTime dateStart;

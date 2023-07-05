@@ -12,6 +12,7 @@
             </h2>
             <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
                 <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden">
+                <input name="categoryWriter" th:id="*{categoryWriter}" th:value="${session.userT.userId}" type="hidden">
                 <table>
                     <colgroup>
                         <col style="width:100px">

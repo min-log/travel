@@ -20,7 +20,8 @@ public class CategoryDTO {
 
     // Category
     private Long categoryNo;
-    private Long userTravelNo;  //작성자 아이디
+    private Long userTravelNo;  //작성자 고유번호
+    private String categoryWriter; // 작성자 아이디
     private String categoryName; // 카테고리 이름
     private String dateStart;
     private String dateEnd;

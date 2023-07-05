@@ -178,7 +178,9 @@ public class MypageController {
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
         Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page ,order);
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
-        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
+
+        log.info("categoryPage : {}",categoryPage);
+        log.info("pageingDTO {}",pageingDTO);
 
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
@@ -200,9 +202,12 @@ public class MypageController {
         if(order == null) order= "dateStart";
 
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryInvitedMYPage(userT.getName(), page ,order);
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryInvitedMYPage(userT.getUserId(), page ,order);
+
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
-        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
+
+        log.info("categoryPage : {}",categoryPage);
+        log.info("pageingDTO {}",pageingDTO);
 
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);

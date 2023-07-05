@@ -26,7 +26,7 @@
             <div class="veiw_info mt-3">
               <p class="travel_people mt-1">
                 <span class="txt_info">여행 인원</span><br />
-                <span class="tag point" th:text="${session.userT.userId}"></span>
+                <span class="tag point" th:text="*{categoryWriter}"></span>
                 <span th:each="tagItem,i:${category.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
               </p>
               <p class="txt_info mt-1">총 예상 비용 : <span></span> 원</p>

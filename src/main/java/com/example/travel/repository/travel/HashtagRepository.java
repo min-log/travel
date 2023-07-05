@@ -19,4 +19,5 @@ public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
     int deleteByHashIdAndTag(@Param(value="id") Long id);
 
     Hashtag findByCategoryId(Long no);
+    Hashtag findByTag(Tag tag);
 }

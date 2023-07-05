@@ -20,7 +20,7 @@ public interface CategoryService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
-
+    Page<CategoryDTO> getCategoryList(Integer page, String order);
 
     Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order);
 
@@ -42,6 +42,7 @@ public interface CategoryService {
 
         CategoryDTO result = CategoryDTO.builder()
                 .userTravelNo(category.getUserTravelNo())
+                .categoryWriter(category.getCategoryWriter())
                 .categoryNo(category.getCategoryNo())
                 .categoryName(category.getCategoryName())
                 .dateStart(startDate)
@@ -64,6 +65,7 @@ public interface CategoryService {
 
         Category result = Category.builder()
                 .userTravelNo(categoryDTO.getUserTravelNo())
+                .categoryWriter(categoryDTO.getCategoryWriter())
                 .categoryNo(categoryDTO.getCategoryNo())
                 .categoryName(categoryDTO.getCategoryName())
                 .dateStart(startDate)

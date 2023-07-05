@@ -63,6 +63,16 @@ public class CategoryServiceImpl implements CategoryService {
         return result;
     }
 
+    public Page<CategoryDTO> getCategoryList(Integer page, String order) {
+        log.info("전체 카테고리 리스트");
+        PageRequest pageRequest;
+
+        pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
+        Page<Category> result = categoryRepository.findByCategoryOpen(true, pageRequest);
+        Page<CategoryDTO> categoryDTOS = convertPage(result);
+
+        return categoryDTOS;
+    }
     @Override
     public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order) {
         log.info("내 카테고리 리스트 전달");
@@ -72,8 +82,6 @@ public class CategoryServiceImpl implements CategoryService {
         pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
         Page<Category> result = categoryRepository.findByUserTravelNoAndCategorySave(no,true, pageRequest);
         Page<CategoryDTO> categoryDTOS = convertPage(result);
-        log.info("categoryDTOS : {}",categoryDTOS.getContent());
-        log.info("categoryDTOS : {}",categoryDTOS.getSize());
 
         return categoryDTOS;
     }
@@ -81,18 +89,45 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
+    @Transactional
     public Page<CategoryDTO> getCategoryInvitedMYPage(
             String name,
             Integer page, String order) {
 
-        log.info("내 카테고리 초대 리스트 전달");
-        log.info("page : {}",page);
+        log.info("내 카테고리 초대 리스트 전달 --------");
+        log.info("내 아이디 : {}",name);
+
+        // 태그 이름을 통해 카테고리 아이디 가져오기
+        List<Long> categoryNoList = new ArrayList<>();
+        List<Tag> tagList = tagRepository.findTagByName(name);
+        if (!tagList.isEmpty()){
+            for (int i=0;i<tagList.size();i++){
+                Long id = tagList.get(i).getId();
+                System.out.println(id);
+                Long categoryId = hashtagRepository.findByTag(tagList.get(i)).getCategoryId();
+                categoryNoList.add(categoryId);
+            }
+        }
+
+
+        // 카테고리 리스트 생성
+        List<Category> categoryList = new ArrayList<>();
+
+
+        for (int i = 0; i<categoryNoList.size();i++){
+            Category one = categoryRepository.getOne(categoryNoList.get(i));
+            if (one.isCategorySave() == true) categoryList.add(one);
+        }
+
         PageRequest pageRequest;
         pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
 
+        Page<Category> Cpage = new PageImpl<>(categoryList, PageRequest.of(page- 1, 6,Sort.by(order).ascending()), categoryNoList.size());
+
+        Page<CategoryDTO> categoryDTOS = convertPage(Cpage);
 
 
-        return null;
+        return categoryDTOS;
     }
 
 
@@ -118,8 +153,6 @@ public class CategoryServiceImpl implements CategoryService {
             categoryDTOList.get(i).setTagList(tagInfoList);
             categoryDTOList.get(i).setTags(tagInfo);
         }
-
-
 
         return new PageImpl<>(categoryDTOList, PageRequest.of(categoryPage.getNumber(), categoryPage.getSize()), categoryPage.getTotalElements());
     }
