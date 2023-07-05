@@ -12,8 +12,10 @@ import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -67,7 +70,9 @@ public class TravelController {
     @GetMapping("/category")
     public String categoryMap(
             @RequestParam(value = "no") long no,
-            Model model
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
     ){
         log.info(no);
         CategoryDTO categoryDTO = categoryService.getCategory(no);
@@ -84,40 +89,30 @@ public class TravelController {
         model.addAttribute("days",days);
         model.addAttribute("startDay",dayOfMonth);
         model.addAttribute("item",item);
+
+
+
+        // 해당 유저의 글이 아닐 시 페이지 접근 막기
+        boolean userCk = userCk(authentication, categoryDTO);
+        if (userCk == false){
+            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+            return "redirect:/board/boardList";
+        }
 
         return "travel/travelMap";
     }
 
 
-    @GetMapping("/boardList")
-    public String categoryList(
-        @RequestParam(value = "page",required = false) Integer page,
-        @RequestParam(value = "order",required = false) String order,
-        Model model){
-
-        if(page == null) page= 1;
-        if(order == null) order= "dateStart";
-
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(page ,order);
-        PageingDTO pageingDTO = new PageingDTO(categoryPage);
-        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
-
-        model.addAttribute("categoryPage",categoryPage);
-        model.addAttribute("pageing",pageingDTO);
-        model.addAttribute("orderCk",order);
-
-        return "/travel/boardList";
-    }
-
 
     @GetMapping("/view")
     public String categoryVeiw(
             @RequestParam(value = "no") long no,
-            Model model
+            Model model,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
     ){
-        log.info(no);
+        log.info("상세페이지");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
-
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
         log.info("days info {}" , days.getDayInfo());
@@ -132,9 +127,36 @@ public class TravelController {
         model.addAttribute("item",item);
 
 
+        // 해당 유저의 글이 아닐 시 페이지 접근 막기
+
+        boolean userCk = userCk(authentication, categoryDTO);
+        if (userCk == false){
+            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+            return "redirect:/board/boardList";
+        }
+
+
         return "travel/travelView";
     }
 
+
+    // 해당 유저의 글이 아닐 시 페이지 접근 막기
+    public boolean userCk(Authentication authentication,CategoryDTO categoryDTO){
+        String name = authentication.getName();
+        String[] tagList = categoryDTO.getTagList();
+        String categoryWriter = categoryDTO.getCategoryWriter();
+        boolean userCk = false;
+        if (tagList != null) {
+            for (int i = 0; i < tagList.length; i++) {
+                if (tagList[i].equals(name)) {
+                    userCk = true;
+                }
+            }
+        }
+        if (categoryWriter.equals(name)) userCk = true;
+        log.info(userCk);
+        return userCk;
+    }
 
 
 

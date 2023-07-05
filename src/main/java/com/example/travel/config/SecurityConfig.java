@@ -35,9 +35,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/mypage").hasRole("USER")
-                .antMatchers("/travel").hasRole("USER")
-                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/mypage/**").hasRole("USER")
+                .antMatchers("/travel/**").hasRole("USER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
         ;
         http.formLogin()
                 .loginPage("/loginForm")
