@@ -186,7 +186,7 @@
                           todayPrice = todayPrice + price;
                           if(price != null || price != 0) price = priceToString(price);
 
-                          itemListCon +='<li class="lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                          itemListCon +='<li class="lh-sm" data-number="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
                           itemListCon += '<div class="top">';
                           itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
                           itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
