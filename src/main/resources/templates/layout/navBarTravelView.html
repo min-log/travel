@@ -161,6 +161,8 @@
               $('#modalMsg').modal("show");
               $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
 
+              removeMarker();
+
               // 리스트 변경하기
               itemList(dayVal);
           })
@@ -186,12 +188,12 @@
                           todayPrice = todayPrice + price;
                           if(price != null || price != 0) price = priceToString(price);
 
-                          itemListCon +='<li class="lh-sm" data-number="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                          itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
                           itemListCon += '<div class="top">';
                           itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
                           itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
                               itemListCon += '<p class="link_zone">';
-                              itemListCon += '    <a href="" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
+                              itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
                               itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
                               itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
                               itemListCon += '</p>';
