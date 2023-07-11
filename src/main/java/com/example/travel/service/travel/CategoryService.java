@@ -4,6 +4,7 @@ import com.example.travel.domain.Category;
 import com.example.travel.domain.Tag;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +36,8 @@ public interface CategoryService {
     boolean categoryTotalSave(long no); //실제 저장
 
     boolean categoryLike(long categoryNo,long userNo);
+
+    List<LikeCategoryDTO> categoryLikeList(long userNo);
 
 
     default CategoryDTO categoryEntityToDto(Category category){

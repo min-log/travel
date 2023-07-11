@@ -1,7 +1,9 @@
 package com.example.travel.controller.travel;
 
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.dto.travel.PageingDTO;
+import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Log4j2
 @Controller
@@ -37,6 +40,9 @@ public class BoardController {
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
+        UserTravelDTO userT = (UserTravelDTO)httpSession.getAttribute("userT");
+        List<LikeCategoryDTO> likeList = categoryService.categoryLikeList(userT.getUserNo());
+        model.addAttribute("likeList",likeList);
 
         return "/travel/boardList";
     }

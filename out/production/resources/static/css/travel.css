@@ -268,7 +268,7 @@ input.err {}
 .tag.point {background:var(--color-main);color:#fff !important;}
 .btn_heart {position: absolute;top:0;right:0;z-index: 1;}
 .btn_heart .bi {font-size:18px}
-
+.btn_heart .bi.bi-heart-fill {position: absolute;right:0;top:0;z-index:1;}
 /*게시판 상세페이지*/
 .veiw_top .date {font-weight:bold}
 .veiw_top .area,

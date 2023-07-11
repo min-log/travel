@@ -3,6 +3,7 @@ package com.example.travel.service.travel;
 import com.example.travel.domain.*;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.dto.travel.TagDTO;
 import com.example.travel.repository.travel.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -358,6 +359,18 @@ public class CategoryServiceImpl implements CategoryService {
             LikeCategory save = likeRepository.save(likeSave);
             return true;
         }
+    }
+
+    @Override
+    public List<LikeCategoryDTO> categoryLikeList(long userNo) {
+        List<LikeCategory> likeList = likeRepository.findByUserId(userNo);
+        List<LikeCategoryDTO> none = new ArrayList<>();
+        if(! likeList.isEmpty()){
+            List<LikeCategoryDTO> result = likeList.stream().map(i -> LikeCategoryDTO.builder().categoryId(i.getCategoryId()).userId(i.getUserId()).build()).collect(Collectors.toList());
+            return result;
+        }
+
+        return none;
     }
 
 
