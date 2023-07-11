@@ -2,6 +2,7 @@ package com.example.travel.controller.api;
 
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
+import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.travel.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Log4j2
@@ -130,8 +132,18 @@ public class BoardApi {
     }
 
 
+    @GetMapping("/likeSave")
+    public boolean categoryLike(
+            @RequestParam("no") Long no,
+            HttpSession httpSession
+    ){
+        log.info("카테고리 좋아요 -----------------");
+        log.info("no : " + no);
+        UserTravelDTO userT = (UserTravelDTO) httpSession.getAttribute("userT");
+        boolean result = categoryService.categoryLike(no, userT.getUserNo());
+        log.info("전달할 값 : " + result);
+        return result;
 
-    //상세페이지 아이템 리스트 --------------------------
-
+    }
 
 }

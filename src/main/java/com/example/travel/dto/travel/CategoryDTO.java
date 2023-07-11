@@ -37,6 +37,7 @@ public class CategoryDTO {
 
     private LocalDateTime createdAt;
 
+    private int viewNum; // 카테고리 조회 수
 
 
 

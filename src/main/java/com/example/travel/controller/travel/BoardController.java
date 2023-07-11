@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 @Log4j2
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class BoardController {
     public String categoryList(
             @RequestParam(value = "page",required = false) Integer page,
             @RequestParam(value = "order",required = false) String order,
+            HttpSession httpSession,
             Model model){
 
         if(page == null) page= 1;

@@ -34,6 +34,8 @@ public interface CategoryService {
 
     boolean categoryTotalSave(long no); //실제 저장
 
+    boolean categoryLike(long categoryNo,long userNo);
+
 
     default CategoryDTO categoryEntityToDto(Category category){
         // 문자열
@@ -52,6 +54,7 @@ public interface CategoryService {
                 .categorySave(category.isCategorySave())
                 .categoryOpen(category.isCategoryOpen())
                 .createdAt(category.getCreatedAt())
+                .viewNum(category.getViewNum())
                 .build();
 
         return result;
@@ -74,6 +77,7 @@ public interface CategoryService {
                 .categoryAreaDetails(categoryDTO.getCategoryAreaDetails())
                 .categorySave(categoryDTO.isCategorySave())
                 .categoryOpen(categoryDTO.isCategoryOpen())
+                .viewNum(categoryDTO.getViewNum())
                 .build();
         return result;
     }

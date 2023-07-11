@@ -30,7 +30,7 @@
 <!--                  </p>-->
                   <div class="con">
                     <p class="address_info mt-1">
-                      <a href="" title="찜하기" class="btn_heart"><i class="bi bi-heart"></i></a>
+                      <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart"><i class="bi bi-heart"></i></a>
                       <span class="point-color" th:text="${list.categoryArea}">제주도</span>
                       <th:block th:if="${list.categoryAreaDetails != ''}">
                         / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
@@ -77,6 +77,29 @@
     </div>
   </div>
 
+
+  <script type="text/javascript">
+      function btnLike(e){
+          console.log(e);
+          $.ajax({
+              url:'/board/likeSave?no=' + e,
+              type: 'get',
+              success:function (data){
+                  console.log(data);
+                  if (data){
+                      alert("저장 되었습니다.");
+
+                  }else{
+                      alert("저장을 삭제 했습니다.");
+                  }
+              },
+              error:function (){
+                  alert("저장이 실패했습니다. 관리자에게 문의해주세요.")
+              }
+
+          })
+      }
+  </script>
 
   <script type="text/javascript">
     $(document).ready(function (){

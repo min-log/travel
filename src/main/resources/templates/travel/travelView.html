@@ -83,6 +83,7 @@
 
         })
         function setMap(){
+            infowindow.close();
             removeMarker();// 지도에 표시되고 있는 마커를 제거합니다
             setTimeout(function (){
                 let places = myMerkerSet();

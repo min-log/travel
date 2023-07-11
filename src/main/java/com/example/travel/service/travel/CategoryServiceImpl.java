@@ -1,16 +1,10 @@
 package com.example.travel.service.travel;
 
-import com.example.travel.domain.Category;
-import com.example.travel.domain.Hashtag;
-import com.example.travel.domain.Item;
-import com.example.travel.domain.Tag;
+import com.example.travel.domain.*;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.TagDTO;
-import com.example.travel.repository.travel.CategoryRepository;
-import com.example.travel.repository.travel.HashtagRepository;
-import com.example.travel.repository.travel.ItemRepository;
-import com.example.travel.repository.travel.TagRepository;
+import com.example.travel.repository.travel.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     final HashtagRepository hashtagRepository;
     final TagRepository tagRepository;
     final ItemRepository itemRepository;
+    final LikeCategoryRepository likeRepository;
 
 
     @Override
@@ -344,4 +339,26 @@ public class CategoryServiceImpl implements CategoryService {
 
         return true;
     }
+
+    @Transactional
+    @Override
+    public boolean categoryLike(long categoryNo, long userNo) {
+        log.info("카테고리 좋아요 기능 --------------------");
+
+        LikeCategory likeSave = LikeCategory.builder().categoryId(categoryNo).userId(userNo).build();
+
+        Optional<LikeCategory> likes = likeRepository.findByCategoryIdAndUserId(categoryNo, userNo);
+        if (likes.isPresent()){
+            log.info("좋아요 제거");
+            LikeCategory likeCategory = likes.get();
+            likeRepository.deleteById(likeCategory.getId());
+            return false;
+        }else {
+            log.info("좋아요");
+            LikeCategory save = likeRepository.save(likeSave);
+            return true;
+        }
+    }
+
+
 }

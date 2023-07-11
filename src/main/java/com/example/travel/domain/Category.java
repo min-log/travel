@@ -29,6 +29,8 @@ public class Category extends BaseEntity{
     private boolean categorySave; // 임시저장 여부  최종 저장 전에는 false -> true
     private boolean categoryOpen; // 카테고리 외부 공개 여부
 
+    private int viewNum; // 카테고리 조회 수
+
 
 
 }
