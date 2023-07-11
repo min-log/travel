@@ -15,8 +15,8 @@
           </p>
           <p class="ml-2">
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
-              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/travel/boardList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
-              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/travel/boardList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
+              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/board/boardList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
+              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/board/boardList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
             </select>
           </p>
         </div>
@@ -67,13 +67,13 @@
         </ul>
         <div th:object="${pageing}" class="mt-5 text-center">
             <th:block th:if="${pageing.prev}">
-              <a class="btn btn-outline-secondary" th:href="@{/travel/boardList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
+              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
             </th:block>
             <th:block th:each="page : ${pageing.pageList}">
-              <a  th:href="@{/travel/boardList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
+              <a  th:href="@{/board/boardList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
             </th:block>
             <th:block th:if="${pageing.next}">
-              <a class="btn btn-outline-secondary" th:href="@{/travel/boardList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
+              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
             </th:block>
         </div>
       </div>
@@ -91,11 +91,12 @@
               type: 'get',
               success:function (data){
                   console.log(data);
-                  if (data){
+                  if (data == 1){
                       alert("저장 되었습니다.");
-
-                  }else{
+                  }else if (data == 0){
                       alert("저장을 삭제 했습니다.");
+                  }else {
+                      alert("로그인이 필요한 기능입니다.");
                   }
               },
               error:function (){

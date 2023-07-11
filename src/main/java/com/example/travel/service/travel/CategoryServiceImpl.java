@@ -344,6 +344,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public boolean categoryLike(long categoryNo, long userNo) {
+
         log.info("카테고리 좋아요 기능 --------------------");
 
         LikeCategory likeSave = LikeCategory.builder().categoryId(categoryNo).userId(userNo).build();

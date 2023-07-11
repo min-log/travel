@@ -40,9 +40,12 @@ public class BoardController {
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
+
         UserTravelDTO userT = (UserTravelDTO)httpSession.getAttribute("userT");
-        List<LikeCategoryDTO> likeList = categoryService.categoryLikeList(userT.getUserNo());
-        model.addAttribute("likeList",likeList);
+        if (userT != null){ //유저가 있을때만
+            List<LikeCategoryDTO> likeList = categoryService.categoryLikeList(userT.getUserNo());
+            model.addAttribute("likeList",likeList);
+        }
 
         return "/travel/boardList";
     }

@@ -2,6 +2,7 @@ package com.example.travel.controller.api;
 
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.travel.ItemService;
@@ -133,16 +134,29 @@ public class BoardApi {
 
 
     @GetMapping("/likeSave")
-    public boolean categoryLike(
+    public int categoryLike(
             @RequestParam("no") Long no,
             HttpSession httpSession
     ){
         log.info("카테고리 좋아요 -----------------");
         log.info("no : " + no);
-        UserTravelDTO userT = (UserTravelDTO) httpSession.getAttribute("userT");
+
+        UserTravelDTO userT = (UserTravelDTO)httpSession.getAttribute("userT");
+        if (userT == null){ //유저가 있을때만
+            return -1;
+        }
+
+
         boolean result = categoryService.categoryLike(no, userT.getUserNo());
         log.info("전달할 값 : " + result);
-        return result;
+
+        if (result){
+            return 1;
+        }else {
+            return 0;
+        }
+
+
 
     }
 
