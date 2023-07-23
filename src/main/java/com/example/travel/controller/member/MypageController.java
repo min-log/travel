@@ -218,5 +218,33 @@ public class MypageController {
 
 
 
+    @GetMapping("/boardLikeList")
+    public String myBoardLikeList(
+            @RequestParam(value = "page",required = false) Integer page,
+            @RequestParam(value = "order",required = false) String order,
+            HttpSession session,
+            Model model){
+
+        if(page == null) page= 1;
+        if(order == null) order= "dateStart";
+
+        UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryInvitedMYPage(userT.getUserId(), page ,order);
+
+        PageingDTO pageingDTO = new PageingDTO(categoryPage);
+
+        log.info("categoryPage : {}",categoryPage);
+        log.info("pageingDTO {}",pageingDTO);
+
+        model.addAttribute("categoryPage",categoryPage);
+        model.addAttribute("pageing",pageingDTO);
+        model.addAttribute("orderCk",order);
+        return "/mypage/boardLikeList";
+    }
+
+
+
+
+
 
 }

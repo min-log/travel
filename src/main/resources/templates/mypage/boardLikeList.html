@@ -5,20 +5,26 @@
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
   <div class="content_nav">
+    <!-- start : navbar -->
+    <th:block th:replace="layout/navBar::navBar"></th:block>
+    <!-- end : navbar -->
+    <!-- start : content -->
     <div class="content">
-      <h2 class="tit text-center mb-2">여행지 모아모아</h2>
-      <p class="text-center mb-5">고객님들이 공유해주신 여행지 정보입니다.</p>
+      <h2 class="tit text-center mb-5">
+        찜리스트
+      </h2>
+
       <div class="board_wrap" th:object="${categoryPage}">
         <div class="board_top mb-2 ">
           <p>
             total <span th:text="${categoryPage.getTotalElements()}">2</span>
           </p>
-          <p class="ml-2">
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
-              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/board/boardList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
-              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/board/boardList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
-            </select>
-          </p>
+<!--          <p class="ml-2">-->
+<!--            <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >-->
+<!--              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/mypage/boardInvitedList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>-->
+<!--              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/mypage/boardInvitedList(page=${pageing.getPage()},order='createdAt')}">작성일</option>-->
+<!--            </select>-->
+<!--          </p>-->
         </div>
         <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
           <th:block th:each="list,i:${categoryPage.getContent()}">
@@ -30,12 +36,6 @@
 <!--                  </p>-->
                   <div class="con">
                     <p class="address_info mt-1">
-                      <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
-                        <i class="bi bi-heart"></i>
-                        <th:block th:each="likes,i:${likeList}">
-                          <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
-                        </th:block>
-                      </a>
                       <span class="point-color" th:text="${list.categoryArea}">제주도</span>
                       <th:block th:if="${list.categoryAreaDetails != ''}">
                         / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
@@ -67,13 +67,13 @@
         </ul>
         <div th:object="${pageing}" class="mt-5 text-center">
             <th:block th:if="${pageing.prev}">
-              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
+              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardInvitedList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
             </th:block>
             <th:block th:each="page : ${pageing.pageList}">
-              <a  th:href="@{/board/boardList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
+              <a  th:href="@{/mypage/boardInvitedList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
             </th:block>
             <th:block th:if="${pageing.next}">
-              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
+              <a class="btn btn-outline-secondary" th:href="@{/mypage/boardInvitedList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
             </th:block>
         </div>
       </div>
@@ -82,36 +82,6 @@
     </div>
   </div>
 
-
-  <script type="text/javascript">
-      function btnLike(e){
-          console.log(e);
-          $.ajax({
-              url:'/board/likeSave?no=' + e,
-              type: 'get',
-              success:function (data){
-                  console.log(data);
-                  if (data == 1){
-                      alert("저장 되었습니다. ");
-
-                  }else if (data == 0){
-                      alert("저장을 삭제 했습니다.");
-                  }else {
-                      let con= '<div class="text-center"><p class="point-color tit mb-2">Travel Road</p>로그인이 필요한 기능입니다. </div>';
-                      con += '<div><a class="btn btn-primary w-100 btn-sm mt-5" href="/loginForm" >로그인하기</a></div>';
-                      $('#modalMsg').modal("show");
-                      $('#modalMsg .modal-message').html(con);
-
-                     // alert("로그인이 필요한 기능입니다.");
-                  }
-              },
-              error:function (){
-                  alert("저장이 실패했습니다. 관리자에게 문의해주세요.")
-              }
-
-          })
-      }
-  </script>
 
   <script type="text/javascript">
     $(document).ready(function (){

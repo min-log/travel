@@ -1,8 +1,11 @@
 package com.example.travel.service.travel;
 
 
+import com.example.travel.domain.Category;
 import com.example.travel.domain.Item;
+import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
+import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.repository.travel.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService{
 
     final ItemRepository itemRepository;
+    final CategoryRepository categoryRepository;
+    final CategoryService categoryService;
 
 
 
@@ -26,8 +31,31 @@ public class ItemServiceImpl implements ItemService{
     public ItemDTO itemSave(ItemDTO itemDTO) {
        log.info("아이템 저장 로직------------------");
         Item item = itemDtoToEntity(itemDTO);
+
+        //총 여행 금액 저장
+        Long categoryId = itemDTO.getCategoryId();
+        int itemAccount = itemDTO.getItemAccount();
+        log.info("itemAccount : {}",itemAccount);
+        Category category = categoryRepository.getOne(categoryId);
+        CategoryDTO categoryDTO = categoryService.categoryEntityToDto(category);
+        log.info("itemAccount category : {}",category );
+
+        if (itemAccount >= 0){
+            log.info("금액이 있으면 저장!");
+            int categoryTotalPrice = categoryDTO.getCategoryTotalPrice();
+            categoryTotalPrice += itemAccount;
+            categoryDTO.setCategoryTotalPrice(categoryTotalPrice);
+
+            Category categorySave = categoryService.categoryDtoToEntity(categoryDTO);
+            categoryRepository.save(categorySave);
+        }
+
+        // 아이템 저장
         Item save = itemRepository.save(item);
         ItemDTO result = itemEntityToDto(save);
+
+
+
         return result;
     }
 

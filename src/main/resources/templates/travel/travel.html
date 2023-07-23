@@ -12,6 +12,7 @@
             </h2>
             <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
                 <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden">
+                <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" type="hidden">
                 <input name="categoryWriter" th:id="*{categoryWriter}" th:value="${session.userT.userId}" type="hidden">
                 <table>
                     <colgroup>
@@ -21,14 +22,16 @@
                     <tbody>
                         <tr>
                             <th>여행명 <span class="txt_info ck">*</span></th>
-                            <td><input th:field="*{categoryName}" th:id="*{categoryName}" th:name="*{categoryName}" class="form-control" type="text" placeholder="가평 가족여행"></td>
+                            <td>
+                                <input th:field="*{categoryName}" th:id="categoryName" th:name="*{categoryName}" class="form-control" type="text" placeholder="가평 가족여행">
+                            </td>
                         </tr>
                         <tr>
                             <th>기간 <span class="txt_info ck">*</span></th>
                             <td>
                                 <div class="input-group input-daterange">
-                                    <input th:field="*{dateStart}" th:id="*{dateStart}" th:name="*{dateStart}" type="text" class="form-control" placeholder="출발 일" readonly>
-                                    <input th:field="*{dateEnd}" th:id="*{dateEnd}" th:name="*{dateEnd}" type="text" class="form-control" placeholder="종료 일" readonly>
+                                    <input th:field="*{dateStart}" id="dateStart" th:name="*{dateStart}" th:value="*{dateStart}" type="text" class="form-control" placeholder="출발 일" readonly>
+                                    <input th:field="*{dateEnd}" id="dateEnd" th:name="*{dateEnd}" th:value="*{dateEnd}" type="text" class="form-control" placeholder="종료 일" readonly>
                                 </div>
                             </td>
                         </tr>
@@ -36,9 +39,9 @@
                             <th>지역 <span class="txt_info ck">*</span></th>
                             <td>
                                 <div class="search_boxes">
-                                    <select  id="categoryArea" name="categoryArea" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
+                                    <select id="categoryArea"  th:field="*{categoryArea}" th:name="*{categoryArea}" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
                                         <option value="">시/도 선택</option>
-                                        <option value="강원" data-sub="general01">강원</option>
+                                        <option value="강원">강원</option>
                                         <option value="경기">경기</option>
                                         <option value="경남">경남</option>
                                         <option value="경북">경북</option>
@@ -56,7 +59,7 @@
                                         <option value="충북">충북</option>
                                     </select>
 
-                                    <select  id="categoryAreaDetails" name="categoryAreaDetails" class="form-select" aria-label="Default select example">
+                                    <select  id="categoryAreaDetails"  th:field="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" class="form-select" aria-label="Default select example">
                                         <option value="">군/구 선택</option>
                                     </select>
                                 </div>
@@ -66,7 +69,7 @@
                             <th>함께</th>
                             <td>
                                 <!-- 해시 태그 정보를 저장할 input 태그. (textarea도 지원) -->
-                                <input th:field="*{tags} "th:id="*{tags}" th:name="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
+                                <input th:field="*{tags}" th:id="*{tags}" th:name="*{tags}" th:value="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
                             </td>
                         </tr>
                     </tbody>

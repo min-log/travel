@@ -36,16 +36,33 @@ public class TravelController {
     final CategoryService categoryService;
 
     @GetMapping("")
-    public String main(Model model, @AuthenticationPrincipal UserTravelAdapter user,
-                       HttpServletRequest request){
+    public String main(Model model,
+                       @AuthenticationPrincipal UserTravelAdapter user,
+                       @RequestParam(value = "no", required = false) Long no,
+                       HttpServletRequest request
+                       ){
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
             model.addAttribute("msg",flashMap.get("msg"));
         }
 
+
         Long userNo = user.getUserNo();
         CategoryDTO categoryDTO = CategoryDTO.builder().userTravelNo(userNo).build();
+        if (no != null){
+            categoryDTO.setCategoryNo(no);
+            CategoryDTO category = categoryService.getCategory(no);
+            categoryDTO.setCategoryName(category.getCategoryName());
+            categoryDTO.setCategoryOpen(category.isCategoryOpen());
+            categoryDTO.setDateStart(category.getDateStart());
+            categoryDTO.setDateEnd(category.getDateEnd());
+            categoryDTO.setCategoryArea(category.getCategoryArea());
+            categoryDTO.setCategoryAreaDetails(category.getCategoryAreaDetails());
+            categoryDTO.setTags(category.getTags());
+        }
+
+
         model.addAttribute("category",categoryDTO);
         return "travel/travel";
     }
@@ -75,14 +92,15 @@ public class TravelController {
             RedirectAttributes redirectAttributes
     ){
         log.info(no);
+        log.info("어디?? ");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
-
+        log.info("어디 0? ");
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
         log.info("days info {}" , days.getDayInfo());
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
-
+        log.info("어디 1? ");
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
         model.addAttribute("category",categoryDTO);
@@ -90,7 +108,7 @@ public class TravelController {
         model.addAttribute("startDay",dayOfMonth);
         model.addAttribute("item",item);
 
-
+        log.info("어디 2? ");
 
         // 해당 유저의 글이 아닐 시 페이지 접근 막기
         boolean userCk = userCk(authentication, categoryDTO);
@@ -98,7 +116,7 @@ public class TravelController {
             redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
             return "redirect:/board/boardList";
         }
-
+        log.info("어디 3? ");
         return "travel/travelMap";
     }
 
@@ -127,14 +145,16 @@ public class TravelController {
         model.addAttribute("item",item);
 
 
-        // 해당 유저의 글이 아닐 시 페이지 접근 막기
 
-        boolean userCk = userCk(authentication, categoryDTO);
-        if (userCk == false){
-            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
-            return "redirect:/board/boardList";
+        // 비공개 글의 경우 해당 유저의 글이 아닐 시 페이지 접근 막기
+        boolean categoryOpen = categoryDTO.isCategoryOpen();
+        if (categoryOpen == false){
+            boolean userCk = userCk(authentication, categoryDTO);
+            if (userCk == false){
+                redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+                return "redirect:/board/boardList";
+            }
         }
-
 
         return "travel/travelView";
     }

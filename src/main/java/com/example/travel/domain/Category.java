@@ -27,7 +27,11 @@ public class Category extends BaseEntity{
     private String categoryArea; // 시/도
     private String categoryAreaDetails; // 군구
     private boolean categorySave; // 임시저장 여부  최종 저장 전에는 false -> true
+
     private boolean categoryOpen; // 카테고리 외부 공개 여부
+
+
+    private int categoryTotalPrice; // 카테고리 총비용
 
     private int viewNum; // 카테고리 조회 수
 

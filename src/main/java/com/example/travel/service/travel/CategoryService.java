@@ -57,6 +57,7 @@ public interface CategoryService {
                 .categorySave(category.isCategorySave())
                 .categoryOpen(category.isCategoryOpen())
                 .createdAt(category.getCreatedAt())
+                .categoryTotalPrice(category.getCategoryTotalPrice())
                 .viewNum(category.getViewNum())
                 .build();
 
@@ -80,6 +81,7 @@ public interface CategoryService {
                 .categoryAreaDetails(categoryDTO.getCategoryAreaDetails())
                 .categorySave(categoryDTO.isCategorySave())
                 .categoryOpen(categoryDTO.isCategoryOpen())
+                .categoryTotalPrice(categoryDTO.getCategoryTotalPrice())
                 .viewNum(categoryDTO.getViewNum())
                 .build();
         return result;

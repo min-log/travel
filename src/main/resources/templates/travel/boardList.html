@@ -92,11 +92,17 @@
               success:function (data){
                   console.log(data);
                   if (data == 1){
-                      alert("저장 되었습니다.");
+                      alert("저장 되었습니다. ");
+
                   }else if (data == 0){
                       alert("저장을 삭제 했습니다.");
                   }else {
-                      alert("로그인이 필요한 기능입니다.");
+                      let con= '<div class="text-center"><p class="point-color tit mb-2">Travel Road</p>로그인이 필요한 기능입니다. </div>';
+                      con += '<div><a class="btn btn-primary w-100 btn-sm mt-5" href="/loginForm" >로그인하기</a></div>';
+                      $('#modalMsg').modal("show");
+                      $('#modalMsg .modal-message').html(con);
+
+                     // alert("로그인이 필요한 기능입니다.");
                   }
               },
               error:function (){

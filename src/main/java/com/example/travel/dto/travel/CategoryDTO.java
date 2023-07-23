@@ -1,14 +1,9 @@
 package com.example.travel.dto.travel;
 
 
-import com.example.travel.domain.Item;
-import com.example.travel.domain.UserTravel;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +32,7 @@ public class CategoryDTO {
 
     private LocalDateTime createdAt;
 
+    private int categoryTotalPrice; // 카테고리 총비용
     private int viewNum; // 카테고리 조회 수
 
 
