@@ -33,22 +33,22 @@ public class ItemServiceImpl implements ItemService{
         Item item = itemDtoToEntity(itemDTO);
 
         //총 여행 금액 저장
-        Long categoryId = itemDTO.getCategoryId();
-        int itemAccount = itemDTO.getItemAccount();
-        log.info("itemAccount : {}",itemAccount);
-        Category category = categoryRepository.getOne(categoryId);
-        CategoryDTO categoryDTO = categoryService.categoryEntityToDto(category);
-        log.info("itemAccount category : {}",category );
-
-        if (itemAccount >= 0){
-            log.info("금액이 있으면 저장!");
-            int categoryTotalPrice = categoryDTO.getCategoryTotalPrice();
-            categoryTotalPrice += itemAccount;
-            categoryDTO.setCategoryTotalPrice(categoryTotalPrice);
-
-            Category categorySave = categoryService.categoryDtoToEntity(categoryDTO);
-            categoryRepository.save(categorySave);
-        }
+//        Long categoryId = itemDTO.getCategoryId();
+//        int itemAccount = itemDTO.getItemAccount();
+//        log.info("itemAccount : {}",itemAccount);
+//        Category category = categoryRepository.getOne(categoryId);
+//        CategoryDTO categoryDTO = categoryService.categoryEntityToDto(category);
+//        log.info("itemAccount category : {}",category );
+//
+//        if (itemAccount >= 0){
+//            log.info("금액이 있으면 저장!");
+//            int categoryTotalPrice = categoryDTO.getCategoryTotalPrice();
+//            categoryTotalPrice += itemAccount;
+//            categoryDTO.setCategoryTotalPrice(categoryTotalPrice);
+//
+//            Category categorySave = categoryService.categoryDtoToEntity(categoryDTO);
+//            categoryRepository.save(categorySave);
+//        }
 
         // 아이템 저장
         Item save = itemRepository.save(item);

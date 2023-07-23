@@ -69,7 +69,7 @@
                             <th>함께</th>
                             <td>
                                 <!-- 해시 태그 정보를 저장할 input 태그. (textarea도 지원) -->
-                                <input th:field="*{tags}" th:id="*{tags}" th:name="*{tags}" th:value="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
+                                <input th:field="*{tags}" th:id="*{tags}" th:name="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
                             </td>
                         </tr>
                     </tbody>
@@ -207,18 +207,16 @@
                     whitelist = data;
                 }
             });
+
         });
-
-
-
 
         // initialize Tagify on the above input node reference
         let tagify = new Tagify(inputElm, {
             enforceWhitelist: true,
-
             // make an array from the initial input value
             whitelist: inputElm.value.trim().split(/\s*,\s*/)
         })
+
 
         // Chainable event listeners
         tagify.on('add', onAddTag) //태그 추가 될때

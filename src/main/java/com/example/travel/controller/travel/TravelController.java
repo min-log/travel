@@ -60,6 +60,8 @@ public class TravelController {
             categoryDTO.setCategoryArea(category.getCategoryArea());
             categoryDTO.setCategoryAreaDetails(category.getCategoryAreaDetails());
             categoryDTO.setTags(category.getTags());
+            categoryDTO.setTagList(category.getTagList());
+
         }
 
 
@@ -94,13 +96,11 @@ public class TravelController {
         log.info(no);
         log.info("어디?? ");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
-        log.info("어디 0? ");
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
         log.info("days info {}" , days.getDayInfo());
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
-        log.info("어디 1? ");
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
         model.addAttribute("category",categoryDTO);
@@ -108,7 +108,6 @@ public class TravelController {
         model.addAttribute("startDay",dayOfMonth);
         model.addAttribute("item",item);
 
-        log.info("어디 2? ");
 
         // 해당 유저의 글이 아닐 시 페이지 접근 막기
         boolean userCk = userCk(authentication, categoryDTO);
@@ -120,7 +119,12 @@ public class TravelController {
         return "travel/travelMap";
     }
 
-
+    @GetMapping("/categoryDelete")
+    public String categoryDelete(@RequestParam("categoryNo") Long no,RedirectAttributes redirectAttributes){
+        categoryService.categoryDelete(no);
+        redirectAttributes.addFlashAttribute("msg","게시물이 삭제되었습니다.");
+        return "redirect:/mypage/boardList";
+    }
 
     @GetMapping("/view")
     public String categoryVeiw(

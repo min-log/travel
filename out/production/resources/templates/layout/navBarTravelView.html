@@ -127,7 +127,7 @@
         <div class="bottom mt-5">
           <div class="btn-group">
             <a th:href="@{/travel/category(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">수정</a>
-            <a href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
+            <a th:href="@{/travel/categoryDelete(categoryNo=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
             <a href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">기록하기</a>
           </div>
         </div>
@@ -181,7 +181,7 @@
           function itemList(e){
               let category = $('input[name=categoryId]').val();
               let itemListCon='';
-              let todayPrice= new Number(todayTotalPrice.text());
+              let todayPrice= 0;
               $.ajax({
                   url: '/board/itemList',
                   type: "get",
@@ -189,11 +189,9 @@
                   dataType: 'json',
                   cache: false,
                   success:function (data){
+                      console.log("리스트 변경");
                       for(var i=0 in data){
                           let price = new Number(data[i].itemAccount);
-                          todayPrice = todayPrice + price;
-                          if(price != null || price != 0) price = priceToString(price);
-
                           itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
                           itemListCon += '<div class="top">';
                           itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
@@ -213,9 +211,12 @@
                           if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
                           itemListCon += '</div>';
                           itemListCon += '</li>';
+
+                          todayPrice = todayPrice + price;
+                          if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
                       }
-                      todayPrice = priceToString(todayPrice);
-                      if(todayPrice == 'NaN') todayPrice = 0;
+
+                      todayPrice = priceToString(todayPrice); // 가격 원단위 추가
                       todayTotalPrice.text(todayPrice);
 
                       itemListWrap.html(itemListCon);

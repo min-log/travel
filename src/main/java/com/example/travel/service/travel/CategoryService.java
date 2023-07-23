@@ -31,6 +31,7 @@ public interface CategoryService {
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
 
     boolean categoryDelete(long no);
+
     DayInfoDTO categoryDays(String start, String end);
 
     boolean categoryTotalSave(long no); //실제 저장

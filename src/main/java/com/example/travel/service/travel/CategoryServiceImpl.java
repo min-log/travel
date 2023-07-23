@@ -173,86 +173,46 @@ public class CategoryServiceImpl implements CategoryService {
             return null;
         }
 
-
-        categoryDTO.setCategorySave(false); //초기 저장 시 임시저장
-        Category category = categoryDtoToEntity(categoryDTO);
-        log.info("저장된 category : {}",category);
-        log.info("category no : {}",categoryDTO.getCategoryNo());
-        Category result = categoryRepository.save(category);  // 1. 카테고리저장
-
-
         //2. 태그저장
-            // 2-1. 처음 저장일때 
-
         String tags = categoryDTO.getTags();
         log.info("tags : {}" ,tags);
-
-        List<TagDTO> itemList = new ArrayList<>();
-        List<Tag> tagList =new ArrayList<>();
+        Category result;
         if (categoryNo == null){
+            categoryDTO.setCategorySave(false); //초기 저장 시 임시저장
+            Category category = categoryDtoToEntity(categoryDTO);
+            result = categoryRepository.save(category);  // 1. 카테고리저장
+
             log.info("처음 저장 시 --------------");
-            if (!tags.equals("")) {
-                log.info("tag가 있으면 저장");
-
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    String[] arr;
-                    itemList = mapper.readValue(tags, new TypeReference<List<TagDTO>>() {
-                    });
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-
-                for (int i = 0; i < itemList.size(); i++) {
-                    String name = itemList.get(i).getValue();
-                    Tag tag = Tag.builder().name(name).build();
-                    tagList.add(tag);
-                    tagRepository.save(tag); // 2. 태그 저장
-                }
-
-                Hashtag hashtag = Hashtag.builder()
-                        .categoryId(result.getCategoryNo())
-                        .tag(tagList)
-                        .build();
-                hashtagRepository.save(hashtag); // 3. 해쉬태그 저장
-            }
+            hashTagSave(tags,result);
         }else {
+
+            Category one = categoryRepository.getOne(categoryNo);
+            CategoryDTO categoryDTORe = categoryEntityToDto(one);
+            // 기존 카테고리에 수정내용 추가
+            categoryDTORe.setCategoryName(categoryDTO.getCategoryName());
+            categoryDTORe.setCategoryArea(categoryDTO.getCategoryArea());
+            categoryDTORe.setCategoryAreaDetails(categoryDTO.getCategoryAreaDetails());
+            categoryDTORe.setDateEnd(categoryDTO.getDateEnd());
+            categoryDTORe.setDateStart(categoryDTO.getDateStart());
+            categoryDTORe.setCategorySave(categoryDTORe.isCategorySave());
+            categoryDTORe.setCategoryOpen(categoryDTO.isCategoryOpen());
+            Category category = categoryDtoToEntity(categoryDTORe);
+
+            result = categoryRepository.save(category);  // 1. 카테고리저장
             log.info("수정일때 --------------");
             Hashtag byCategoryId = hashtagRepository.findByCategoryId(categoryNo);
             if (byCategoryId != null){
                 Long hashId = byCategoryId.getHashId();
                 hashTagDelete(hashId);
             }
-            if (!tags.equals("")) {
-                log.info("tag가 있으면 저장");
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    String[] arr;
-                    itemList = mapper.readValue(tags, new TypeReference<List<TagDTO>>() {
-                    });
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-
-                for (int i = 0; i < itemList.size(); i++) {
-                    String name = itemList.get(i).getValue();
-                    Tag tag = Tag.builder().name(name).build();
-                    tagList.add(tag);
-                    tagRepository.save(tag); // 2. 태그 저장
-                }
-
-                Hashtag hashtag = Hashtag.builder()
-                        .categoryId(result.getCategoryNo())
-                        .tag(tagList)
-                        .build();
-                hashtagRepository.save(hashtag); // 3. 해쉬태그 저장
-            }
-
+            hashTagSave(tags,result);
         }
 
         CategoryDTO dto = categoryEntityToDto(result);
         return dto;
     }
+
+
 
     @Override
     public CategoryDTO getCategory(long no) {
@@ -315,6 +275,32 @@ public class CategoryServiceImpl implements CategoryService {
         return true;
     }
 
+    public void hashTagSave(String tags,Category result){
+        List<TagDTO> itemList = new ArrayList<>();
+        List<Tag> tagList =new ArrayList<>();
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String[] arr;
+            itemList = mapper.readValue(tags, new TypeReference<List<TagDTO>>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < itemList.size(); i++) {
+            String name = itemList.get(i).getValue();
+            Tag tag = Tag.builder().name(name).build();
+            tagList.add(tag);
+            tagRepository.save(tag); // 2. 태그 저장
+        }
+
+        Hashtag hashtag = Hashtag.builder()
+                .categoryId(result.getCategoryNo())
+                .tag(tagList)
+                .tag(tagList)
+                .build();
+        hashtagRepository.save(hashtag); // 3. 해쉬태그 저장
+    }
     public void hashTagDelete(Long no){
         Optional<Hashtag> hashtag = hashtagRepository.findById(no);
         if (hashtag.isPresent()){
@@ -323,6 +309,7 @@ public class CategoryServiceImpl implements CategoryService {
             Hashtag hashtagResult = hashtag.get();
 
             List<Tag> tag = hashtagResult.getTag();
+
             if (!tag.isEmpty()){ // 리스트가 존재하면 제거
                 log.info("리스트 존재");
                 for(int i=0;i<tag.size();i++){
@@ -331,8 +318,11 @@ public class CategoryServiceImpl implements CategoryService {
                     System.out.println(result);
                     tagRepository.delete(tagItem); // 1. tag 제거
                 }
+                hashtagRepository.deleteByHashIdAndTag(hashtagResult.getHashId()); //중간 태그 제거
                 hashtagRepository.delete(hashtagResult); // 2. 해쉬태그 제거
+
             } else {
+                hashtagRepository.deleteByHashIdAndTag(hashtagResult.getHashId()); //중간 태그 제거
                 hashtagRepository.delete(hashtagResult); // 3. 해쉬태그 제거
             }
         } // 해쉬태그, 태그 제거 end
@@ -387,6 +377,19 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.getOne(no);
         CategoryDTO categoryDTO = categoryEntityToDto(category);
         categoryDTO.setCategorySave(true);
+        int categoryTotalPrice = 0;
+
+        //총 여행 금액 저장
+        List<Item> itemByCategory = itemRepository.findItemByCategory(category);
+        for(int i=0; i<itemByCategory.size();i++){
+            int itemAccount = itemByCategory.get(i).getItemAccount();
+            if (itemAccount >= 0) {
+                categoryTotalPrice += itemAccount;
+            }
+        }
+
+        categoryDTO.setCategoryTotalPrice(categoryTotalPrice);
+
         Category result = categoryDtoToEntity(categoryDTO);
         categoryRepository.save(result);
 
