@@ -42,16 +42,20 @@
                       </th:block>
                     </p>
                     <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
+
                     <p class="travel_date mt-1">
                       <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
                        -
                       <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span>
                     </p>
+
+
                     <p class="travel_people mt-2">
                       <i class="bi bi-emoji-smile"></i>
-                      <span class="tag point" th:text="${list.categoryWriter}"></span>
-                      <span th:each="tagItem,i:${list.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+                      <span class="txt_info" style="color:#333;">작성자 :</span> <span class="tag point" th:text="${list.categoryWriter}"></span>
+                      <span class="txt_info" style="color:#333;">인원 :</span>  <span th:each="tagItem,i:${list.tagList}" th:text="${i.size}+ 1 + '명'" class="tag">#나무늘보 #왈왈이</span>
                     </p>
+                    <p class="txt_info mt-2" style="color:#333;">작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
                   </div>
                 </div>
                 <!-- end :card-body -->
