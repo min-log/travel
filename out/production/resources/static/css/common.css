@@ -27,6 +27,14 @@ table td {padding:10px 10px;box-sizing: border-box}
 
 
 }
+
+h1 {font-size:24px;}
+h2 {font-size:22px;}
+h3 {font-size:20px;}
+h4 {font-size:18px;}
+h5 {font-size:16px;}
+h6 {font-size:14px;}
+
 .btn-primary {background:var(--color-main);}
 .point-color {color:var(--color-main);}
 .point-err {color:var(--color-err);}
@@ -103,6 +111,17 @@ footer {height:85px}
 .btn.btn-outline-secondary .bi:before {color:#6c757d}
 .navbar_wrap h3,
 .navbar_wrap h4 {font-weight:bold;}
+.navbar_wrap .up {position: absolute;top:10px;right:10px;}
+.navbar_wrap .up a {    border: 2px solid #2595ff;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    border-radius: 50%;
+    display: flex;
+    align-content: baseline;
+    justify-content: center;
+    background: #eee;}
+.navbar_wrap .up .bi {font-size: 16px;color: #2595ff;}
 .list-storage {}
 .list-storage li {border-bottom:1px #dee2e6 dashed;padding:5px 5px;display:flex;justify-content: space-between;}
 .list-storage li * {color: #999; font-size:14px;}

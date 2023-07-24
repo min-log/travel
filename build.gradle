@@ -26,8 +26,9 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
-    // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+    ///https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'//구글소셜로그인
 
     // 이메일 설정 - 아파치

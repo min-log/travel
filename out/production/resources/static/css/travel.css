@@ -302,3 +302,33 @@ input.err {}
 .item_veiw_con .link_zone .bi:hover {color:var(--color-main) !important;}
 .item_veiw_con .road_address {font-weight:bold}
 .item_veiw_con .address_name {clear:both;}
+
+#summernote {}
+.note-toolbar .dropdown-toggle::after {display:none}
+.note-btn-group.open.note-color .note-dropdown-menu {display:flex;}
+.note-editable h1 {font-size:24px;}
+.note-editable h2 {font-size:22px;}
+.note-editable h3 {font-size:20px;}
+.note-editable h4 {font-size:18px;}
+.note-editable h5 {font-size:16px;}
+.note-editable h6 {font-size:14px;}
+.note-editable ul {}
+.note-editable ul li {padding-left:10px;box-sizing:border-box;position:relative;}
+.note-editable ul li:before {content: '';display: inline-block;top: 0;left: 0;font-size: 0px;width: 5px;height: 5px;margin-left:-10px;margin-right: 5px;background: #000;border-radius: 50%;}
+.note-editable ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 30px;
+}
+
+.note-editable li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+.note-modal-backdrop {display:none !important;}
+.note-modal-content {z-index:100;position: absolute;top:50%;left:50%;transform:translate(-25%,-25%);margin:0;}

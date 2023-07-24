@@ -1,8 +1,7 @@
 package com.example.travel.service.user;
 
-import com.example.travel.domain.Image;
 import com.example.travel.domain.UserImage;
-import com.example.travel.dto.ImageDTO;
+import com.example.travel.dto.user.ImageDTO;
 import org.springframework.stereotype.Service;
 
 @Service

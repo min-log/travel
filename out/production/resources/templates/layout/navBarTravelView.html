@@ -10,6 +10,11 @@
     <div class="navbar_wrap scrollBar">
       <div class="flex-column ">
         <div class="top veiw_top" >
+          <div class="up">
+            <a th:href="@{/travel/post(no=${category.categoryNo})}"  title="기록하기">
+              <i class="bi bi-pen-fill"></i>
+            </a>
+          </div>
           <div th:object="${category}">
             <p class="area text-center">
               <span th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:text="*{categoryArea}"></span>
@@ -128,7 +133,6 @@
           <div class="btn-group">
             <a th:href="@{/travel/category(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">수정</a>
             <a th:href="@{/travel/categoryDelete(categoryNo=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
-            <a th:href="@{/travel/post(no=${category.categoryNo})}" class="btn btn-primary" type="button" style="width:100%">기록하기</a>
           </div>
         </div>
       </div>

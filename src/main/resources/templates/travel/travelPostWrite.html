@@ -4,25 +4,7 @@
       layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
 
-    <script th:src="@{/smarteditor/js/HuskyEZCreator.js}" charset="utf-8"></script>
-    <!-- 페이지 로딩시 초기화 -->
-    <script>
-        $(document).ready(function (){
-            $("#itemNoSave").val(1);
 
-            let oEditors = []
-            smartEditor = function() {
-                console.log("Naver SmartEditor")
-                nhn.husky.EZCreator.createInIFrame({
-                    oAppRef: oEditors,
-                    elPlaceHolder: "editorTxt",
-                    sSkinURI: "/smarteditor/SmartEditor2Skin.html",
-                    fCreator: "createSEditor2"
-                })
-            }
-            smartEditor();
-        });
-    </script>
 
     <div class="content_nav"  th:object="${category}">
         <!-- start : navbar -->
@@ -30,18 +12,44 @@
         <div class="content">
             <h3 class="tit text-center">제목</h3>
             <p class="mt-2">날짜 : <span class="dayName" th:text="${days.dayInfo[0]}"></span></p>
-            <form class="mt-2" action="insertStudentInfoForm" method="post">
+            <form class="mt-2" action="insertStudentInfoForm" method="post" form>
                 <input id="categoryNoSave"  type="text" th:value="${category.categoryNo}">
                 <input id="itemNoSave"  type="text" value="itemNum">
                 <div id="smarteditor">
-                    <textarea name="editorTxt" id="editorTxt" rows="20" cols="10"  style="width: 100%">
-
-                    </textarea>
+                    <div id="summernote"></div>
                 </div>
-                <input class="btn btn-primary" type="button"  value="저장하기"/>
+                <button class="btn btn-primary" type="button" onclick="submitPost()">저장하기</button>
             </form>
         </div>
     </div>
+    <!-- 페이지 로딩시 초기화 -->
 
+
+<!--    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <script>
+        $(document).ready(function (){
+            $("#itemNoSave").val(1);
+            $('#summernote').summernote({
+                placeholder: 'Hello stand alone ui',
+                tabsize: 2,
+                height: 120,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
+        });
+
+
+
+    </script>
 </th:block>
 </html>
