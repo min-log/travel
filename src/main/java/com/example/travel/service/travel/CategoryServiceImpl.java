@@ -70,12 +70,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDTOS;
     }
     @Override
-    public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order) {
+    public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order,Integer size) {
         log.info("내 카테고리 리스트 전달");
         log.info("page : {}",page);
         PageRequest pageRequest;
 
-        pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
+
+        pageRequest = PageRequest.of(page - 1, size, Sort.by(order).ascending());
         Page<Category> result = categoryRepository.findByUserTravelNoAndCategorySave(no,true, pageRequest);
         Page<CategoryDTO> categoryDTOS = convertPage(result);
 
@@ -120,6 +121,34 @@ public class CategoryServiceImpl implements CategoryService {
 
         Page<Category> Cpage = new PageImpl<>(categoryList, PageRequest.of(page- 1, 6,Sort.by(order).ascending()), categoryNoList.size());
 
+        Page<CategoryDTO> categoryDTOS = convertPage(Cpage);
+
+
+        return categoryDTOS;
+    }
+
+    @Override
+    public Page<CategoryDTO> getCategoryLikeMYPage(Long no, Integer page, String order,Integer size) {
+        log.info("찜 리스트 전달 --------");
+
+        log.info("내 아이디 : {}",no);
+
+        List<LikeCategoryDTO> likeCategoryDTOS = categoryLikeList(no);
+
+        // 카테고리 리스트 생성
+        List<Category> categoryList = new ArrayList<>();
+
+        for (int i=0;i<likeCategoryDTOS.size();i++){
+            Long id = likeCategoryDTOS.get(i).getCategoryId();
+            Category category = categoryRepository.getOne(id);
+            categoryList.add(category);
+
+        }
+
+        PageRequest pageRequest;
+        pageRequest = PageRequest.of(page - 1, size, Sort.by(order).ascending());
+
+        Page<Category> Cpage = new PageImpl<>(categoryList, PageRequest.of(page- 1, size,Sort.by(order).ascending()), likeCategoryDTOS.size());
         Page<CategoryDTO> categoryDTOS = convertPage(Cpage);
 
 

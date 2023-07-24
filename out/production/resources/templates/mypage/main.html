@@ -11,88 +11,118 @@
     <!-- start : content -->
     <div class="content">
       <h2 class="tit text-center mb-5">마이페이지</h2>
-      <div class="content-tit">
-        <h4 class="tit_con mb-3">👀 현재 계획 중인 여행</h4>
-        <span class="num">2</span>
-        <a class="btn btn-sm btn-outline-secondary" href="">더보기 +</a>
-      </div>
-      <div class="board_wrap">
+
+      <div class="board_wrap" th:object="${categoryPage}">
+        <div class="content-tit">
+          <h4 class="tit_con mb-3">👀 현재 계획 중인 여행</h4>
+          <span class="num">[[${categoryPage.size}]]</span>
+          <a class="btn btn-sm btn-outline-secondary" href="/mypage/boardList">더보기 +</a>
+        </div>
+
+
         <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">
-          <li class="col">
-            <div class="card">
-              <p class="img">
-                <img src="" alt="여행썸내일">
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">동물농장 여행</h5>
-                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
-                <p class="travel_date">2023-08-11 - 2023-08-20</p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: 10%"></div>
+          <th:block th:each="list,i:${categoryPage.getContent()}">
+            <li class="col">
+              <div class="card">
+                <div class="card-body">
+                  <!--                  <p class="img">-->
+                  <!--                    <img src="" alt="여행썸내일">-->
+                  <!--                  </p>-->
+                  <div class="con">
+                    <p class="address_info mt-1">
+                      <span class="point-color" th:text="${list.categoryArea}">제주도</span>
+                      <th:block th:if="${list.categoryAreaDetails != ''}">
+                        / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
+                      </th:block>
+                    </p>
+                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
+                    <div class="mt-1">
+                      <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                      <p class="travel_date mt-1" style="display:inline-block">
+                        ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                        -
+                        <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                      </p>
+                    </div>
+                    <p class="mt-1"><i class="bi bi-clock"></i>
+                      작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
+                    <p class="travel_people mt-2">
+                      <i class="bi bi-emoji-smile"></i>
+                      <span class="tag point" th:text="${list.categoryWriter}"></span>
+                      <span th:each="tagItem,i:${list.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <a href="#" class="btn border-top">상세 보기 +</a>
-            </div>
-          </li>
-          <li class="col">
-            <div class="card">
-              <p class="img">
-                <img src="" alt="여행썸내일">
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">동물농장 여행</h5>
-                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
-                <p class="travel_date">2023-08-11 - 2023-08-20</p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: 10%"></div>
+                <!-- end :card-body -->
+                <div class="progress_wrap p-2 border-top">
+                  <p class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <span class="progress-bar" style="width: 10%"></span>
+                  </p>
                 </div>
+                <!-- end : progress_wrap-->
+                <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn border-top">상세 보기 +</a>
               </div>
-              <a href="#" class="btn border-top">상세 보기 +</a>
-            </div>
-          </li>
+            </li>
+          </th:block>
         </ul>
       </div>
 
 
-      <div class="content-tit mt-5 border-top pt-5">
-        <h4 class="tit_con mb-3">⭐ 찜리스트</h4>
-        <span class="num">10</span>
-        <a class="btn btn-sm btn-outline-secondary" href="">더보기 +</a>
-      </div>
-      <div class="board_wrap">
+
+      <div class="board_wrap" th:object="${categoryLikePage}">
+        <div class="content-tit mt-5 border-top pt-5">
+          <h4 class="tit_con mb-3">⭐ 찜리스트</h4>
+          <span class="num">10</span>
+          <a class="btn btn-sm btn-outline-secondary" href="/mypage/boardLikeList">더보기 +</a>
+        </div>
         <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">
-          <li class="col">
-            <div class="card">
-              <p class="img">
-                <img src="" alt="여행썸내일">
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">동물농장 여행</h5>
-                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
-                <p class="travel_date">2023-08-11 - 2023-08-20</p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: 10%"></div>
+          <th:block th:each="list,i:${categoryLikePage.getContent()}">
+            <li class="col" th:class="|col col_${list.categoryNo}|" >
+              <div class="card">
+                <div class="card-body">
+                  <!--                  <p class="img">-->
+                  <!--                    <img src="" alt="여행썸내일">-->
+                  <!--                  </p>-->
+                  <div class="con">
+                    <p class="address_info mt-1">
+                      <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
+                        <i class="bi bi-heart"></i>
+                        <th:block th:each="likes,i:${likeList}">
+                          <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
+                        </th:block>
+                      </a>
+                      <span class="point-color" th:text="${list.categoryArea}">제주도</span>
+                      <th:block th:if="${list.categoryAreaDetails != ''}">
+                        / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
+                      </th:block>
+                    </p>
+                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
+                    <div class="mt-1">
+                      <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                      <p class="travel_date mt-1" style="display:inline-block">
+                        ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                        -
+                        <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                      </p>
+                    </div>
+                    <p class="mt-1"><i class="bi bi-clock"></i>
+                      작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
+                    <p class="travel_people mt-1">
+                      <i class="bi bi-emoji-smile"></i>
+                      <span class="txt_info" style="color: #333">작정자 : </span>
+                      <span class="tag point" th:text="${list.categoryWriter}"></span>
+                      <th:block th:each="tagItem,i:${list.tagList}" th:if="${i.size > 0}" >
+                        <span class="">인원 : </span>
+                        <span th:text="${i.size} + 1" class="tag"></span>
+                      </th:block>
+                    </p>
+                  </div>
                 </div>
+                <!-- end :card-body -->
+                <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn border-top">상세 보기 +</a>
               </div>
-              <a href="#" class="btn border-top">상세 보기 +</a>
-            </div>
-          </li>
-          <li class="col">
-            <div class="card">
-              <p class="img">
-                <img src="" alt="여행썸내일">
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">동물농장 여행</h5>
-                <p class="travel_people">함께 : <span>#나무늘보 #왈왈이</span></p>
-                <p class="travel_date">2023-08-11 - 2023-08-20</p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="progress-bar" style="width: 10%"></div>
-                </div>
-              </div>
-              <a href="#" class="btn border-top">상세 보기 +</a>
-            </div>
-          </li>
+            </li>
+          </th:block>
         </ul>
       </div>
     </div>

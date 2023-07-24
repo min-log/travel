@@ -10,15 +10,36 @@
         <!-- start : navbar -->
         <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>
         <div class="content">
-            <h3 class="tit text-center">제목</h3>
-            <p class="mt-2">날짜 : <span class="dayName" th:text="${days.dayInfo[0]}"></span></p>
+            <h3 class="tit text-center">글쓰기</h3>
             <form class="mt-2" action="insertStudentInfoForm" method="post" form>
                 <input id="categoryNoSave"  type="text" th:value="${category.categoryNo}">
                 <input id="itemNoSave"  type="text" value="itemNum">
+                <table class="board-top">
+                    <colgroup>
+                        <col style="width:20%">
+                        <col style="width:80%">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>제목</th>
+                            <td>
+                                <input id="boardTite" class="form-control" type="text">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>
+                                날짜
+                            </th>
+                            <td> <span class="dayName" th:text="${days.dayInfo[0]}"></span></td>
+                        </tr>
+
+                    </tbody>
+                </table>
                 <div id="smarteditor">
                     <div id="summernote"></div>
                 </div>
-                <button class="btn btn-primary" type="button" onclick="submitPost()">저장하기</button>
+                <button class="btn btn-primary mt-3 w-100" type="button" onclick="submitPost()">저장하기</button>
             </form>
         </div>
     </div>
@@ -32,10 +53,16 @@
     <script>
         $(document).ready(function (){
             $("#itemNoSave").val(1);
+
+
             $('#summernote').summernote({
-                placeholder: 'Hello stand alone ui',
+                placeholder: '기억에 남았던 나의 여행을 기록해보세요 ^^',
                 tabsize: 2,
-                height: 120,
+                height: 300,
+                minHeight: null,             // 최소 높이
+                maxHeight: null,             // 최대 높이
+                focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
+                lang: "ko-KR",					// 한글 설정
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
@@ -44,11 +71,84 @@
                     ['table', ['table']],
                     ['insert', ['link', 'picture', 'video']],
                     ['view', ['fullscreen', 'codeview', 'help']]
-                ]
+                ],
+                callbacks: {
+                    onImageUpload : function(files, editor, welEditable){
+
+                        // 파일 업로드(다중업로드를 위해 반복문 사용)
+                        for (var i = files.length - 1; i >= 0; i--) {
+                            console.log(i);
+                            uploadSummernoteImageFile(files[i],this);
+                        }
+                    }
+                }
+
             });
         });
 
 
+
+        // function uploadSummernoteImageFile(file, el) {
+        //     var data = new FormData();
+        //     data.append("file",file);
+        //     $.ajax({
+        //         url: '/../summer_image.do',
+        //         type: "POST",
+        //         enctype: 'multipart/form-data',
+        //         data: data,
+        //         cache: false,
+        //         contentType : false,
+        //         processData : false,
+        //         success : function(data) {
+        //             var json = JSON.parse(data);
+        //             $(el).summernote('editor.insertImage',json["url"]);
+        //             jsonArray.push(json["url"]);
+        //             jsonFn(jsonArray);
+        //         },
+        //         error : function(e) {
+        //             console.log(e);
+        //         }
+        //     });
+        //}
+
+
+
+
+        function submitPost(file, el){
+
+                var markupStr = $('#summernote').summernote('code');
+                console.log(markupStr);
+
+                // 파일
+                var data = new FormData();
+                data.append("file",file);
+
+
+                var saveFome = {
+                    data :data,
+                    contxt : markupStr
+                }
+
+                // $.ajax({
+                //     url: '/../summer_image.do',
+                //     type: "POST",
+                //     enctype: 'multipart/form-data',
+                //     data: saveFome,
+                //     cache: false,
+                //     contentType : false,
+                //     processData : false,
+                //     success : function(data) {
+                //         var json = JSON.parse(data);
+                //         $(el).summernote('editor.insertImage',json["url"]);
+                //         jsonArray.push(json["url"]);
+                //         jsonFn(jsonArray);
+                //     },
+                //     error : function(e) {
+                //         console.log(e);
+                //     }
+                // });
+
+        }
 
     </script>
 </th:block>

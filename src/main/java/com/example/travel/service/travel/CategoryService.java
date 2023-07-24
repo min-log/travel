@@ -23,9 +23,11 @@ public interface CategoryService {
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
     Page<CategoryDTO> getCategoryList(Integer page, String order);
 
-    Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order);
+    Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order,Integer size);
 
     Page<CategoryDTO> getCategoryInvitedMYPage(String name, Integer page, String order);
+
+    Page<CategoryDTO> getCategoryLikeMYPage(Long no, Integer page, String order,Integer size);
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
@@ -39,6 +41,9 @@ public interface CategoryService {
     boolean categoryLike(long categoryNo,long userNo);
 
     List<LikeCategoryDTO> categoryLikeList(long userNo);
+
+
+
 
 
     default CategoryDTO categoryEntityToDto(Category category){

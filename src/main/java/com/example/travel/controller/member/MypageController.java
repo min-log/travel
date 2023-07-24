@@ -37,7 +37,21 @@ public class MypageController {
 
     @GetMapping("")
     public String myPage(HttpServletRequest request,
-                         Model model){
+                         Model model,
+                         HttpSession session){
+
+
+        UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), 1 ,"dateStart",2);
+        Page<CategoryDTO> categoryLikePage = categoryService.getCategoryLikeMYPage(userT.getUserNo(), 1 ,"dateStart",6);
+
+        PageingDTO pageingDTO = new PageingDTO(categoryPage);
+
+        model.addAttribute("categoryPage",categoryPage);
+        model.addAttribute("categoryLikePage",categoryLikePage);
+
+
+
         log.info("마이페이지");
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
@@ -176,7 +190,7 @@ public class MypageController {
         if(order == null) order= "dateStart";
 
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page ,order);
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page ,order,6);
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
 
         log.info("categoryPage : {}",categoryPage);
@@ -229,7 +243,7 @@ public class MypageController {
         if(order == null) order= "dateStart";
 
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryInvitedMYPage(userT.getUserId(), page ,order);
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryLikeMYPage(userT.getUserNo(), page ,order,6);
 
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
 

@@ -47,7 +47,7 @@
             <ul sec:authorize="isAuthenticated()">
               <li><a class="dropdown-item" href="/mypage/boardList">내 여행</a></li>
               <li><a class="dropdown-item" href="/mypage/boardInvitedList">초대 받은 여행</a></li>
-              <li><a class="dropdown-item" href="#">찜리스트 <span th:text="${session.likeNum}"></span></a></li>
+              <li><a class="dropdown-item" href="/mypage/boardLikeList">찜리스트 <span th:text="${session.likeNum}"></span></a></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item" th:href="@{/logout}" href="/logout">로그아웃</a>
