@@ -1,30 +1,22 @@
 package com.example.travel.controller.travel;
 
-
-
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.ItemDTO;
-import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
-import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Map;
 
 
@@ -94,7 +86,6 @@ public class TravelController {
             RedirectAttributes redirectAttributes
     ){
         log.info(no);
-        log.info("어디?? ");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
@@ -115,7 +106,7 @@ public class TravelController {
             redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
             return "redirect:/board/boardList";
         }
-        log.info("어디 3? ");
+
         return "travel/travelMap";
     }
 
@@ -180,6 +171,28 @@ public class TravelController {
         if (categoryWriter.equals(name)) userCk = true;
         log.info(userCk);
         return userCk;
+    }
+
+
+    //---------------- 게시글 후기 작성
+    @GetMapping("/post")
+    public String postWriter(@RequestParam(value = "no") long no,
+                             Model model
+    ){
+        log.info("게시글 후긴");
+        CategoryDTO categoryDTO = categoryService.getCategory(no);
+        DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
+        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
+        int dayOfMonth = localDate.getDayOfMonth();
+
+        ItemDTO item = ItemDTO.builder().categoryId(no).build();
+
+        model.addAttribute("category",categoryDTO);
+        model.addAttribute("days",days);
+        model.addAttribute("startDay",dayOfMonth);
+        model.addAttribute("item",item);
+
+        return "travel/travelPostWrite";
     }
 
 

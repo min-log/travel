@@ -64,7 +64,7 @@ public class SecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/security-login");
 
-
+        http.headers().frameOptions().sameOrigin(); // 스마트 에디터 오류 수정 -- 네이버
         
         return http.build();
     }

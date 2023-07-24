@@ -162,6 +162,12 @@ public class CategoryServiceImpl implements CategoryService {
         Long categoryNo = categoryDTO.getCategoryNo();
         log.info("카테고리 no : {}",categoryNo);
         log.info(userTravelNo);
+
+        DayInfoDTO dayInfoDTO = categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
+        int day = dayInfoDTO.getDay();
+
+        categoryDTO.setDateTxt(day);
+
         // 1. 카테고리저장
         // 2. 태그 저장
         // 3. 해쉬태그 저장

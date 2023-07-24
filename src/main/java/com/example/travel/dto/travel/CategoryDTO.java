@@ -20,6 +20,7 @@ public class CategoryDTO {
     private String categoryName; // 카테고리 이름
     private String dateStart;
     private String dateEnd;
+    private int dateTxt;
     private String categoryArea; // 시/도
     private String categoryAreaDetails; // 군구
     private boolean categorySave; // 임시저장 여부  최종 저장 전에는 false -> true

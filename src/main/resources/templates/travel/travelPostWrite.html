@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+
+    <script th:src="@{/smarteditor/js/HuskyEZCreator.js}" charset="utf-8"></script>
+    <!-- 페이지 로딩시 초기화 -->
+    <script>
+        $(document).ready(function (){
+            $("#itemNoSave").val(1);
+
+            let oEditors = []
+            smartEditor = function() {
+                console.log("Naver SmartEditor")
+                nhn.husky.EZCreator.createInIFrame({
+                    oAppRef: oEditors,
+                    elPlaceHolder: "editorTxt",
+                    sSkinURI: "/smarteditor/SmartEditor2Skin.html",
+                    fCreator: "createSEditor2"
+                })
+            }
+            smartEditor();
+        });
+    </script>
+
+    <div class="content_nav"  th:object="${category}">
+        <!-- start : navbar -->
+        <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>
+        <div class="content">
+            <h3 class="tit text-center">제목</h3>
+            <p class="mt-2">날짜 : <span class="dayName" th:text="${days.dayInfo[0]}"></span></p>
+            <form class="mt-2" action="insertStudentInfoForm" method="post">
+                <input id="categoryNoSave"  type="text" th:value="${category.categoryNo}">
+                <input id="itemNoSave"  type="text" value="itemNum">
+                <div id="smarteditor">
+                    <textarea name="editorTxt" id="editorTxt" rows="20" cols="10"  style="width: 100%">
+
+                    </textarea>
+                </div>
+                <input class="btn btn-primary" type="button"  value="저장하기"/>
+            </form>
+        </div>
+    </div>
+
+</th:block>
+</html>

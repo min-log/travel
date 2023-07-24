@@ -40,11 +40,16 @@
                       </th:block>
                     </p>
                     <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
-                    <p class="travel_date mt-1">
-                      <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
-                       -
-                      <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span>
-                    </p>
+                    <div class="mt-1">
+                      <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                      <p class="travel_date mt-1" style="display:inline-block">
+                        ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                        -
+                        <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                      </p>
+                    </div>
+                    <p class="mt-1"><i class="bi bi-clock"></i>
+                      작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
                     <p class="travel_people mt-2">
                       <i class="bi bi-emoji-smile"></i>
                       <span class="tag point" th:text="${list.categoryWriter}"></span>

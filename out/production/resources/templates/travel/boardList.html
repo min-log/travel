@@ -22,7 +22,7 @@
         </div>
         <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
           <th:block th:each="list,i:${categoryPage.getContent()}">
-            <li class="col">
+            <li class="col" th:class="|col col_${list.categoryNo}|" >
               <div class="card">
                 <div class="card-body">
 <!--                  <p class="img">-->
@@ -42,25 +42,28 @@
                       </th:block>
                     </p>
                     <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
-                    <p class="travel_date mt-1">
-                      <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
-                       -
-                      <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span>
-                    </p>
-                    <p class="travel_people mt-2">
+                    <div class="mt-1">
+                      <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                      <p class="travel_date mt-1" style="display:inline-block">
+                        ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                        -
+                        <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                      </p>
+                    </div>
+                    <p class="mt-1"><i class="bi bi-clock"></i>
+                      작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
+                    <p class="travel_people mt-1">
                       <i class="bi bi-emoji-smile"></i>
+                      <span class="txt_info" style="color: #333">작정자 : </span>
                       <span class="tag point" th:text="${list.categoryWriter}"></span>
-                      <span th:each="tagItem,i:${list.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+                      <th:block th:each="tagItem,i:${list.tagList}" th:if="${i.size > 0}" >
+                        <span class="">인원 : </span>
+                        <span th:text="${i.size} + 1" class="tag"></span>
+                      </th:block>
                     </p>
                   </div>
                 </div>
                 <!-- end :card-body -->
-                <div class="progress_wrap p-2 border-top">
-                  <p class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                    <span class="progress-bar" style="width: 10%"></span>
-                  </p>
-                </div>
-                <!-- end : progress_wrap-->
                 <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn border-top">상세 보기 +</a>
               </div>
             </li>
@@ -87,18 +90,30 @@
   <script type="text/javascript">
       function btnLike(e){
           console.log(e);
+          let box = ".col_"+e;
+          let con='';
           $.ajax({
               url:'/board/likeSave?no=' + e,
               type: 'get',
               success:function (data){
                   console.log(data);
                   if (data == 1){
-                      alert("저장 되었습니다. ");
-
+                      con = '<div class="text-center">게시글이 찜리스트에 저장 되었습니다.</div>';
+                      con += '<div><a class="btn btn-primary w-100 btn-sm mt-3" href="/mypage/boardLikeList" >찜리스트 바로가기</a></div>';
+                      $("#modalMsg").modal("show");
+                      $("#modalMsg .modal-message").html(con);
+                      $(box).find(".btn_heart .bi").removeClass("bi-heart");
+                      $(box).find(".btn_heart .bi").addClass("bi-heart-fill");
                   }else if (data == 0){
-                      alert("저장을 삭제 했습니다.");
+                      con = '<div class="text-center">게시글 저장을 삭제 했습니다.</div>';
+                      $("#modalMsg").modal("show");
+                      $("#modalMsg .modal-message").html(con);
+
+                      $(box).find(".btn_heart .bi").removeClass("bi-heart-fill");
+                      $(box).find(".btn_heart .bi").addClass("bi-heart");
+
                   }else {
-                      let con= '<div class="text-center"><p class="point-color tit mb-2">Travel Road</p>로그인이 필요한 기능입니다. </div>';
+                      con = '<div class="text-center"><p class="point-color tit mb-2">Travel Road</p>로그인이 필요한 기능입니다. </div>';
                       con += '<div><a class="btn btn-primary w-100 btn-sm mt-5" href="/loginForm" >로그인하기</a></div>';
                       $('#modalMsg').modal("show");
                       $('#modalMsg .modal-message').html(con);

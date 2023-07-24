@@ -34,7 +34,7 @@
             </div>
             <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
           </div>
-          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-week"></i>
             날짜선택</h4>
           <div class="day_select mt-3" style="">
             <select class="form-select" aria-label="Default select example">
@@ -128,7 +128,7 @@
           <div class="btn-group">
             <a th:href="@{/travel/category(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">수정</a>
             <a th:href="@{/travel/categoryDelete(categoryNo=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
-            <a href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">기록하기</a>
+            <a th:href="@{/travel/post(no=${category.categoryNo})}" class="btn btn-primary" type="button" style="width:100%">기록하기</a>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@
   </div>
 
   <script type="text/javascript">
-
+      let itemNo; // 아이템 넘버
       let modal =$('#modalMsg');
       let msg='';
       let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
@@ -164,7 +164,8 @@
           daySelect.on('change',function(){
               let dayCnt = daySelect.find("option:selected").data("cnt");
               let dayVal = daySelect.find("option:selected").val();
-
+              $(".dayName").text(dayCnt);
+              $("#itemNoSave").val(dayVal);
               $('#modalMsg').modal("show");
               $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
 
@@ -190,6 +191,7 @@
                   cache: false,
                   success:function (data){
                       console.log("리스트 변경");
+                      itemNo = data[0].itemNo;
                       for(var i=0 in data){
                           let price = new Number(data[i].itemAccount);
                           itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';

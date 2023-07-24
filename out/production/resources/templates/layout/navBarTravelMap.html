@@ -11,6 +11,7 @@
       <div class="flex-column ">
           <div class="top" >
               <div th:object="${category}">
+                <p class="text-center mb-1 txt_info">stap 2 > 여행 상세계획</p>
                 <h3 class="text-center" th:text="*{categoryName}">
                 </h3>
                 <div class="mt-2 text-center">
@@ -22,7 +23,7 @@
                 <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
               </div>
 
-              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-check-fill"></i>
+              <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-week"></i>
                 날짜선택</h4>
               <div class="day_select mt-3" style="">
                 <select class="form-select" aria-label="Default select example">
