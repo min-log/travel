@@ -84,7 +84,7 @@ public class FileService {
     }
 
 
-    private String makeFolder(String folder) {
+    protected String makeFolder(String folder) {
         String folderPath = folder.replace("/", File.separator);
         File uploadPathFolder = new File(uploadPath,folderPath);
         if (uploadPathFolder.exists() == false){
@@ -95,7 +95,7 @@ public class FileService {
 
 
     // 날짜 폴더 생성
-    private String makeDateFolder() {
+    protected String makeDateFolder() {
         String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         String folderPath = str.replace("/", File.separator);
 

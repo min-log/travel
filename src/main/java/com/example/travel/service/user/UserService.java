@@ -28,6 +28,8 @@ public interface UserService {
     public String userGetName(String name,String email); // 아이디 찾기
     public UserDTO userGetPassword(String id,String name,String email); // 비밀번호 찾기
 
+    public UserImage userGetProfileImage(Long no);
+
     @Transactional
     public UserTravel userInfo(UserDTO userDTO);
 

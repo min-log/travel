@@ -242,6 +242,15 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public UserImage userGetProfileImage(Long no) {
+        UserTravel userTravel = userRepository.getOne(no);
+        UserImage userImg = userTravel.getUserImg();
+        String originFileName = userImg.getOriginFileName();
+        log.info("originFileName : {}",originFileName);
+        return userImg;
+    }
+
     @Transactional
     @Override
     public UserTravel userInfo(UserDTO userDTO) {
