@@ -13,4 +13,6 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @SuperBuilder
 public class CategoryImage extends Image {
+    private Long boardNo;
+    private boolean thumbnail;
 }

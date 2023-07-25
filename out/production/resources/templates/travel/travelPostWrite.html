@@ -8,7 +8,7 @@
 
     <div class="content_nav"  th:object="${category}">
         <!-- start : navbar -->
-<!--        <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>-->
+        <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>
         <div class="content">
             <h3 class="tit text-center">글쓰기</h3>
             <form class="mt-2" action="insertStudentInfoForm" method="post" enctype="multipart/form-data">
@@ -84,7 +84,6 @@
                         // 파일 업로드 (다중 업로드를 위해 반복문 사용)
                         for (var i = files.length - 1; i >= 0; i--) {
                             var fileName = files[i].name
-
                             // 이미지 alt 속성 삽일을 위한 설정
                             var caption = prompt('이미지 설명 :', fileName)
                             if (caption == '') {
@@ -100,10 +99,9 @@
 
             // 이미지 업로드 함수 ajax 활용
             function uploadSummernoteImageFile(file, el, caption) {
+                /* Post 메서드 시큐리티 추가 */
                 var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
                 var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
-
-
 
                 let formData = new FormData();
                 formData.append('file', file)
@@ -111,7 +109,7 @@
                 $.ajax({
                     type: 'post',
                     data: formData,
-                    url: "/file/image",
+                    url: "/file/categoryImgSave",
                     dataType: 'json',
                     contentType: false,
                     enctype: 'multipart/form-data',
@@ -123,14 +121,21 @@
                         xhr.setRequestHeader(headerName, token);
                     },
                     focus: true,
-                    success: function (img) {
-                        console.log(img)
+                    success: function (data) {
+                        $(el).summernote('editor.insertImage', data.url);
+                        // $(el).summernote(
+                        //     'editor.insertImage',
+                        //     data.url,
+                        //     function ($image) {
+                        //         $image.attr('alt', caption) // 캡션 정보를 이미지의 alt 속성에 설정
+                        //     }
+                        // )
                     },
                     error:function (data){
                         console.log(data)
                     }
                 });
-                console.log("3")
+
             }
 
     </script>
