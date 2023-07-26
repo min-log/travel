@@ -1,5 +1,7 @@
 package com.example.travel.controller.travel;
 
+import com.example.travel.domain.CategoryBoard;
+import com.example.travel.dto.travel.CategoryBoardDTO;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.ItemDTO;
@@ -187,6 +189,9 @@ public class TravelController {
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
+//        CategoryBoardDTO categoryBoardDTO = new CategoryBoardDTO();
+//        model.addAttribute("board", categoryBoardDTO);
+
         model.addAttribute("category",categoryDTO);
         model.addAttribute("days",days);
         model.addAttribute("startDay",dayOfMonth);
@@ -194,6 +199,8 @@ public class TravelController {
 
         return "travel/travelPostWrite";
     }
+
+
 
 
 

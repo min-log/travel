@@ -11,13 +11,13 @@
         <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>
         <div class="content">
             <h3 class="tit text-center">글쓰기</h3>
-            <form class="mt-2" action="insertStudentInfoForm" method="post" enctype="multipart/form-data">
+            <form class="mt-2" id="BoardForm" method="post" enctype="multipart/form-data">
                 <!--start 시큐리티 추가 -->
                 <input class="csrf_input" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input class="csrf_input" type="hidden" th:name="${_csrf.getHeaderName()}">
                 <!--end 시큐리티 추가 -->
-                <input id="categoryNoSave"  type="text" th:value="${category.categoryNo}">
-                <input id="itemNoSave"  type="text" value="itemNum">
+                <input id="categoryNoSave"  type="text" th:value="${category.categoryNo}" th:type="hidden">
+                <input id="itemNoSave"  type="text" value="itemNum"  th:type="hidden">
                 <table class="board-top">
                     <colgroup>
                         <col style="width:20%">
@@ -27,17 +27,26 @@
                         <tr>
                             <th>제목</th>
                             <td>
-                                <input id="boardTite" class="form-control" type="text">
+                                <input id="boardTit" class="form-control" type="text">
                             </td>
-
                         </tr>
                         <tr>
                             <th>여행 일자</th>
-                            <td><span class="dayName" th:text="${days.dayInfo[0]}"></span></td>
+                            <td><input id="boardTravelDate" class="dayName form-control" th:value="${days.dayInfo[0]}" readonly /></td>
                         </tr>
                         <tr>
                             <th>썸네일</th>
-                            <td><input text=""></td>
+                            <td>
+                                <div class="userimg_wrap">
+                                    <div class="userimg_box">
+                                        <img id="preview" src="" alt="">
+                                    </div>
+                                    <label for="userImg" class="btn btn-dark btn-sm ">
+                                         선택하기👆
+                                    </label>
+                                    <input type="file" name="file" id="userImg" accept="image/*" multiple="multiple">
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -46,98 +55,224 @@
                 </div>
                 <button class="btn btn-primary mt-3 w-100" type="button" onclick="submitPost()">저장하기</button>
             </form>
+
+            <div id="BoardView" style="display: none">
+                저장된 객체 다시 뿌려주기 !!
+                <table class="board-top">
+                    <colgroup>
+                        <col style="width:20%">
+                        <col style="width:80%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <span class="board-tit"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>여행 일자</th>
+                        <td><span class="board-date"></span></td>
+                    </tr>
+                    <tr>
+                        <th>썸네일</th>
+                        <td>
+                            <div class="userimg_wrap">
+                                <div class="userimg_box">
+                                    <img class="board-img" src="" alt="">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="board-content-wrap">
+                    <div class="board-content"></div>
+                </div>
+                <div>
+                    <button class="btn btn-black mt-3 w-100 board-modify" type="button" data-no=""  onclick="boardFormShow()">수정하기</button>
+                    <button class="btn btn-dark mt-3 w-100" type="button" onclick="boardFormDelete()">삭제하기</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- 페이지 로딩시 초기화 -->
-
-
 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
     <script type="text/javascript">
+        let file = document.querySelector('#userImg');
+        let fileList = null;
         $(document).ready(function (){
             $("#itemNoSave").val(1);
         });
 
-
-
-            $('#summernote').summernote({
-                placeholder: '기억에 남는 여행 순간들을 기록해보세요.',
-                tabsize: 2,
-                height: 300,
-                minHeight: null,             // 최소 높이
-                maxHeight: null,             // 최대 높이
-                focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
-                lang: "ko-KR",					// 한글 설정
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                callbacks: {
-                    onImageUpload: function (files, editor, welEditable) {
-                        // 파일 업로드 (다중 업로드를 위해 반복문 사용)
-                        for (var i = files.length - 1; i >= 0; i--) {
-                            var fileName = files[i].name
-                            // 이미지 alt 속성 삽일을 위한 설정
-                            var caption = prompt('이미지 설명 :', fileName)
-                            if (caption == '') {
-                                caption = '이미지'
-                            }
-                            uploadSummernoteImageFile(files[i], this, caption)
+        // 게시판
+        $('#summernote').summernote({
+            placeholder: '기억에 남는 여행 순간들을 기록해보세요.',
+            tabsize: 2,
+            height: 300,
+            minHeight: null,             // 최소 높이
+            maxHeight: null,             // 최대 높이
+            focus: true,                  // 에디터 로딩후 포커스를 맞출지 여부
+            lang: "ko-KR",					// 한글 설정
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            callbacks: {
+                onImageUpload: function (files, editor, welEditable) {
+                    // 파일 업로드 (다중 업로드를 위해 반복문 사용)
+                    for (var i = files.length - 1; i >= 0; i--) {
+                        var fileName = files[i].name
+                        // 이미지 alt 속성 삽일을 위한 설정
+                        var caption = prompt('이미지 설명 :', fileName)
+                        if (caption == '') {
+                            caption = '이미지'
                         }
-                    },
-                }
+                        uploadSummernoteImageFile(files[i], this, caption)
+                    }
+                },
+            }
 
+        });
+
+
+        /* Post 메서드 시큐리티 추가 */
+        let headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+        let token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
+
+        // 이미지 업로드 함수 ajax 활용
+        function uploadSummernoteImageFile(file, el, caption) {
+            let formData = new FormData();
+            formData.append('file', file)
+            console.log(formData);
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "/file/categoryImgSave",
+                dataType: 'json',
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                async: true, //동기, 비동기 여부
+                cache :false, // 캐시 여부
+                beforeSend : function(xhr)
+                {
+                    xhr.setRequestHeader(headerName, token);
+                },
+                focus: true,
+                success: function (data) {
+                    $(el).summernote(
+                        'editor.insertImage',
+                        data.url,
+                        function ($image) {
+                            $image.attr('alt', caption) // 캡션 정보를 이미지의 alt 속성에 설정
+                        }
+                    )
+                },
+                error:function (data){
+                    console.log(data)
+                }
+            });
+
+        }
+
+
+
+
+        // 게시판 저장
+        function submitPost(){
+
+            // title,썸네일,category번호,item 순서번호, content 가지고와서 formdata 로 전송
+            //
+            let categoryNoSave = document.getElementById('categoryNoSave').value;
+            let itemNoSave = document.getElementById('itemNoSave').value;
+            let boardTravelDate = document.getElementById('boardTravelDate').value;
+            let boardTit = document.getElementById('boardTit').value;
+            let content = $('#summernote').summernote('code');
+
+            console.log(boardTit)
+            console.log("content :" + content);
+
+            //json 형태 데이터 전달
+            let itemCon = {
+                "boardNo":null,
+                "categoryNo":categoryNoSave,
+                "boardItemDay": itemNoSave,
+                "boardTravelDate": boardTravelDate,
+                "boardTit": boardTit,
+                "boardContent": content,
+                "boardImg":null,
+                "createdAt":null
+            }
+
+            let formData = new FormData;
+            formData.append('itemCon', new Blob([JSON.stringify(itemCon)] , {type: "application/json"}));
+            if(fileList != null) formData.append("boardFile", fileList[0]); // 썸네일 파일 객체
+
+            //console.log(fileList[0]);
+
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "/board/postSave",
+                dataType: 'json',
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                async: true, //동기, 비동기 여부
+                cache :false, // 캐시 여부
+                beforeSend : function(xhr)
+                {
+                    xhr.setRequestHeader(headerName, token);
+                },
+                success:function (data) {
+                    console.log(data)
+                    if(data == null) alert("저장이 실패했습니다.");
+
+                    $("#BoardForm").hide();
+                    $("#BoardView").show();
+                    $(".board-tit").text(data.boardTit);
+                    $(".board-date").text(data.boardTravelDate);
+                    $(".board-img").attr('src',data.boardImg);
+                    $(".board-content").html(data.boardContent);
+                    $(".board-modify").data('no',data.boardNo);
+
+
+
+                },
+                error:function (data) {
+                    alert("저장이 실패했습니다. 관리자에게 문의 주세요.");
+                }
             });
 
 
-            // 이미지 업로드 함수 ajax 활용
-            function uploadSummernoteImageFile(file, el, caption) {
-                /* Post 메서드 시큐리티 추가 */
-                var headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
-                var token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
 
-                let formData = new FormData();
-                formData.append('file', file)
-                console.log(formData);
-                $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: "/file/categoryImgSave",
-                    dataType: 'json',
-                    contentType: false,
-                    enctype: 'multipart/form-data',
-                    processData: false,
-                    async: true, //동기, 비동기 여부
-                    cache :false, // 캐시 여부
-                    beforeSend : function(xhr)
-                    {
-                        xhr.setRequestHeader(headerName, token);
-                    },
-                    focus: true,
-                    success: function (data) {
-                        $(el).summernote('editor.insertImage', data.url);
-                        // $(el).summernote(
-                        //     'editor.insertImage',
-                        //     data.url,
-                        //     function ($image) {
-                        //         $image.attr('alt', caption) // 캡션 정보를 이미지의 alt 속성에 설정
-                        //     }
-                        // )
-                    },
-                    error:function (data){
-                        console.log(data)
-                    }
-                });
 
-            }
+        }
 
+
+        <!-- start 프로필 이미지 -->
+        file.onchange = function () {
+            fileList = file.files ;
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsDataURL(fileList[0]);
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').src = reader.result ;
+            };
+        };
+        <!-- end 프로필 이미지 -->
     </script>
+
+
 </th:block>
 </html>

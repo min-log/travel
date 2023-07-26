@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 @Entity
 @Setter
@@ -13,6 +16,6 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @SuperBuilder
 public class CategoryImage extends Image {
-    private Long boardNo;
-    private boolean thumbnail;
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    private CategoryBoard boardNo;
 }

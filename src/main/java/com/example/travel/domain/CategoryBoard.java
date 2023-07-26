@@ -19,10 +19,10 @@ public class CategoryBoard extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardNo;
     private Long categoryNo;
-    private int itemDay;
+    private int boardItemDay;
     private String boardTit;
+    private String boardTravelDate;
     private String boardContent;
-    private String boardImg;
 
 
 }
