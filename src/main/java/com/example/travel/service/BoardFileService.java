@@ -7,6 +7,7 @@ import com.example.travel.repository.travel.CategoryImageRepository;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.apache.commons.io.FileUtils;
@@ -26,7 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-
+@RequiredArgsConstructor
 @Service
 @Log4j2
 public class BoardFileService{
@@ -34,7 +35,7 @@ public class BoardFileService{
     @Value("${spring.servlet.multipart.location}")
     private String uploadPath;
 
-    private CategoryImageRepository categoryImageRepository;
+    final CategoryImageRepository categoryImageRepository;
 
     public JsonObject createImage(MultipartFile uploadFile,String folderPath) {
         log.info("일반 컨텐츠 이미지 저장 ==========================");

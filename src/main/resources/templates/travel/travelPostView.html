@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+
+
+
+    <div class="content_nav"  th:object="${category}">
+        <!-- start : navbar -->
+        <th:block th:replace="layout/navBarTravelView::navBarTravelView"></th:block>
+        <div class="content">
+            <h3 class="tit text-center">글쓰기</h3>
+            <div id="BoardView" th:object="${board}">
+                <table class="board-top">
+                    <colgroup>
+                        <col style="width:20%">
+                        <col style="width:80%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>제목</th>
+                        <td>
+                            <span th:text="*{boardTit}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>여행 일자</th>
+                        <td>
+                            <span th:text="*{boardTravelDate}"></span>
+                        </td>
+                    </tr>
+                    <th:block>
+                        <tr>
+                            <th>썸네일</th>
+                            <td>
+                                <div class="userimg_wrap">
+                                    <div class="userimg_box">
+                                        <img class="board-img" th:src="*{boardImg}" alt="">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+                <div class="board-content-wrap">
+                    <div id="boardContent" th:text="*{boardContent}"></div>
+                </div>
+                <div>
+                    <button class="btn btn-black mt-3 w-100 board-modify" type="button" data-no=""  onclick="boardFormShow()">수정하기</button>
+                    <button class="btn btn-dark mt-3 w-100" type="button" onclick="boardFormDelete()">삭제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 페이지 로딩시 초기화 -->
+    <script type="text/javascript">
+        // 태그 특수문자 변환
+        let con = $("#boardContent").html();
+        $("#boardContent").html(decodeHTMLEntities(con));
+
+        function decodeHTMLEntities (str) {
+            if(str !== undefined && str !== null && str !== '') {
+                str = String(str);
+
+                str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                var element = document.createElement('div');
+                element.innerHTML = str;
+                str = element.textContent;
+                element.textContent = '';
+            }
+
+            return str;
+        }
+
+
+
+
+
+    </script>
+
+
+
+</th:block>
+</html>

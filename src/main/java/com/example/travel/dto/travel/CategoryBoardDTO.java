@@ -14,12 +14,13 @@ import java.time.LocalDateTime;
 public class CategoryBoardDTO{
 
     private Long boardNo;
-    private Long categoryNo;
+    private Long boardCategoryNo;
     private int boardItemDay;
     private String boardTit;
     private String boardTravelDate;
     private String boardContent;
     private LocalDateTime createdAt;
     private String boardImg; // 썸내일 이미지 전달 시 사용
+
 
 }

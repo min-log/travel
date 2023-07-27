@@ -6,6 +6,7 @@ import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.DayInfoDTO;
 import com.example.travel.dto.travel.ItemDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
+import com.example.travel.service.travel.CategoryBoardService;
 import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,10 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Map;
+
+
 
 
 @Log4j2
@@ -28,6 +32,7 @@ import java.util.Map;
 @RequestMapping("/travel")
 public class TravelController {
     final CategoryService categoryService;
+    final CategoryBoardService categoryBoardService;
 
     @GetMapping("")
     public String main(Model model,
@@ -181,7 +186,9 @@ public class TravelController {
     public String postWriter(@RequestParam(value = "no") long no,
                              Model model
     ){
-        log.info("게시글 후긴");
+        log.info("게시글 후기 작성 ----------------------");
+
+
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
@@ -189,9 +196,17 @@ public class TravelController {
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
-//        CategoryBoardDTO categoryBoardDTO = new CategoryBoardDTO();
-//        model.addAttribute("board", categoryBoardDTO);
 
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardCNo(no); // 카테고리 가져오기
+        if (categoryBoardDTO !=null){
+            String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
+            categoryBoardDTO.setBoardContent(txt);
+            log.info("저장된 글 존재");
+        }
+
+        categoryBoardDTO = CategoryBoardDTO.builder().boardCategoryNo(no).build();
+        log.info("categoryBoardDTO : {}",categoryBoardDTO);
+        model.addAttribute("board", categoryBoardDTO);
         model.addAttribute("category",categoryDTO);
         model.addAttribute("days",days);
         model.addAttribute("startDay",dayOfMonth);
@@ -201,6 +216,34 @@ public class TravelController {
     }
 
 
+    @GetMapping("/postView")
+    public String postView(
+            @RequestParam(value = "no") long no,
+            @RequestParam(value = "boardNo") long boardNo,
+             Model model
+    ){
+        log.info("작성 게시물 상세 페이지 -------------");
+        log.info(boardNo);
+
+        CategoryDTO categoryDTO = categoryService.getCategory(no);
+        DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
+        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
+        int dayOfMonth = localDate.getDayOfMonth();
+
+        ItemDTO item = ItemDTO.builder().categoryId(no).build();
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(boardNo); // 카테고리 가져오기
+        String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
+        categoryBoardDTO.setBoardContent(txt);
+
+        log.info("categoryBoardDTO : {}",categoryBoardDTO);
+        model.addAttribute("board", categoryBoardDTO);
+        model.addAttribute("category",categoryDTO);
+        model.addAttribute("days",days);
+        model.addAttribute("startDay",dayOfMonth);
+        model.addAttribute("item",item);
+
+        return "travel/travelPostView";
+    }
 
 
 

@@ -153,7 +153,6 @@ public class BoardApi {
             return -1;
         }
 
-
         boolean result = categoryService.categoryLike(no, userT.getUserNo());
         log.info("전달할 값 : " + result);
 
@@ -176,11 +175,11 @@ public class BoardApi {
 
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         log.info("boardFile : {}",boardFile);
-        CategoryBoardDTO categoryBoard = categoryBoardService.createCategoryBoard(categoryBoardDTO, boardFile);
-        if (categoryBoard == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        CategoryBoardDTO result = categoryBoardService.createCategoryBoard(categoryBoardDTO, boardFile);
+        if (result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
 
-        return new ResponseEntity<>(categoryBoardDTO, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
 

@@ -169,7 +169,9 @@
               let dayCnt = daySelect.find("option:selected").data("cnt");
               let dayVal = daySelect.find("option:selected").val();
               $(".dayName").text(dayCnt);
-              $("#itemNoSave").val(dayVal);
+              $("#boardItemDay").val(dayVal);
+              if (dayVal>1){$("#thumbnailWarp").hide();
+              }else{$("#thumbnailWarp").show();}
               $('#modalMsg').modal("show");
               $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
 
