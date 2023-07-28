@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface CategoryBoardRepository extends JpaRepository<CategoryBoard,Long> {
 
-    Optional<CategoryBoard> getCategoryBoardByBoardCategoryNo(Long no);
+    Optional<CategoryBoard> getCategoryBoardByBoardCategoryNoAndBoardItemDay(Long no,int dayNo);
 }

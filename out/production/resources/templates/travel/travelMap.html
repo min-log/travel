@@ -173,18 +173,6 @@
             itemEl.onclick = function (){
                 displayInfowindow(marker, info);
             }
-
-              // kakao.maps.event.addListener(marker, 'mouseout', function() {
-              //   infowindow.close();
-              // });
-
-              // itemEl.onmouseover =  function () {
-              //   displayInfowindow(marker, info);
-              // };
-              //
-              // itemEl.onmouseout =  function () {
-              //   infowindow.close();
-              // };
         })(marker, info);
 
         fragment.appendChild(itemEl);
@@ -210,20 +198,9 @@
               '   <h5 class="place_name">' + places.place_name + '</h5>';
                 if (places.road_address_name) {
                 itemStr += '    <span class="road_address_name">' + places.road_address_name + '</span>';
-                    //+ '   <span class="jibun gray address_name">' +  places.address_name  + '</span>';
                 } else {
                 itemStr += '    <span class="address_name">' +  places.address_name  + '</span>';
                 }
-
-                // if (places.place_url) {
-                // itemStr += '    <span><a class="place_url" href="' + places.place_url + '" target="_blank">' + places.place_url + '</a></span>' ;
-                // }
-                //
-                // itemStr += '  <span class="tel phone">' + places.phone  + '</span>';
-                // itemStr += '<button onclick="btnItemMapAdd(' + places.id + ')" type="button" class="btn btn-dark item-add btn-sm" data-id="'+ places.id +'' +
-                //     '" data-bs-toggle="modal" data-bs-target="#staticBackdrop">' +
-                //     ' 일정 추가하기 ' +
-                //     '</button>';
                 itemStr +='</div>';
         el.innerHTML = itemStr;
         el.className = 'item';

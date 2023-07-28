@@ -11,7 +11,7 @@
       <div class="flex-column ">
         <div class="top veiw_top" >
           <div class="up">
-            <a th:href="@{/travel/post(no=${category.categoryNo})}"  title="기록하기">
+            <a th:href="@{/travel/post(no=${category.categoryNo},day=1)}"  title="기록하기">
               <i class="bi bi-pen-fill"></i>
             </a>
           </div>
@@ -177,7 +177,6 @@
 
               // 리스트 변경하기
               itemList(dayVal);
-              setMap();
           })
 
           function priceToString(price) {
@@ -186,19 +185,18 @@
 
 
           function itemList(e){
-              let category = $('input[name=categoryId]').val();
               let itemListCon='';
               let todayPrice= 0;
               $.ajax({
                   url: '/board/itemList',
                   type: "get",
-                  data: {itemDay:e,cateNo:category},
+                  data: {itemDay:e,cateNo:[[${param.no}]]},
                   dataType: 'json',
                   cache: false,
                   success:function (data){
                       console.log("리스트 변경");
-                      itemNo = data[0].itemNo;
                       for(var i=0 in data){
+                          itemNo = data[i].itemNo;
                           let price = new Number(data[i].itemAccount);
                           itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
                           itemListCon += '<div class="top">';

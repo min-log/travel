@@ -184,6 +184,7 @@ public class TravelController {
     //---------------- 게시글 후기 작성
     @GetMapping("/post")
     public String postWriter(@RequestParam(value = "no") long no,
+                             @RequestParam(value = "day") int dayNo,
                              Model model
     ){
         log.info("게시글 후기 작성 ----------------------");
@@ -197,11 +198,12 @@ public class TravelController {
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
 
-        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardCNo(no); // 카테고리 가져오기
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardCNo(no,dayNo); // 카테고리 가져오기
         if (categoryBoardDTO !=null){
             String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
             categoryBoardDTO.setBoardContent(txt);
             log.info("저장된 글 존재");
+            return "redirect:/travel/postView?no="+no+"&boardNo="+categoryBoardDTO.getBoardNo();
         }
 
         categoryBoardDTO = CategoryBoardDTO.builder().boardCategoryNo(no).build();

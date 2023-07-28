@@ -89,8 +89,8 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
 
 
     @Override
-    public CategoryBoardDTO getCagetgoryBoardCNo(Long categoryNo) {
-        Optional<CategoryBoard> board = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+    public CategoryBoardDTO getCagetgoryBoardCNo(Long categoryNo,int dayNo) {
+        Optional<CategoryBoard> board = categoryBoardRepository.getCategoryBoardByBoardCategoryNoAndBoardItemDay(categoryNo,dayNo);
         if (board.isPresent()){
             CategoryBoard categoryBoard = board.get();
             CategoryBoardDTO resultCategoryBoard = findResultCategoryBoard(categoryBoard);
