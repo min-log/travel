@@ -16,7 +16,7 @@
 
                 <input th:field="*{boardNo}" th:name="*{boardNo}" id="boardNo" type="text" th:type="hidden">
                 <input th:field="*{boardCategoryNo}" th:name="*{boardCategoryNo}" id="boardCategoryNo"  type="text" th:type="hidden">
-                <input th:field="*{boardItemDay}" th:name="*{boardItemDay}" id="boardItemDay"  type="text" value="itemNum" th:type="hidden">
+                <input th:name="*{boardItemDay}" id="boardItemDay"  type="text" th:value="${param.day}" th:type="hidden">
                 <table class="board-top">
                     <colgroup>
                         <col style="width:20%">
@@ -66,9 +66,7 @@
     <script type="text/javascript">
         let file = document.querySelector('#userImg');
         let fileList = null;
-        $(document).ready(function (){
-            $("#boardItemDay").val(1);
-        });
+
 
         // 게시판
         $('#summernote').summernote({
@@ -198,8 +196,7 @@
                 },
                 success:function (data) {
                     console.log(data)
-                    let boardViewPage = "/travel/postView?no=" + data.boardCategoryNo + "&boardNo="+data.boardNo;
-
+                    let boardViewPage = "/travel/postView?no=" + data.boardCategoryNo + "&day="+ data.boardItemDay;
                     if(data == null) {
                         alert("저장이 실패했습니다.");
                     }else{

@@ -183,30 +183,34 @@ public class TravelController {
 
     //---------------- 게시글 후기 작성
     @GetMapping("/post")
-    public String postWriter(@RequestParam(value = "no") long no,
-                             @RequestParam(value = "day") int dayNo,
-                             Model model
+    public String postWriter(
+            @RequestParam(value = "re" , required = false) String re,
+            @RequestParam(value = "no") long no,
+            @RequestParam(value = "day") int dayNo,
+            Model model
     ){
         log.info("게시글 후기 작성 ----------------------");
-
-
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
-
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardPost(no,dayNo); // 카테고리 가져오기
 
-        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardCNo(no,dayNo); // 카테고리 가져오기
-        if (categoryBoardDTO !=null){
+        if (categoryBoardDTO !=null && re == null){
+            log.info("저장된 글 존재");
             String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
             categoryBoardDTO.setBoardContent(txt);
-            log.info("저장된 글 존재");
-            return "redirect:/travel/postView?no="+no+"&boardNo="+categoryBoardDTO.getBoardNo();
+
+            return "redirect:/travel/postView?no="+no+"&day="+dayNo;
+        }else if(categoryBoardDTO ==null && re == null){
+            log.info("게시글 수정");
+            categoryBoardDTO = CategoryBoardDTO.builder().boardCategoryNo(no).build();
         }
 
-        categoryBoardDTO = CategoryBoardDTO.builder().boardCategoryNo(no).build();
+        log.info("게시글 초기 작성");
+        categoryBoardDTO = categoryBoardDTO;
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         model.addAttribute("board", categoryBoardDTO);
         model.addAttribute("category",categoryDTO);
@@ -221,11 +225,11 @@ public class TravelController {
     @GetMapping("/postView")
     public String postView(
             @RequestParam(value = "no") long no,
-            @RequestParam(value = "boardNo") long boardNo,
+            @RequestParam(value = "day") int dayNo,
              Model model
     ){
         log.info("작성 게시물 상세 페이지 -------------");
-        log.info(boardNo);
+        log.info(dayNo);
 
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
@@ -233,7 +237,7 @@ public class TravelController {
         int dayOfMonth = localDate.getDayOfMonth();
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
-        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(boardNo); // 카테고리 가져오기
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardPost(no,dayNo); // 카테고리 가져오기
         String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
         categoryBoardDTO.setBoardContent(txt);
 

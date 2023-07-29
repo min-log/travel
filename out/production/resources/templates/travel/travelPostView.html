@@ -47,8 +47,8 @@
                 <div class="board-content-wrap">
                     <div id="boardContent" th:text="*{boardContent}"></div>
                 </div>
-                <div>
-                    <button class="btn btn-black mt-3 w-100 board-modify" type="button" data-no=""  onclick="boardFormShow()">수정하기</button>
+                <div class="btn-group w-100 mt-5">
+                    <a th:href="@{/travel/post(re='y',no=${param.no},day=${param.day})}" class="btn btn-outline-secondary mt-3 w-100 board-modify">수정하기</a>
                     <button class="btn btn-dark mt-3 w-100" type="button" onclick="boardFormDelete()">삭제하기</button>
                 </div>
             </div>
