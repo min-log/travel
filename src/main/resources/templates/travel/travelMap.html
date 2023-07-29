@@ -11,8 +11,8 @@
                 <ul id="placesList" class="scrollBar"></ul>
                 <div id="pagination"></div>
             </div>
-            <div class="map_wrap">
-                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+            <div class="map_wrap" style="overflow: hidden">
+                <div id="map" style="width:100%;height:100%;"></div>
                 <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
                 <div class="custom_zoomcontrol radius_border">
                     <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
@@ -22,11 +22,290 @@
         </div>
     </div>
 
-
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
-    <script>
+    <script type="text/javascript">
+        let modal =$('#modalMsg');
+        let modalMsg =$('#modalMsg .modal-message');
+        let msg='';
 
-    let menuEl = document.getElementById('mapMenuWrap');
+        let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
+        let categoryTitle = $("h3").text();
+        let itemDay = $("#itemDay");
+        let itemNum = 0; //아이템 순서를 결정
+
+        // 아이템 생성
+        let itemForm =$("#itemForm");
+        let itemListWrap = $("#sortable");
+        let btnSelectDay = $("#btnSelectDay");
+        // let btnItemAdd = $("#btnItemAdd");
+        let daySelect = $(".day_select .form-select");
+        let dayContent = $(".day_wrap");
+
+
+        //아이템 저장 / 삭제
+        let btnItemSave = $("#btnItemSave");
+        let btnItemClose = $("#btnItemClose");
+        let btnItemDelete =$("#btnItemDelete");
+
+
+
+        //최종 저장
+        let btnTotalStorageSave = $("#btnTotalStorageSave");
+        let btnTotalSave = $("#btnTotalSave");
+        $(document).ready(function () {
+
+
+
+        function mapReSet(){
+            infowindow.close(); // 지도 선택 후 저장에 성공 시
+            var keyword = document.getElementById('keyword').value;
+
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                ps.keywordSearch(categoryArea, placesSearchCB);
+            } else {
+                ps.keywordSearch(kwd, placesSearchCB);
+            }
+        }
+
+
+
+
+
+        $(function () {
+
+            $(document).ready(function (){
+                //처음 시작시 1번 일정 불러오기
+                itemList(1);
+                itemDay.val(1);
+                $("#itemDayName").val($(".dayName").text());
+            });
+
+
+
+            function itemBoxClose(){
+                //btnItemAdd.show();
+                dayContent.hide();
+                btnItemDelete.hide();
+                itemForm.each(function (){
+                    this.reset();
+                });
+            }
+
+            daySelect.on('change',function(){
+                let dayCnt = daySelect.find("option:selected").data("cnt");
+                let dayVal = daySelect.find("option:selected").val();
+                itemDay.val(dayVal); // 날짜
+
+                $('#modalMsg').modal("show");
+                $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
+                itemBoxClose();
+                // 리스트 변경하기
+                $(".dayName").text(dayCnt);
+                $("#itemDayName").val(dayCnt);
+                itemList(dayVal);
+
+                mapReSet();//지도 재 설정
+            })
+            btnSelectDay.on('click', function () {});
+
+
+
+            btnItemSave.on('click',function (){
+                let dayVal = daySelect.find("option:selected").val();
+                let item = $("#itemForm").serialize();
+                $.ajax({
+                    url:"/board/itemSave",
+                    type:'POST',
+                    data: item, // 전송 데이터
+                    dataType: 'json', // 전송 데이터 형식
+                    success:function (data){
+                        if(data){
+                            itemBoxClose();
+                            $('#modalMsg').modal("show");
+                            $('#modalMsg .modal-message').html("저장되었습니다.");
+
+                        }else {
+                            $('#modalMsg').modal("show");
+                            $('#modalMsg .modal-message').html("저장이 실패했습니다.");
+                        }
+                        itemList(dayVal); //
+                        mapReSet(); //지도 재 설정
+
+                    },
+                    error:function (){
+                        $('#modalMsg').modal("show");
+                        $('#modalMsg .modal-message').html("저장할 수 없습니다. 관리자에게 문의해주세요.");
+                    }
+
+                });
+            });
+            btnItemClose.on('click',function (){
+                itemBoxClose();
+            });
+            btnItemDelete.on('click',function (){
+                let itemNo = $("input[name=itemNo]").val();
+                let itemDay = $("input[name=itemDay]").val();
+                console.log(itemNo);
+                $.ajax({
+                    url:'/board/itemDelete?no='+itemNo,
+                    type:'get',
+                    success:function (data) {
+                        $('#modalMsg').modal("show");
+                        $('#modalMsg .modal-message').html("일정이 삭제되었습니다.");
+                        itemBoxClose();
+                        itemList(itemDay);
+                        mapReSet();
+                    },
+                    error:function (data){
+                        alert("일정 삭제에 실패했습니다.");
+                    }
+
+                });
+            });
+
+
+            function storageSave(){
+                let data = [];
+                itemListWrap.find("li").each(function (index, item){
+                    index = {
+                        itemNo:'',
+                        itemNumber :''
+                    }
+                    index.itemNo = $(this).data("no");
+                    index.itemNumber =  $(this).data("index");
+                    data.push(index);
+                });
+                var jsonData = JSON.stringify(data);
+                return jsonData;
+            }
+
+            btnTotalStorageSave.on('click',function () {
+                let jsonData = storageSave();
+                console.log(jsonData);
+                $.ajax({
+                    url:'/board/StorageSave',
+                    type:'get',
+                    dataType: 'json',
+                    data: {"jsonData" : jsonData},
+                    success:function (data){
+                        $('#modalMsg').modal("show");
+                        $('#modalMsg .modal-message').html("리스트가 임시저장 되었습니다.");
+                        mapReSet();
+                    },
+                    error:function (data){
+                        alert("오류")
+                    }
+                });
+            })
+
+            btnTotalSave.on('click',function () {
+                let categoryNo = $("input[name=categoryNo]").val();
+                let msg='';
+                let jsonData = storageSave();
+                console.log(jsonData);
+                console.log(categoryNo);
+                $.ajax({
+                    url:'/board/StorageTotalSave',
+                    type:'get',
+                    dataType: 'json',
+                    data: {"jsonData" : jsonData,"categoryNo":categoryNo},
+                    success:function (data){
+                        $('#modalMsg').modal("show");
+                        msg+="<p>" + categoryTitle +"가 저장되었습니다.</p>";
+                        msg+="<div class='btn-group mt-5' style='width:100%'>";
+                        msg+="<button type='button' data-bs-dismiss='modal' aria-label='Close' class='btn btn-sm btn-outline-secondary' >더 수정하기</button><a href='/mypage/boardList' class='btn btn-primary btn-sm'>내 여행 리스트로 이동</a>";
+                        msg+="</div>";
+                        $('#modalMsg .modal-message').html(msg);
+                        mapReSet();
+                    },
+                    error:function (data){
+                        alert("오류")
+                    }
+                });
+
+            });
+
+
+            function itemList(e){
+                let category = $('input[name=categoryId]').val();
+                let itemListCon='';
+                $.ajax({
+                    url: '/board/itemList',
+                    type: "get",
+                    data: {itemDay:e,cateNo:category},
+                    dataType: 'json',
+                    cache: false,
+                    success:function (data){
+                        for(var i=0 in data){
+                            //alert(data[i].placeName);
+                            itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                            itemListCon += '<span class="markerbg marker_'+ i +'"></span>';
+                            itemListCon +=  '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
+                            itemListCon +=  '<i class="bi bi-chevron-expand"></i>';
+                            itemListCon += '</li>';
+                        }
+                        itemListWrap.html(itemListCon);
+                        reorder();
+                    }
+                })
+            }
+
+
+            itemListWrap.sortable({
+                start:function (event,ui){
+                    ui.item.data('start_pos',ui.item.index());
+                },
+                stop:function (event,ui){
+                    var spos = ui.item.data('start_pos');
+                    var epos = ui.item.index();
+                    reorder();
+                }
+            });
+            function reorder(){
+                $("#sortable .list-group-item").each(function (i,box){
+                    $(box).attr('data-index',i);
+                    $(box).find('.markerbg').attr('class','markerbg marker_'+i);
+                });
+
+                $("#sortable .list-group-item").on('click',function () {
+                    let dayNo = $(this).data("no");
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url:'/board/itemGet?no='+dayNo,
+                        success:function (data) {
+                            let arr=[];
+                            arr = data;
+                            console.log(arr.itemNo);
+                            $("input[name=itemNo]").val(arr.itemNo);
+                            $("input[name=categoryId]").val(arr.categoryId);
+                            $("input[name=itemDay]").val(arr.itemDay);
+                            $("input[name=itemNumber]").val(arr.itemNumber);
+                            $("input[name=itemAccount]").val(arr.itemAccount);
+                            $("textarea[name=itemInfo]").text(arr.itemInfo);
+                            $("input[name=itemTime]").val(arr.itemTime);
+                            $("input[name=placeName]").val(arr.placeName);
+                            $("input[name=placeTime]").val(arr.placeTime);
+                            $("input[name=placeUrl]").val(arr.placeUrl);
+                            $("input[name=phone]").val(arr.phone);
+                            $("input[name=addressName]").val(arr.addressName);
+                            $("input[name=roadAddressName]").val(arr.roadAddressName);
+                            // btnItemAdd.hide();
+                            dayContent.show();
+                            btnItemDelete.show();
+                            $(".navbar_wrap").animate( { scrollTop : 0 }, 500 );;
+                        },
+                        error:function (){
+                            alert("내용을 불러오는 것을 실패했습니다.");
+                        }
+                    });
+                });
+            }
+
+        });
+
+
+
     // 마커를 담을 배열입니다
     var markers = [];
     // 내가 저장한 마커의 배열입니다.
@@ -37,14 +316,14 @@
     let imageSize, spriteSize, spriteOrigin,offset;
 
 
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    let mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
       center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-      level: 3 // 지도의 확대 레벨
+      level: 8// 지도의 확대 레벨
     };
 
     // 지도를 생성합니다
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+    let map = new kakao.maps.Map(mapContainer, mapOption);
 
     // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
     function zoomIn() {
@@ -80,12 +359,13 @@
     var infowindow = new kakao.maps.InfoWindow({zIndex:1});
     // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
     $(document).ready(function (){
+        console.log(categoryArea);
         ps.keywordSearch(categoryArea, placesSearchCB);
-    })
 
-    //searchPlaces();
+    });
 
-    // 키워드 검색을 요청하는 함수입니다
+
+    //키워드 검색을 요청하는 함수입니다
     function searchPlaces() {
       var keyword = document.getElementById('keyword').value;
 
@@ -346,40 +626,48 @@
     }
 
 
-    function btnItemMapAdd(id){
-        console.log(id);
 
-        let roadAddressName,
-        addressName,
-        placeUrl,
-        phone = null;
+        });
+        function btnItemMapAdd(id){
+            console.log(id);
 
-        let mapMarkInfo =document.querySelector('.map_mark_info');
-        let placeName = mapMarkInfo.querySelector('.place_name').textContent;
-        let x = mapMarkInfo.querySelector('.map_info_x').textContent;
-        let y = mapMarkInfo.querySelector('.map_info_y').textContent;
+            let roadAddressName,
+                addressName,
+                placeUrl,
+                phone = null;
 
-
-        if (mapMarkInfo.querySelector('.road_address_name') != null) roadAddressName = mapMarkInfo.querySelector('.road_address_name').textContent;
-        if (mapMarkInfo.querySelector('.address_name')!=null) addressName = mapMarkInfo.querySelector('.address_name').textContent;
-        if (mapMarkInfo.querySelector('.place_url')!=null) placeUrl = mapMarkInfo.querySelector('.place_url').textContent;
-        if (mapMarkInfo.querySelector('.phone')!=null) phone = mapMarkInfo.querySelector('.phone').textContent;
-        //input에 값 추가
-        $('input[name=id]').val(id);
-        $('input[name=placeName]').val(placeName);
-        $('input[name=x]').val(x);
-        $('input[name=y]').val(y);
-
-        if (roadAddressName != null) $('input[name=roadAddressName]').val(roadAddressName);
-        if (addressName != null) $('input[name=addressName]').val(addressName);
-        if (placeUrl != null) $('input[name=placeUrl]').val(placeUrl);
-        if (phone != null) $('input[name=phone]').val(phone);
-
-        ItemAdd();
-
-    }
+            let mapMarkInfo =document.querySelector('.map_mark_info');
+            let placeName = mapMarkInfo.querySelector('.place_name').textContent;
+            let x = mapMarkInfo.querySelector('.map_info_x').textContent;
+            let y = mapMarkInfo.querySelector('.map_info_y').textContent;
 
 
+            if (mapMarkInfo.querySelector('.road_address_name') != null) roadAddressName = mapMarkInfo.querySelector('.road_address_name').textContent;
+            if (mapMarkInfo.querySelector('.address_name')!=null) addressName = mapMarkInfo.querySelector('.address_name').textContent;
+            if (mapMarkInfo.querySelector('.place_url')!=null) placeUrl = mapMarkInfo.querySelector('.place_url').textContent;
+            if (mapMarkInfo.querySelector('.phone')!=null) phone = mapMarkInfo.querySelector('.phone').textContent;
+            //input에 값 추가
+            $('input[name=id]').val(id);
+            $('input[name=placeName]').val(placeName);
+            $('input[name=x]').val(x);
+            $('input[name=y]').val(y);
+
+            if (roadAddressName != null) $('input[name=roadAddressName]').val(roadAddressName);
+            if (addressName != null) $('input[name=addressName]').val(addressName);
+            if (placeUrl != null) $('input[name=placeUrl]').val(placeUrl);
+            if (phone != null) $('input[name=phone]').val(phone);
+
+            ItemAdd();
+
+        }
+
+        function ItemAdd(){
+            itemNum = itemListWrap.find("li").length;
+            $("input[name=itemNumber]").val(itemNum);
+            $("input[name=itemNo]").val(''); //고유값 지우기
+            //btnItemAdd.hide();
+            dayContent.slideDown(800);
+        }
     </script>
 
 

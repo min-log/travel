@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>layout</title>
+  <!-- <script th:src="@{/js/jquery-3.6.4.js}"></script>-->
+  <th:block th:replace="layout/config::config"></th:block>
+</head>
+<body>
+  <th:block th:replace="layout/header::header"></th:block>
+  <div id="contentWrap">
+    <th:block layout:fragment="content"></th:block>
+  </div>
+  <th:block th:replace="layout/footer::footer"></th:block>
+  <link rel="stylesheet" th:href="@{/css/travel.css}" />
+</body>
+</html>

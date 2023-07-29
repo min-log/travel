@@ -34,18 +34,11 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         //태그 특수문자로 변경하여 저장
         String replace = getReplace(categoryBoardDTO.getBoardContent());
         log.info("replace : "+replace);
+
         categoryBoardDTO.setBoardContent(replace);
-
         CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
-
-
-
         CategoryBoard save = categoryBoardRepository.save(categoryBoard);
-
-        log.info("저장된 객체 : {}",save );
-
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
-
         if (file == null) {
             log.info("썸네일 없음");
             return result;
@@ -61,15 +54,10 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
             categoryBoardRepository.delete(save);
             return null;
         }
-
-
-
         log.info("이미지 저장 성공");
         String asString = categoryThumbnail.get("url").getAsString();
-        log.info("저장된 이미지 주소 2 : {}", asString);
         result.setBoardImg(asString);
 
-        log.info("이미지 저장 성공 객체 : {}",result );
         return result;
     }
 
