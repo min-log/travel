@@ -36,7 +36,7 @@ public class CategoryDTO {
     private int categoryTotalPrice; // 카테고리 총비용
     private int viewNum; // 카테고리 조회 수
 
-
+    private Boolean boardExistence; // 카테고리 후기 존재 유무
 
 
 }

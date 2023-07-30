@@ -13,4 +13,8 @@ public interface CategoryBoardRepository extends JpaRepository<CategoryBoard,Lon
 
     @Query(value = "select b from CategoryBoard b where b.boardCategoryNo=:no and b.boardItemDay=:dayNo" )
     Optional<CategoryBoard> getGategoryBoardVer(@Param(value = "no") Long no,@Param(value = "dayNo") int dayNo);
+
+    List<CategoryBoard> getCategoryBoardByBoardCategoryNo(Long CategoryNo);
+
+
 }

@@ -265,6 +265,8 @@ input.err {}
 .board_content .card-body .img + .con {padding-left:20px;width:calc(100% - 100px);}
 .board_content .card-body .con h5 {font-weight:bold;font-size:18px;}
 .board_content .card-body .con .address_info {font-size:12px;color:var(--color-main);font-weight:bold;}
+.board_content .btn-group .btn {border-top-left-radius: 0px;border-top-right-radius: 0px;}
+.board_content .btn-group .btn:hover {background:var(--color-main);color:#fff;}
 .tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
 .tag.point {background:var(--color-main);color:#fff !important;}
 .btn_heart {position: absolute;top:0;right:0;z-index: 1;width:18px;height:18px;}

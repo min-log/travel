@@ -38,6 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     final ItemRepository itemRepository;
     final LikeCategoryRepository likeRepository;
 
+    final CategoryBoardRepository categoryBoardRepository;
 
     @Override
     public List<CategoryDTO> getCategoryTemList(Long no) {
@@ -214,6 +215,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category result;
         if (categoryNo == null){
             categoryDTO.setCategorySave(false); //초기 저장 시 임시저장
+            categoryDTO.setBoardExistence(false); //초기저장시
             Category category = categoryDtoToEntity(categoryDTO);
             result = categoryRepository.save(category);  // 1. 카테고리저장
 
@@ -231,8 +233,11 @@ public class CategoryServiceImpl implements CategoryService {
             categoryDTORe.setDateStart(categoryDTO.getDateStart());
             categoryDTORe.setCategorySave(categoryDTORe.isCategorySave());
             categoryDTORe.setCategoryOpen(categoryDTO.isCategoryOpen());
+            categoryDTORe.setBoardExistence(categoryDTO.getBoardExistence());
+
             Category category = categoryDtoToEntity(categoryDTORe);
 
+            
             result = categoryRepository.save(category);  // 1. 카테고리저장
             log.info("수정일때 --------------");
             Hashtag byCategoryId = hashtagRepository.findByCategoryId(categoryNo);
@@ -303,9 +308,20 @@ public class CategoryServiceImpl implements CategoryService {
         // 2. 해쉬태그 제거
         // 3. 해쉬태그 중간 맵핑 제거
         // 4. 카테고리 제거
-        hashTagDelete(no);
-        categoryRepository.delete(category); //4. 카테고리제거
+        // 5. 카테고리 후기 제거
 
+        hashTagDelete(no);
+        // 카테고리 후기 제거
+        List<CategoryBoard> categoryBoardList = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(no);
+        if (categoryBoardList != null){
+            log.info("카테고리 후기가 존재한다면 제거");
+            for(int i = 0; i < categoryBoardList.size();i++){
+                CategoryBoard categoryBoard = categoryBoardList.get(i);
+                categoryBoardRepository.delete(categoryBoard);
+            }
+        }
+
+        categoryRepository.delete(category); //4. 카테고리제거
         log.info("카테고리가 없으면 false 반환");
         return true;
     }

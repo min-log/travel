@@ -12,8 +12,10 @@ import com.example.travel.service.travel.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -181,6 +183,8 @@ public class BoardApi {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    
+
+
+
 
 }

@@ -1,10 +1,15 @@
 package com.example.travel.service.travel;
 
+import com.example.travel.domain.Category;
 import com.example.travel.domain.CategoryBoard;
 import com.example.travel.domain.CategoryImage;
+import com.example.travel.domain.Item;
 import com.example.travel.dto.travel.CategoryBoardDTO;
+import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.repository.travel.CategoryBoardRepository;
 import com.example.travel.repository.travel.CategoryImageRepository;
+import com.example.travel.repository.travel.CategoryRepository;
+import com.example.travel.repository.travel.ItemRepository;
 import com.example.travel.service.BoardFileService;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -15,12 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
 @RequiredArgsConstructor
 @Service
 public class CategoryBoardServiceImpl implements CategoryBoardService {
+
+    final CategoryService categoryService;
     final CategoryBoardRepository categoryBoardRepository;
     final CategoryImageRepository categoryImageRepository;
     final BoardFileService boardFileService;
@@ -38,6 +46,12 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         categoryBoardDTO.setBoardContent(replace);
         CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
         CategoryBoard save = categoryBoardRepository.save(categoryBoard);
+
+        // 카테고리 업데이트
+        CategoryDTO category = categoryService.getCategory(categoryBoardDTO.getBoardCategoryNo());
+        category.setBoardExistence(true);
+        categoryService.categorySave(category);
+
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
         if (file == null) {
             log.info("썸네일 없음");
@@ -87,6 +101,19 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
             log.info("찾는 게시물이 없습니다.");
             return null;
         }
+    }
+
+    @Override
+    public Boolean getcategoryBoardExistence(Long categoryNo) {
+
+        List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+        if (list.isEmpty()){
+            return false;
+        }else {
+            log.info("게시물 갯수 : " + list.size());
+            return true;
+        }
+
     }
 
     @Override

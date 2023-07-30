@@ -11,6 +11,7 @@ public interface CategoryBoardService {
 
     public CategoryBoardDTO getCategoryBoard(Long boardNo); // 저장 된 카테고리 게시판 가져오기
     public CategoryBoardDTO getCagetgoryBoardPost(Long categoryNo,int dayNo); // 썸네일 이미지 찾기
+    public Boolean getcategoryBoardExistence(Long categoryNo);
     public CategoryBoardDTO getImgCategoryBoard(Long categoryNo); // 썸네일 이미지 찾기
 
 
