@@ -12,6 +12,7 @@
                 나만의 여행을 만들어보세요.
             </h2>
             <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
+                <input th:field="*{boardExistence}" th:id="*{boardExistence}" th:name="*{userTravelNo}" th:value="*{boardExistence}" type="hidden">
                 <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden">
                 <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" type="hidden">
                 <input name="categoryWriter" th:id="*{categoryWriter}" th:value="${session.userT.userId}" type="hidden">

@@ -15,9 +15,9 @@
           <a th:href="@{/board/boardList}" class="p-2">여행지모아모아</a>
         </div>
         <div class="search_wrap w-50 m-3">
-          <form role="search" onsubmit="searchPlaces(); return false;" >
+          <form role="search" onsubmit="return false;" >
             <input type="text" class="form-control" value="" placeholder="원하는 장소를 입력하세요✈️" id="keyword" size="15" aria-label="Search">
-            <button type="submit"><i class="bi bi-search"></i></button>
+            <button id="btnKeyword" type="submit"><i class="bi bi-search"></i></button>
           </form>
         </div>
 

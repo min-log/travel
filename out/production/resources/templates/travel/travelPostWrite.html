@@ -159,7 +159,14 @@
             let content = $('#summernote').summernote('code');
 
 
-            console.log("boardCategoryNo :" + boardCategoryNo);
+            if (boardTit == '') {
+                alert("타이틀을 입력해주세요."); return false;
+            }else if (content == '') {
+                alert("컨텐츠를 입력해주세요."); return false;
+            }
+
+
+            console.log("boardTit :" + boardCategoryNo);
             console.log("content :" + content);
 
             //json 형태 데이터 전달

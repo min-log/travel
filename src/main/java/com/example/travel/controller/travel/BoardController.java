@@ -47,7 +47,7 @@ public class BoardController {
             model.addAttribute("likeList",likeList);
         }
 
-        return "/travel/boardList";
+        return "/board/boardList";
     }
 
 

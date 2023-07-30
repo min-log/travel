@@ -47,21 +47,19 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
         CategoryBoard save = categoryBoardRepository.save(categoryBoard);
 
+
+
         // 카테고리 업데이트
         CategoryDTO category = categoryService.getCategory(categoryBoardDTO.getBoardCategoryNo());
         category.setBoardExistence(true);
-        categoryService.categorySave(category);
-
+        categoryService.categoryUpdate(category);
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
         if (file == null) {
             log.info("썸네일 없음");
             return result;
         }
 
-        Long categoryNo = save.getBoardCategoryNo();
         JsonObject categoryThumbnail = boardFileService.createImageThumbnail(file, "categoryThumbnail",save);
-
-
         if (categoryThumbnail == null) {
             // 썸네일 저장 되지 않고 오류 생길 경우 --저장된 게시글도 제거
             log.info("이미지 저장 실패");
@@ -75,23 +73,9 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         return result;
     }
 
-    @Override
-    public CategoryBoardDTO getCategoryBoard(Long boardNo) {
-        log.info("저장 한 결과 가져가기 -------------------------");
-        Optional<CategoryBoard> board = categoryBoardRepository.findById(boardNo);
-        if (board.isPresent()){
-            CategoryBoard categoryBoard = board.get();
-            CategoryBoardDTO resultCategoryBoard = findResultCategoryBoard(categoryBoard);
-            return resultCategoryBoard;
-        }else{
-            log.info("찾는 게시물이 없습니다.");
-            return null;
-        }
-    }
-
 
     @Override
-    public CategoryBoardDTO getCagetgoryBoardPost(Long categoryNo,int dayNo) {
+    public CategoryBoardDTO getCategoryBoard(Long categoryNo,int dayNo) {
         Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
         if (board.isPresent()){
             CategoryBoard categoryBoard = board.get();
@@ -104,31 +88,33 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
     }
 
     @Override
-    public Boolean getcategoryBoardExistence(Long categoryNo) {
+    public List<CategoryBoardDTO> getCategoryBoardList(Long categoryNo) {
 
-        List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
-        if (list.isEmpty()){
-            return false;
-        }else {
-            log.info("게시물 갯수 : " + list.size());
-            return true;
-        }
 
-    }
-
-    @Override
-    public CategoryBoardDTO getImgCategoryBoard(Long categoryNo) {
         return null;
     }
 
-    @Override
-    public boolean deleteAllCategoryBoard(Long categoryNo) {
-        return false;
-    }
 
     @Override
-    public boolean deleteCategoryBoard(Long categoryNo, int number) {
-        return false;
+    public boolean deleteCategoryBoard(Long categoryNo, int dayNo) {
+        log.info("카테고리 후기 제거 ------------");
+        CategoryBoardDTO categoryBoardDTO = getCategoryBoard(categoryNo, dayNo);
+
+        if (categoryBoardDTO == null){
+            return false;
+        }
+
+        CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
+        categoryBoardRepository.delete(categoryBoard);
+
+        List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+        if (list.isEmpty()){
+            log.info("저장된 후기가 없다면");
+            CategoryDTO category = categoryService.getCategory(categoryNo);
+            category.setBoardExistence(false); // 카테고리 후기 존재 수정
+            categoryService.categoryUpdate(category);
+        }
+        return true;
     }
 
     //저장 결과 전달

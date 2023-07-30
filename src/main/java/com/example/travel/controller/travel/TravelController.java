@@ -54,6 +54,7 @@ public class TravelController {
             CategoryDTO category = categoryService.getCategory(no);
             categoryDTO.setCategoryName(category.getCategoryName());
             categoryDTO.setCategoryOpen(category.isCategoryOpen());
+            categoryDTO.setBoardExistence(category.getBoardExistence());
             categoryDTO.setDateStart(category.getDateStart());
             categoryDTO.setDateEnd(category.getDateEnd());
             categoryDTO.setCategoryArea(category.getCategoryArea());
@@ -87,9 +88,9 @@ public class TravelController {
 
     @GetMapping("/category")
     public String categoryMap(
+            Authentication authentication,
             @RequestParam(value = "no") long no,
             Model model,
-            Authentication authentication,
             RedirectAttributes redirectAttributes
     ){
         log.info(no);
@@ -118,7 +119,17 @@ public class TravelController {
     }
 
     @GetMapping("/categoryDelete")
-    public String categoryDelete(@RequestParam("categoryNo") Long no,RedirectAttributes redirectAttributes){
+    public String categoryDelete(
+            Authentication authentication,
+            @RequestParam("categoryNo") Long no,RedirectAttributes redirectAttributes){
+
+        // 해당 유저의 글이 아닐 시 페이지 접근 막기
+        boolean userCk = userCk2(authentication, no);
+        if (userCk == false){
+            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+            return "redirect:/board/boardList";
+        }
+
         categoryService.categoryDelete(no);
         redirectAttributes.addFlashAttribute("msg","게시물이 삭제되었습니다.");
         return "redirect:/mypage/boardList";
@@ -126,11 +137,13 @@ public class TravelController {
 
     @GetMapping("/view")
     public String categoryVeiw(
+            Authentication authentication,
             @RequestParam(value = "no") long no,
             Model model,
-            Authentication authentication,
             RedirectAttributes redirectAttributes
     ){
+
+
         log.info("상세페이지");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
@@ -162,33 +175,27 @@ public class TravelController {
     }
 
 
-    // 해당 유저의 글이 아닐 시 페이지 접근 막기
-    public boolean userCk(Authentication authentication,CategoryDTO categoryDTO){
-        String name = authentication.getName();
-        String[] tagList = categoryDTO.getTagList();
-        String categoryWriter = categoryDTO.getCategoryWriter();
-        boolean userCk = false;
-        if (tagList != null) {
-            for (int i = 0; i < tagList.length; i++) {
-                if (tagList[i].equals(name)) {
-                    userCk = true;
-                }
-            }
-        }
-        if (categoryWriter.equals(name)) userCk = true;
-        log.info(userCk);
-        return userCk;
-    }
+
 
 
     //---------------- 게시글 후기 작성
     @GetMapping("/post")
     public String postWriter(
+            Authentication authentication,
             @RequestParam(value = "re" , required = false) String re,
             @RequestParam(value = "no") long no,
             @RequestParam(value = "day") int dayNo,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ){
+
+        // 해당 유저의 글이 아닐 시 페이지 접근 막기
+        boolean userCk = userCk2(authentication, no);
+        if (userCk == false){
+            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+            return "redirect:/board/boardList";
+        }
+
         log.info("게시글 후기 작성 ----------------------");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
@@ -196,7 +203,7 @@ public class TravelController {
         int dayOfMonth = localDate.getDayOfMonth();
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
 
-        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardPost(no,dayNo); // 카테고리 가져오기
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(no,dayNo); // 카테고리 가져오기
 
         if (categoryBoardDTO !=null && re == null){
             log.info("저장된 글 존재");
@@ -224,10 +231,19 @@ public class TravelController {
 
     @GetMapping("/postView")
     public String postView(
+            Authentication authentication,
             @RequestParam(value = "no") long no,
-            @RequestParam(value = "day") int dayNo,
-             Model model
+            @RequestParam(value = "day" , required = false) int dayNo,
+             Model model,
+            RedirectAttributes redirectAttributes
     ){
+        // 해당 유저의 글이 아닐 시 페이지 접근 막기
+        boolean userCk = userCk2(authentication, no);
+        if (userCk == false){
+            redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
+            return "redirect:/board/boardList";
+        }
+
         log.info("작성 게시물 상세 페이지 -------------");
         log.info(dayNo);
 
@@ -237,7 +253,7 @@ public class TravelController {
         int dayOfMonth = localDate.getDayOfMonth();
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
-        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCagetgoryBoardPost(no,dayNo); // 카테고리 가져오기
+        CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(no,dayNo); // 카테고리 가져오기
         String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
         categoryBoardDTO.setBoardContent(txt);
 
@@ -250,6 +266,43 @@ public class TravelController {
 
         return "travel/travelPostView";
     }
+
+
+
+
+
+
+    // 해당 유저의 글이 아닐 시 페이지 접근 막기
+    public boolean userCk(Authentication authentication,CategoryDTO categoryDTO){
+        String name = authentication.getName();
+        String[] tagList = categoryDTO.getTagList();
+        String categoryWriter = categoryDTO.getCategoryWriter();
+        boolean userCk = false;
+        if (tagList != null) {
+            for (int i = 0; i < tagList.length; i++) {
+                if (tagList[i].equals(name)) {
+                    userCk = true;
+                }
+            }
+        }
+        if (categoryWriter.equals(name)) userCk = true;
+        log.info(userCk);
+        return userCk;
+    }
+
+
+
+    // 해당 유저의 글이 아닐 시 페이지 접근 막기
+    public boolean userCk2(Authentication authentication,Long categoryNo){
+        CategoryDTO category = categoryService.getCategory(categoryNo);
+        String name = authentication.getName();
+        String categoryWriter = category.getCategoryWriter();
+        boolean userCk = false;
+        if (categoryWriter.equals(name)) userCk = true;
+        log.info(userCk);
+        return userCk;
+    }
+
 
 
 

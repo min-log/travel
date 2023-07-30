@@ -17,4 +17,5 @@ public interface CategoryBoardRepository extends JpaRepository<CategoryBoard,Lon
     List<CategoryBoard> getCategoryBoardByBoardCategoryNo(Long CategoryNo);
 
 
+
 }

@@ -1,11 +1,141 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/basic}">
+    layout:decorate="~{layout/basicMap}">
 <th:block layout:fragment="content">
     <div class="content_nav"  th:object="${category}">
         <!-- start : navbar -->
-        <th:block th:replace="layout/navBarTravelMap::navBarTravelMap"></th:block>
+        <div class="navbar">
+            <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
+            </button>
+            <div class="navbar_wrap scrollBar">
+                <div class="flex-column ">
+                    <div class="top" >
+                        <div th:object="${category}">
+                            <p class="text-center mb-1 txt_info">stap 2 > 여행 상세계획</p>
+                            <h3 class="text-center" th:text="*{categoryName}">
+                            </h3>
+                            <div class="mt-2 text-center">
+                                <span th:text="*{dateStart}"></span>
+                                <span class="ml-2"> - </span>
+                                <span class="ml-2" th:text="*{dateEnd}"></span>
+                            </div>
+                            <input th:field="*{categoryArea}" th:id="categoryArea" th:name="*{categoryArea}" th:value="*{categoryArea}" type="hidden">
+                            <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
+                        </div>
+
+                        <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-week"></i>
+                            날짜선택</h4>
+                        <div class="day_select mt-3" style="">
+                            <select class="form-select" aria-label="Default select example">
+                                <th:block th:each="list, i : ${days.dayInfo}">
+                                    <option th:text="|D-${i.index+1} : ${list}|" th:value="${i.index + 1}" th:data-cnt="${list}" th:selected="${i.index} == 0"></option>
+                                </th:block>
+                            </select>
+                            <p class="txt_info mt-3">
+                                <span class="point-color"><i class="bi bi-search point-color" style="font-size: 14px;"></i> 상단 검색 바</span>에서  원하는 장소 검색해 보세요.
+                            </p>
+                            <p class="txt_info mt-2">
+                                원하는 장소를 선택하시면 <span class="infobtn btn-dark">일정 추가하기</span>버튼을 통해 일정을 만들어 갈 수 있어요!
+                            </p>
+                        </div>
+                        <p class="mt-3"></p>
+
+                        <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
+                            <form id="itemForm" method="post" th:action="@{/board/itemSave}">
+                                <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
+                                <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
+                                <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
+                                <input th:field="*{itemDayName}" th:name="*{itemDayName}" id="itemDayName" value="" type="hidden">
+                                <input th:field="*{itemNumber}" th:name="*{itemNumber}" id="itemNumber"  type="hidden">
+                                <input th:field="*{id}" th:name="*{id}"  id="id" value="장소 id" type="hidden">
+                                <input th:field="*{x}" th:name="*{x}"  id="x" value="장소 x 위치 값" type="hidden">
+                                <input th:field="*{y}" th:name="*{y}"  id="y" value="장소 y 위치 값" type="hidden">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:60px">
+                                        <col style="width:auto">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th><label>장소명</label></th>
+                                        <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text" placeholder="장소 명을 입력해주세요."></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>주소</label></th>
+                                        <td>
+                                            <input th:field="*{addressName}" th:id="*{addressName}" th:name="*{addressName}" id="addressName" class="form-control form-control-sm" placeholder="지번주소" type="text">
+                                            <input th:field="*{roadAddressName}" th:id="*{roadAddressName}" th:name="*{roadAddressName}" id="roadAddressName" class="form-control form-control-sm mt-2" placeholder="도로명주소" type="text">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>연락처</label></th>
+                                        <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text" placeholder="000-000-000"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>URL</label></th>
+                                        <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" placeholder="홈페이지나 참고 링크를 남겨주세요." type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>비용</label></th>
+                                        <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" value="" id="itemAccount" class="form-control form-control-sm" type="number" placeholder="필요 경비를 적어주세요."></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>운영시간</label></th>
+                                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00-24:00"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>도착시간</label></th>
+                                        <td>
+                                            <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control form-control-sm" placeholder="24:00" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>내용</label></th>
+                                        <td><textarea th:field="*{itemInfo}" th:id="*{itemInfo}" th:name="*{itemInfo}"  id="itemInfo" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="mt-3 overflow-hidden" style="text-align: right">
+                                    <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="btn-group float-end">
+                                        <button id="btnItemClose" type="reset" class="btn btn-outline-secondary btn-sm">
+                                            닫기
+                                        </button>
+                                        <a id="btnItemSave" href="javascript:void(0)" class="btn btn-dark btn-sm">저장</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- end : day_wrap -->
+
+                        <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
+                        <p class="txt_info mt-1"><i class="bi bi-chevron-expand"></i> 드레그로 순서 변경이 가능합니다.</p>
+                        <p class="txt_info mt-1">순서 변경 · 일정을 완성하면 <span class="infobtn btn-primary">저장</span> 또는 임시저장 버튼을 꼭 눌러주세요!</p>
+                        <ul id="sortable" class="item_wrap item_map list-group mt-3"></ul>
+                        <!-- end : sortable -->
+
+                    </div>
+                    <!-- end : top -->
+                    <div class="bottom mt-5">
+                        <div class="btn-group">
+                            <a th:href="@{/travel(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">여행 설정가기</a>
+                            <th:block th:if="${category.categorySave != true}">
+                                <a id="btnTotalStorageSave" href="javascript:void(0)" class="btn btn-outline-secondary" type="button" style="width:100%">임시저장</a>
+                            </th:block>
+                            <a id="btnTotalSave"  href="javascript:void(0)" class="btn btn-primary" type="button" style="width:100%">저장</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end : navbar -->
         <div class="content" style="padding:0;">
             <div id="mapMenuWrap" class="bg_white" style="display:none">
                 <ul id="placesList" class="scrollBar"></ul>
@@ -25,7 +155,6 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
     <script type="text/javascript">
         let modal =$('#modalMsg');
-        let modalMsg =$('#modalMsg .modal-message');
         let msg='';
 
         let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
@@ -37,7 +166,6 @@
         let itemForm =$("#itemForm");
         let itemListWrap = $("#sortable");
         let btnSelectDay = $("#btnSelectDay");
-        // let btnItemAdd = $("#btnItemAdd");
         let daySelect = $(".day_select .form-select");
         let dayContent = $(".day_wrap");
 
@@ -52,35 +180,16 @@
         //최종 저장
         let btnTotalStorageSave = $("#btnTotalStorageSave");
         let btnTotalSave = $("#btnTotalSave");
+
         $(document).ready(function () {
 
-
-
-        function mapReSet(){
-            infowindow.close(); // 지도 선택 후 저장에 성공 시
-            var keyword = document.getElementById('keyword').value;
-
-            if (!keyword.replace(/^\s+|\s+$/g, '')) {
-                ps.keywordSearch(categoryArea, placesSearchCB);
-            } else {
-                ps.keywordSearch(kwd, placesSearchCB);
-            }
-        }
-
-
-
-
-
-        $(function () {
-
-            $(document).ready(function (){
-                //처음 시작시 1번 일정 불러오기
-                itemList(1);
-                itemDay.val(1);
-                $("#itemDayName").val($(".dayName").text());
-            });
-
-
+            /*============================================================
+            아이템 관련 스크립트
+            ==============================================================*/
+            //처음 시작시 1번 일정 불러오기
+            itemList(1);
+            itemDay.val(1);
+            $("#itemDayName").val($(".dayName").text());
 
             function itemBoxClose(){
                 //btnItemAdd.show();
@@ -107,9 +216,6 @@
                 mapReSet();//지도 재 설정
             })
             btnSelectDay.on('click', function () {});
-
-
-
             btnItemSave.on('click',function (){
                 let dayVal = daySelect.find("option:selected").val();
                 let item = $("#itemForm").serialize();
@@ -224,8 +330,6 @@
                 });
 
             });
-
-
             function itemList(e){
                 let category = $('input[name=categoryId]').val();
                 let itemListCon='';
@@ -237,7 +341,6 @@
                     cache: false,
                     success:function (data){
                         for(var i=0 in data){
-                            //alert(data[i].placeName);
                             itemListCon +='<li class="list-group-item lh-sm" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
                             itemListCon += '<span class="markerbg marker_'+ i +'"></span>';
                             itemListCon +=  '<a href="javascript:void(0)" >'+ data[i].placeName +'</a>';
@@ -302,332 +405,329 @@
                 });
             }
 
-        });
 
+            /*============================================================
+            지도
+            ==============================================================*/
 
+            // 마커를 담을 배열입니다
+            var markers = [];
+            // 내가 저장한 마커의 배열입니다.
+            let myMarkers=[];
+            let markerItem;
+            let imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
+            let imageSize, spriteSize, spriteOrigin,offset;
+            let mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+              center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+              level: 8// 지도의 확대 레벨
+            };
 
-    // 마커를 담을 배열입니다
-    var markers = [];
-    // 내가 저장한 마커의 배열입니다.
-    let myMarkers=[];
-    let markerItem;
-
-    let imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
-    let imageSize, spriteSize, spriteOrigin,offset;
-
-
-    let mapContainer = document.getElementById('map'), // 지도를 표시할 div
-    mapOption = {
-      center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-      level: 8// 지도의 확대 레벨
-    };
-
-    // 지도를 생성합니다
-    let map = new kakao.maps.Map(mapContainer, mapOption);
-
-    // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    function zoomIn() {
-        map.setLevel(map.getLevel() - 1);
-    }
-
-    // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-    function zoomOut() {
-        map.setLevel(map.getLevel() + 1);
-    }
-
-
-    // 지도 이동
-    function setCenter(y,x) {
-        // 이동할 위도 경도 위치를 생성합니다
-        var moveLatLon = new kakao.maps.LatLng(y, x);
-
-        // 지도 중심을 이동 시킵니다
-        //map.setCenter(moveLatLon);
-        // 지도 중심을 부드럽게 이동시킵니다
-            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-        map.panTo(moveLatLon);
-    }
-
-
-
-
-    // ------------ 내 위치
-// ----------- 검색
-    // 장소 검색 객체를 생성합니다
-    var ps = new kakao.maps.services.Places();
-    // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-    // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
-    $(document).ready(function (){
-        console.log(categoryArea);
-        ps.keywordSearch(categoryArea, placesSearchCB);
-
-    });
-
-
-    //키워드 검색을 요청하는 함수입니다
-    function searchPlaces() {
-      var keyword = document.getElementById('keyword').value;
-
-      if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
-        return false;
-      }
-
-      // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-      ps.keywordSearch( keyword, placesSearchCB);
-    }
-
-    // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-    function placesSearchCB(data, status, pagination) {
-      if (status === kakao.maps.services.Status.OK) {
-
-        // 정상적으로 검색이 완료됐으면
-        // 검색 목록과 마커를 표출합니다
-        displayPlaces(data);
-
-        // 페이지 번호를 표출합니다
-        displayPagination(pagination);
-
-      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
-        alert('검색 결과가 존재하지 않습니다.');
-        return;
-
-      } else if (status === kakao.maps.services.Status.ERROR) {
-
-        alert('검색 결과 중 오류가 발생했습니다.');
-        return;
-
-      }
-    }
-
-    // 검색 결과 목록과 마커를 표출하는 함수입니다
-    function displayPlaces(places) {
-
-        removeMarker();// 지도에 표시되고 있는 마커를 제거합니다
-        myMerkerSet();
-
-        var listEl = document.getElementById('placesList'),
-            menuEl = document.getElementById('mapMenuWrap'),
-            fragment = document.createDocumentFragment(),
-            bounds = new kakao.maps.LatLngBounds(),
-            listStr = '';
-        //검색 리스트 보여주기
-        $("#mapMenuWrap").show();
-
-        // 검색 결과 목록에 추가된 항목들을 제거합니다
-        removeAllChildNods(listEl);
-
-        // 내가 저장한 마커 표시
-        //일정별 마커 표시
-        for (var i=0; i< myMarkers.length;i++){
-            //console.log(myMarkers[i].itemDay)
-            //console.log(itemDay.val())
-            if (myMarkers[i].itemDay == itemDay.val()){
-                var placePosition = new kakao.maps.LatLng(myMarkers[i].mapPositionY, myMarkers[i].mapPositionX);
-                var marker = addMarker(placePosition, i,myMarkers[i].mapIdArr);
-                   // itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+            // 지도를 생성합니다
+            let map = new kakao.maps.Map(mapContainer, mapOption);
+            // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomIn() {
+                map.setLevel(map.getLevel() - 1);
             }
-        }
+            // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomOut() {
+                map.setLevel(map.getLevel() + 1);
+            }
 
-        // 전달 받은 데이터의 마커를 생성하고 지도에 표시합니다
-        for ( var i=0; i<places.length; i++ ) {
-            var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-                    marker = addMarker(placePosition, i, places[i].id),
-                    itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
-                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
-            bounds.extend(placePosition);
+            // 지도 이동
+            function setCenter(y,x) {
+                // 이동할 위도 경도 위치를 생성합니다
+                var moveLatLon = new kakao.maps.LatLng(y, x);
 
-            // 마커와 검색결과 항목에 mouseover 했을때
-            // 해당 장소에 인포윈도우에 장소명을 표시합니다
-            // mouseout 했을 때는 인포윈도우를 닫습니다
-          var info = places[i];
-        (function(marker, info) {
-            kakao.maps.event.addListener(marker, 'click', function() {
-                displayInfowindow(marker, info);
+                // 지도 중심을 이동 시킵니다
+                //map.setCenter(moveLatLon);
+                // 지도 중심을 부드럽게 이동시킵니다
+                    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+                map.panTo(moveLatLon);
+            }
+
+            // ------------ 내 위치
+              // ----------- 검색
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places();
+            // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+            // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
+            $(document).ready(function (){
+                ps.keywordSearch(categoryArea, placesSearchCB);
             });
 
-            itemEl.onclick = function (){
-                displayInfowindow(marker, info);
-            }
-        })(marker, info);
-
-        fragment.appendChild(itemEl);
-        }
+            // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 
 
-        function markeClose (){
-            infowindow.close();
-        }
+            // 검색 결과 목록과 마커를 표출하는 함수입니다
+            function displayPlaces(places) {
 
-        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
-        listEl.appendChild(fragment);
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-        map.setBounds(bounds);
-    }
+                removeMarker();// 지도에 표시되고 있는 마커를 제거합니다
+                myMerkerSet();
 
-    // 검색결과 항목을 Element로 반환하는 함수입니다
-    function getListItem(index, places) {
+                var listEl = document.getElementById('placesList'),
+                    menuEl = document.getElementById('mapMenuWrap'),
+                    fragment = document.createDocumentFragment(),
+                    bounds = new kakao.maps.LatLngBounds(),
+                    listStr = '';
+                //검색 리스트 보여주기
+                $("#mapMenuWrap").show();
 
-      var el = document.createElement('li'),
-          itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-          '<div class="info" id="triveItem'+ places.id +'">' +
-              '   <h5 class="place_name">' + places.place_name + '</h5>';
-                if (places.road_address_name) {
-                itemStr += '    <span class="road_address_name">' + places.road_address_name + '</span>';
-                } else {
-                itemStr += '    <span class="address_name">' +  places.address_name  + '</span>';
+                // 검색 결과 목록에 추가된 항목들을 제거합니다
+                removeAllChildNods(listEl);
+
+                // 내가 저장한 마커 표시
+                //일정별 마커 표시
+                for (var i=0; i< myMarkers.length;i++){
+                    //console.log(myMarkers[i].itemDay)
+                    //console.log(itemDay.val())
+                    if (myMarkers[i].itemDay == itemDay.val()){
+                        var placePosition = new kakao.maps.LatLng(myMarkers[i].mapPositionY, myMarkers[i].mapPositionX);
+                        var marker = addMarker(placePosition, i,myMarkers[i].mapIdArr);
+                           // itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+                    }
                 }
-                itemStr +='</div>';
-        el.innerHTML = itemStr;
-        el.className = 'item';
-      return el;
-    }
+
+                // 전달 받은 데이터의 마커를 생성하고 지도에 표시합니다
+                for ( var i=0; i<places.length; i++ ) {
+                    var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+                            marker = addMarker(placePosition, i, places[i].id),
+                            itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+                        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                    // LatLngBounds 객체에 좌표를 추가합니다
+                    bounds.extend(placePosition);
+
+                    // 마커와 검색결과 항목에 mouseover 했을때
+                    // 해당 장소에 인포윈도우에 장소명을 표시합니다
+                    // mouseout 했을 때는 인포윈도우를 닫습니다
+                  var info = places[i];
+                (function(marker, info) {
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                        displayInfowindow(marker, info);
+                    });
+
+                    itemEl.onclick = function (){
+                        displayInfowindow(marker, info);
+                    }
+                })(marker, info);
+
+                fragment.appendChild(itemEl);
+                }
 
 
-    // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다. ------------------------------
+                function markeClose (){
+                    infowindow.close();
+                }
 
-    function myMerkerSet(){
-        //일정 선택시 변경되는 imgOptions
-        $("#sortable .list-group-item").each(function (i,box){
-            markerItem ={
-                itemDay:$(box).attr('data-day'),
-                itemIndexArr:$(box).attr('data-index'),
-                mapIdArr :$(box).attr('data-map-id'),
-                mapPositionX:$(box).attr('data-map-x'),
-                mapPositionY:$(box).attr('data-map-y')
+                // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+                listEl.appendChild(fragment);
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+                map.setBounds(bounds);
             }
-            myMarkers.push(markerItem);
+
+            // 검색결과 항목을 Element로 반환하는 함수입니다
+            function getListItem(index, places) {
+
+              var el = document.createElement('li'),
+                  itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                  '<div class="info" id="triveItem'+ places.id +'">' +
+                      '   <h5 class="place_name">' + places.place_name + '</h5>';
+                        if (places.road_address_name) {
+                        itemStr += '    <span class="road_address_name">' + places.road_address_name + '</span>';
+                        } else {
+                        itemStr += '    <span class="address_name">' +  places.address_name  + '</span>';
+                        }
+                        itemStr +='</div>';
+                el.innerHTML = itemStr;
+                el.className = 'item';
+              return el;
+            }
+
+
+            // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다. ------------------------------
+
+            function myMerkerSet(){
+                //일정 선택시 변경되는 imgOptions
+                $("#sortable .list-group-item").each(function (i,box){
+                    markerItem ={
+                        itemDay:$(box).attr('data-day'),
+                        itemIndexArr:$(box).attr('data-index'),
+                        mapIdArr :$(box).attr('data-map-id'),
+                        mapPositionX:$(box).attr('data-map-x'),
+                        mapPositionY:$(box).attr('data-map-y')
+                    }
+                    myMarkers.push(markerItem);
+                });
+                //console.log(myMarkers);
+            }
+            function myMarker(id){
+                for (var i=0; i< myMarkers.length;i++){
+                    //console.log(myMarkers[i])
+                    if (myMarkers[i].mapIdArr==id){
+                        imageSrc ='/img/marker_number_blue.png';
+                        spriteSize = new kakao.maps.Size(35, 691);
+                        spriteOrigin= new kakao.maps.Point(0, (myMarkers[i].itemIndexArr*46)+10);
+                        offset = new kakao.maps.Point(13, 37);
+                    }
+                }
+            }
+            function addMarker(position, idx,id) {
+                //기본 imgOptions
+                imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
+                imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
+                spriteSize = new kakao.maps.Size(36, 37);
+                spriteOrigin= new kakao.maps.Point(0,0);
+                offset = new kakao.maps.Point(18, 37);
+
+                myMarker(id); //내 마커 표시
+
+                var imgOptions =  {
+                    spriteSize : spriteSize, // 스프라이트 이미지의 크기
+                    spriteOrigin : spriteOrigin, // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+                    offset: offset // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+                  },
+                  markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+                  marker = new kakao.maps.Marker({
+                    position: position, // 마커의 위치
+                    image: markerImage
+                  });
+
+              marker.setMap(map); // 지도 위에 마커를 표출합니다
+              markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+              return marker;
+            }
+
+            // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+            function removeMarker() {
+              for ( var i = 0; i < markers.length; i++ ) {
+                  markers[i].setMap(null);
+
+              }
+              myMarkers=[];
+              markers = [];
+            }
+
+            // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+            function displayPagination(pagination) {
+              var paginationEl = document.getElementById('pagination'),
+                      fragment = document.createDocumentFragment(),
+                      i;
+
+              // 기존에 추가된 페이지번호를 삭제합니다
+              while (paginationEl.hasChildNodes()) {
+                paginationEl.removeChild (paginationEl.lastChild);
+              }
+
+              for (i=1; i<=pagination.last; i++) {
+                var el = document.createElement('a');
+                el.href = "#";
+                el.innerHTML = i;
+
+                if (i===pagination.current) {
+                  el.className = 'on';
+                } else {
+                  el.onclick = (function(i) {
+                    return function() {
+                      pagination.gotoPage(i);
+                    }
+                  })(i);
+                }
+
+                fragment.appendChild(el);
+              }
+              paginationEl.appendChild(fragment);
+            }
+
+            // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+            // 인포윈도우에 장소명을 표시합니다
+            function displayInfowindow(marker, info) {
+                var iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+
+                var content = '<div class="map_mark_info">';
+                content += '<div class="map_mark_top mb-3">';
+                content +=  '   <h5 class="place_name">'+ info.place_name+ '</h5>';
+                content +=  '   <a href="javascript:infowindow.close()" class="btn btn-close"></a>'
+                content += '</div>'
+                if(info.road_address_name) {
+                    content += '    <p class="road_address_name">' + info.road_address_name + '</p>' +
+                        '   <p class="jibun gray address_name">' +  info.address_name  + '</p>';
+                } else {
+                    content += '    <p class="address_name">' +  info.address_name  + '</p>';
+                }
+                if (info.place_url) {
+                    content += '    <p><a class="place_url" href="' + info.place_url + '" target="_blank">' + info.place_url + '</a></p>' ;
+                }
+                content += '  <p class="tel phone">' + info.phone  + '</p>';
+                content += '<button onclick="btnItemMapAdd(' + info.id + ')" type="button" class="btn btn-dark item-add btn-sm mt-3" style="width:100%" >' +
+                    ' 일정 추가하기 ' +
+                    '</button>' ;
+                content += '<p class="map_info_x" style="display:none">'+ info.x +'</p>';
+                content += '<p class="map_info_y" style="display:none">'+ info.y +'</p>';
+                content += '</div>';
+
+                //console.log(info.y +  "  / "+info.x);
+              setCenter(info.y,info.x);
+              infowindow.setContent(content);
+              infowindow.open(map, marker);
+
+            }
+
+            // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+            function removeAllChildNods(el) {
+              while (el.hasChildNodes()) {
+                el.removeChild (el.lastChild);
+              }
+            }
+
+            function mapReSet(){
+                infowindow.close(); // 지도 선택 후 저장에 성공 시
+                var keyword = document.getElementById('keyword').value;
+
+                if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                    ps.keywordSearch(categoryArea, placesSearchCB);
+                } else {
+                    ps.keywordSearch(kwd, placesSearchCB);
+                }
+            }
+
+
+
+            function placesSearchCB(data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+                    // 정상적으로 검색이 완료됐으면
+                    // 검색 목록과 마커를 표출합니다
+                    displayPlaces(data);
+                    // 페이지 번호를 표출합니다
+                    displayPagination(pagination);
+                } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                    alert('검색 결과가 존재하지 않습니다.');
+                    return;
+                } else if (status === kakao.maps.services.Status.ERROR) {
+                    alert('검색 결과 중 오류가 발생했습니다.');
+                    return;
+                }
+
+            }
+
+            $("#btnKeyword").on('click',function () {
+                let keyword = document.getElementById('keyword').value;
+                if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                    alert('키워드를 입력해주세요!');
+                    return false;
+                }
+                // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+                ps.keywordSearch( keyword, placesSearchCB);
+                return false;
+            });
+
         });
-        //console.log(myMarkers);
-    }
-    function myMarker(id){
-        for (var i=0; i< myMarkers.length;i++){
-            //console.log(myMarkers[i])
-            if (myMarkers[i].mapIdArr==id){
-                imageSrc ='/img/marker_number_blue.png';
-                spriteSize = new kakao.maps.Size(35, 691);
-                spriteOrigin= new kakao.maps.Point(0, (myMarkers[i].itemIndexArr*46)+10);
-                offset = new kakao.maps.Point(13, 37);
-            }
-        }
-    }
-    function addMarker(position, idx,id) {
-        //기본 imgOptions
-        imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
-        spriteSize = new kakao.maps.Size(36, 37);
-        spriteOrigin= new kakao.maps.Point(0,0);
-        offset = new kakao.maps.Point(18, 37);
-
-        myMarker(id); //내 마커 표시
-
-        var imgOptions =  {
-            spriteSize : spriteSize, // 스프라이트 이미지의 크기
-            spriteOrigin : spriteOrigin, // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-            offset: offset // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-          },
-          markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-          marker = new kakao.maps.Marker({
-            position: position, // 마커의 위치
-            image: markerImage
-          });
-
-      marker.setMap(map); // 지도 위에 마커를 표출합니다
-      markers.push(marker);  // 배열에 생성된 마커를 추가합니다
-
-      return marker;
-    }
-
-    // 지도 위에 표시되고 있는 마커를 모두 제거합니다
-    function removeMarker() {
-      for ( var i = 0; i < markers.length; i++ ) {
-          markers[i].setMap(null);
-
-      }
-      myMarkers=[];
-      markers = [];
-    }
-
-    // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
-    function displayPagination(pagination) {
-      var paginationEl = document.getElementById('pagination'),
-              fragment = document.createDocumentFragment(),
-              i;
-
-      // 기존에 추가된 페이지번호를 삭제합니다
-      while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild (paginationEl.lastChild);
-      }
-
-      for (i=1; i<=pagination.last; i++) {
-        var el = document.createElement('a');
-        el.href = "#";
-        el.innerHTML = i;
-
-        if (i===pagination.current) {
-          el.className = 'on';
-        } else {
-          el.onclick = (function(i) {
-            return function() {
-              pagination.gotoPage(i);
-            }
-          })(i);
-        }
-
-        fragment.appendChild(el);
-      }
-      paginationEl.appendChild(fragment);
-    }
-
-    // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
-    // 인포윈도우에 장소명을 표시합니다
-    function displayInfowindow(marker, info) {
-        var iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 
 
-        var content = '<div class="map_mark_info">';
-        content += '<div class="map_mark_top mb-3">';
-        content +=  '   <h5 class="place_name">'+ info.place_name+ '</h5>';
-        content +=  '   <a href="javascript:infowindow.close()" class="btn btn-close"></a>'
-        content += '</div>'
-        if(info.road_address_name) {
-            content += '    <p class="road_address_name">' + info.road_address_name + '</p>' +
-                '   <p class="jibun gray address_name">' +  info.address_name  + '</p>';
-        } else {
-            content += '    <p class="address_name">' +  info.address_name  + '</p>';
-        }
-        if (info.place_url) {
-            content += '    <p><a class="place_url" href="' + info.place_url + '" target="_blank">' + info.place_url + '</a></p>' ;
-        }
-        content += '  <p class="tel phone">' + info.phone  + '</p>';
-        content += '<button onclick="btnItemMapAdd(' + info.id + ')" type="button" class="btn btn-dark item-add btn-sm mt-3" style="width:100%" >' +
-            ' 일정 추가하기 ' +
-            '</button>' ;
-        content += '<p class="map_info_x" style="display:none">'+ info.x +'</p>';
-        content += '<p class="map_info_y" style="display:none">'+ info.y +'</p>';
-        content += '</div>';
-
-        //console.log(info.y +  "  / "+info.x);
-      setCenter(info.y,info.x);
-      infowindow.setContent(content);
-      infowindow.open(map, marker);
-
-    }
-
-    // 검색결과 목록의 자식 Element를 제거하는 함수입니다
-    function removeAllChildNods(el) {
-      while (el.hasChildNodes()) {
-        el.removeChild (el.lastChild);
-      }
-    }
-
-
-
-        });
         function btnItemMapAdd(id){
             console.log(id);
 
@@ -668,6 +768,10 @@
             //btnItemAdd.hide();
             dayContent.slideDown(800);
         }
+
+
+
+
     </script>
 
 

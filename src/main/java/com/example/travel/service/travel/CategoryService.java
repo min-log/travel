@@ -30,6 +30,7 @@ public interface CategoryService {
     Page<CategoryDTO> getCategoryLikeMYPage(Long no, Integer page, String order,Integer size);
 
     CategoryDTO categorySave(CategoryDTO categoryDTO); // 카테고리 임시 저장
+    CategoryDTO categoryUpdate(CategoryDTO categoryDTO); // 카테고리 수정
     CategoryDTO getCategory(long no); // 일치하는 카테고리 불러오기
 
     boolean categoryDelete(long no);

@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -174,14 +175,23 @@ public class BoardApi {
     ){
 
         log.info("게시판 생성 =================================");
-
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         log.info("boardFile : {}",boardFile);
         CategoryBoardDTO result = categoryBoardService.createCategoryBoard(categoryBoardDTO, boardFile);
         if (result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/postDelete")
+    public Boolean postDelete(
+            @RequestParam(value = "no") long no,
+            @RequestParam(value = "day") int dayNo
+    ){
+        boolean result = categoryBoardService.deleteCategoryBoard(no, dayNo);
+
+        return result;
     }
 
 

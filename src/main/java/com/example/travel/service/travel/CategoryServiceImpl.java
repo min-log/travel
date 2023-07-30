@@ -222,7 +222,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.info("처음 저장 시 --------------");
             hashTagSave(tags,result);
         }else {
-
+            log.info("후기가 있는지 확인 : {}" ,categoryDTO.getBoardExistence());
             Category one = categoryRepository.getOne(categoryNo);
             CategoryDTO categoryDTORe = categoryEntityToDto(one);
             // 기존 카테고리에 수정내용 추가
@@ -237,9 +237,9 @@ public class CategoryServiceImpl implements CategoryService {
 
             Category category = categoryDtoToEntity(categoryDTORe);
 
-            
+
             result = categoryRepository.save(category);  // 1. 카테고리저장
-            log.info("수정일때 --------------");
+            log.info("카테고리 수정일때 --------------");
             Hashtag byCategoryId = hashtagRepository.findByCategoryId(categoryNo);
             if (byCategoryId != null){
                 Long hashId = byCategoryId.getHashId();
@@ -252,6 +252,13 @@ public class CategoryServiceImpl implements CategoryService {
         return dto;
     }
 
+    @Override
+    public CategoryDTO categoryUpdate(CategoryDTO categoryDTO) {
+        Category categorySave = categoryDtoToEntity(categoryDTO);
+        Category category = categoryRepository.save(categorySave);
+        CategoryDTO result = categoryEntityToDto(category);
+        return result;
+    }
 
 
     @Override
