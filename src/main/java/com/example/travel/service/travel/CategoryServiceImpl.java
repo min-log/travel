@@ -70,6 +70,17 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryDTOS;
     }
+
+    @Override
+    public Page<CategoryDTO> searchCategory(Integer page, String order, String keyword) {
+        log.info("카테고리 리스트 검색");
+
+//        Page<Category> result = categoryRepository.searchCategory(true,"제주", 6,1);
+//        Page<CategoryDTO> categoryDTOS = convertPage(result);
+
+        return null;
+    }
+
     @Override
     public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order,Integer size) {
         log.info("내 카테고리 리스트 전달");
@@ -131,7 +142,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<CategoryDTO> getCategoryLikeMYPage(Long no, Integer page, String order,Integer size) {
         log.info("찜 리스트 전달 --------");
-
         log.info("내 아이디 : {}",no);
 
         List<LikeCategoryDTO> likeCategoryDTOS = categoryLikeList(no);

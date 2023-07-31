@@ -27,6 +27,7 @@ public class BoardController {
     public String categoryList(
             @RequestParam(value = "page",required = false) Integer page,
             @RequestParam(value = "order",required = false) String order,
+            @RequestParam(value = "k",required = false) String keyword,
             HttpSession httpSession,
             Model model){
 
@@ -34,6 +35,10 @@ public class BoardController {
         if(order == null) order= "dateStart";
 
         Page<CategoryDTO> categoryPage = categoryService.getCategoryList(page ,order);
+
+       // if (keyword != null) categoryPage = categoryService.searchCategory(page ,order,keyword);
+
+
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
         log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
 
@@ -46,6 +51,9 @@ public class BoardController {
             List<LikeCategoryDTO> likeList = categoryService.categoryLikeList(userT.getUserNo());
             model.addAttribute("likeList",likeList);
         }
+
+
+
 
         return "/board/boardList";
     }
