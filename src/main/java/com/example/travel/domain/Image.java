@@ -23,5 +23,5 @@ public abstract class Image {
     private String fileName;
     private String originFileName;
     private String thumbnailName;
-    private String path; // 폴더 생성 날짜
+    private String path;  // 폴더명
 }

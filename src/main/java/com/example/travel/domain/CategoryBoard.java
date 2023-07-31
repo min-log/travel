@@ -17,11 +17,8 @@ public class CategoryBoard extends BaseEntity{
     private Long boardNo;
     private Long boardCategoryNo;
     private int boardItemDay;
-    @Column(columnDefinition = "varchar(500)", nullable = false)
     private String boardTit;
     private String boardTravelDate;
-
-    @Column(columnDefinition = "varchar(6000)", nullable = false)
     private String boardContent;
 
 

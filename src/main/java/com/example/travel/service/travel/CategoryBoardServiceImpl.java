@@ -10,6 +10,7 @@ import com.example.travel.repository.travel.CategoryBoardRepository;
 import com.example.travel.repository.travel.CategoryImageRepository;
 import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.repository.travel.ItemRepository;
+import com.example.travel.service.BoardContentFileService;
 import com.example.travel.service.BoardFileService;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -31,29 +32,45 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
     final CategoryService categoryService;
     final CategoryBoardRepository categoryBoardRepository;
     final CategoryImageRepository categoryImageRepository;
-    final BoardFileService boardFileService;
+    final BoardFileService boardFileService; // 이미지 파일 저장
+    final BoardContentFileService boardContentFileService; // txt 파일 저장
 
+    private String folderPath = "categoryBoard";
 
 
     @Override
     public CategoryBoardDTO createCategoryBoard(CategoryBoardDTO categoryBoardDTO, MultipartFile file) {
-        log.info("저장 로직 --------------------");
+        log.info("CategoryBoard 저장 로직 --------------------");
+        String title = categoryBoardDTO.getBoardTit();
 
+        log.info("화면에서 가져온 객체 : {}",categoryBoardDTO);
+        //파일 명으로 저장될 타이틀 공백 앞 뒤 제거 및 변경
+        String img_title = title.trim().replace(" ", "_");
+        categoryBoardDTO.setBoardTit(img_title);
         //태그 특수문자로 변경하여 저장
         String replace = getReplace(categoryBoardDTO.getBoardContent());
-        log.info("replace : "+replace);
-
         categoryBoardDTO.setBoardContent(replace);
+
+        // txt 파일 저장
+        String contentSave = boardContentFileService.createBoardContent(categoryBoardDTO, folderPath);
+        if (contentSave == null){
+            log.info("컨텐츠 저장이 실패했습니다.");
+            return null;
+        }
+
+        // 컨텐츠 저장
+        categoryBoardDTO.setBoardTit(title);
+        categoryBoardDTO.setBoardContent(contentSave);
         CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
         CategoryBoard save = categoryBoardRepository.save(categoryBoard);
 
-
-
         // 카테고리 업데이트
+        log.info("categoryBoardDTO.getBoardCategoryNo() : {}",categoryBoardDTO.getBoardCategoryNo());
         CategoryDTO category = categoryService.getCategory(categoryBoardDTO.getBoardCategoryNo());
         category.setBoardExistence(true);
         categoryService.categoryUpdate(category);
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
+
         if (file == null) {
             log.info("썸네일 없음");
             return result;
@@ -79,13 +96,34 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
         if (board.isPresent()){
             CategoryBoard categoryBoard = board.get();
+            String content = boardContentFileService.readBoardContent(folderPath, categoryBoard.getBoardContent());
             CategoryBoardDTO resultCategoryBoard = findResultCategoryBoard(categoryBoard);
+            resultCategoryBoard.setBoardContent(content);
+
             return resultCategoryBoard;
         }else{
             log.info("찾는 게시물이 없습니다.");
             return null;
         }
     }
+
+    @Override
+    public boolean updateCategoryBoard(Long boardNo){
+        Optional<CategoryBoard> entity = categoryBoardRepository.findById(boardNo);
+        if (entity.isPresent()){
+            log.info("업데이트 될 객체 : {}",boardNo);
+            CategoryBoard categoryBoard = entity.get();
+            CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
+            // 1. 컨텐츠 txt파일 제거
+            boardContentFileService.removeFile(folderPath,categoryBoard.getBoardContent());
+
+            return true;
+        }
+
+        return false;
+    }
+
+
 
     @Override
     public List<CategoryBoardDTO> getCategoryBoardList(Long categoryNo) {
@@ -116,6 +154,8 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
         }
         return true;
     }
+
+
 
     //저장 결과 전달
     CategoryBoardDTO findResultCategoryBoard(CategoryBoard categoryBoard){

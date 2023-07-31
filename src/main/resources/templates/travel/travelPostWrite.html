@@ -15,7 +15,7 @@
                 <!--end 시큐리티 추가 -->
 
                 <input th:field="*{boardNo}" th:name="*{boardNo}" id="boardNo" type="text" th:type="hidden">
-                <input th:field="*{boardCategoryNo}" th:name="*{boardCategoryNo}" id="boardCategoryNo"  type="text" th:type="hidden">
+                <input th:name="boardCategoryNo" id="boardCategoryNo"  th:value="${category.categoryNo}" th:type="hidden">
                 <input th:name="*{boardItemDay}" id="boardItemDay"  type="text" th:value="${param.day}" th:type="hidden">
                 <table class="board-top">
                     <colgroup>
@@ -39,7 +39,7 @@
                             <td>
                                 <div class="userimg_wrap">
                                     <div class="userimg_box">
-                                        <img id="preview" src="" alt="">
+                                        <img th:src="*{boardImg}" id="preview" alt="" >
                                     </div>
                                     <label for="userImg" class="btn btn-dark btn-sm ">
                                          선택하기👆
@@ -52,7 +52,8 @@
                     </tbody>
                 </table>
                 <div id="editor_con">
-                    <div id="summernote"></div>
+                    <div id="boardContent" th:text="*{boardContent}" style="display:none"></div>
+                    <textarea id="summernote"></textarea>
                 </div>
                 <button class="btn btn-primary mt-3 w-100" type="button" onclick="submitPost()">저장하기</button>
             </form>
@@ -66,6 +67,27 @@
     <script type="text/javascript">
         let file = document.querySelector('#userImg');
         let fileList = null;
+
+
+        // 태그 특수문자 변환
+        let boardCont = $("#boardContent");
+        $("#boardContent").html(decodeHTMLEntities(boardCont.html()));
+
+        function decodeHTMLEntities (str) {
+            if(str !== undefined && str !== null && str !== '') {
+                str = String(str);
+
+                str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+                str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+                var element = document.createElement('div');
+                element.innerHTML = str;
+                str = element.textContent;
+                element.textContent = '';
+            }
+
+            return str;
+        }
+
 
 
         // 게시판
@@ -102,6 +124,9 @@
             }
 
         });
+
+        $('#summernote').summernote('code',boardCont.html());
+
 
 
         /* Post 메서드 시큐리티 추가 */
@@ -151,7 +176,7 @@
         function submitPost(){
 
             // title,썸네일,category번호,item 순서번호, content 가지고와서 formdata 로 전송
-            //th:id="*{boardCategoryNo}"
+            let boardNo = document.getElementById('boardNo').value;
             let boardCategoryNo = document.getElementById('boardCategoryNo').value;
             let boardItemDay = document.getElementById('boardItemDay').value;
             let boardTravelDate = document.getElementById('boardTravelDate').value;
@@ -166,12 +191,12 @@
             }
 
 
-            console.log("boardTit :" + boardCategoryNo);
+            console.log("boardCategoryNo :" + boardCategoryNo);
             console.log("content :" + content);
 
             //json 형태 데이터 전달
             let itemCon = {
-                "boardNo":null,
+                "boardNo":boardNo,
                 "boardCategoryNo":boardCategoryNo,
                 "boardItemDay": boardItemDay,
                 "boardTravelDate": boardTravelDate,

@@ -188,7 +188,6 @@ public class TravelController {
             Model model,
             RedirectAttributes redirectAttributes
     ){
-
         // 해당 유저의 글이 아닐 시 페이지 접근 막기
         boolean userCk = userCk2(authentication, no);
         if (userCk == false){
@@ -202,21 +201,23 @@ public class TravelController {
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
-
         CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(no,dayNo); // 카테고리 가져오기
 
-        if (categoryBoardDTO !=null && re == null){
+        if (categoryBoardDTO != null && re == null){
             log.info("저장된 글 존재");
             String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
             categoryBoardDTO.setBoardContent(txt);
-
             return "redirect:/travel/postView?no="+no+"&day="+dayNo;
-        }else if(categoryBoardDTO ==null && re == null){
+        }else if(categoryBoardDTO != null && re.equals("y")){
             log.info("게시글 수정");
-            categoryBoardDTO = CategoryBoardDTO.builder().boardCategoryNo(no).build();
+            String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
+            categoryBoardDTO.setBoardContent(txt);
+
+        }else if(categoryBoardDTO == null){
+            log.info("게시글 초기 작성");
+            categoryBoardDTO = new CategoryBoardDTO();
         }
 
-        log.info("게시글 초기 작성");
         categoryBoardDTO = categoryBoardDTO;
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         model.addAttribute("board", categoryBoardDTO);
@@ -254,6 +255,8 @@ public class TravelController {
 
         ItemDTO item = ItemDTO.builder().categoryId(no).build();
         CategoryBoardDTO categoryBoardDTO = categoryBoardService.getCategoryBoard(no,dayNo); // 카테고리 가져오기
+
+
         String txt = HtmlUtils.htmlUnescape(categoryBoardDTO.getBoardContent());
         categoryBoardDTO.setBoardContent(txt);
 

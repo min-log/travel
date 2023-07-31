@@ -177,6 +177,7 @@ public class BoardApi {
         log.info("게시판 생성 =================================");
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         log.info("boardFile : {}",boardFile);
+        categoryBoardService.updateCategoryBoard(categoryBoardDTO.getBoardCategoryNo());
         CategoryBoardDTO result = categoryBoardService.createCategoryBoard(categoryBoardDTO, boardFile);
         if (result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
