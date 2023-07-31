@@ -34,7 +34,7 @@
                             <td><input th:name="*{boardTravelDate}" id="boardTravelDate" class="dayName form-control" th:value="${days.dayInfo[0]}" readonly /></td>
                         </tr>
 
-                        <tr id="thumbnailWarp">
+                        <tr id="thumbnailWarp" style="display:none">
                             <th>썸네일</th>
                             <td>
                                 <div class="userimg_wrap">
@@ -51,7 +51,7 @@
 
                     </tbody>
                 </table>
-                <div id="editor_con">
+                <div id="editor_con" class="board-content-wrap">
                     <div id="boardContent" th:text="*{boardContent}" style="display:none"></div>
                     <textarea id="summernote"></textarea>
                 </div>

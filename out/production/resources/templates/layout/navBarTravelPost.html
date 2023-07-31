@@ -43,17 +43,15 @@
             날짜선택</h4>
           <div class="day_select mt-3" style="">
             <select class="form-select" aria-label="Default select example" onchange="window.open(value,'_self')">
-              <th:block th:each="list, i : ${days.dayInfo}">
-                <option th:text="|D-${i.index+1} : ${list}|" th:value="|/travel/post?no=${param.no}&day=${i.index + 1}|" th:data-no="${i.index + 1}"></option>
-              </th:block>
-        </select>
-</div>
-<p class="mt-3"></p>
-
-
+                  <th:block th:each="list, i : ${days.dayInfo}">
+                    <option th:text="|D-${i.index+1} : ${list}|" th:value="|/travel/post?no=${param.no}&day=${i.index + 1}|" th:data-no="${i.index + 1}"></option>
+                  </th:block>
+            </select>
+          </div>
+          <p class="mt-3"></p>
           <!-- end : day_wrap -->
 
-          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName">하루</span> 일정</h4>
           <p class="txt_info mt-1">하루 총 예상 비용 : <b id="todayTotalPrice" class="point-color"></b> 원</p>
           <ul id="sortable" class="item_veiw_con item_map mt-3"></ul>
           <!-- end : sortable -->
@@ -83,30 +81,28 @@
 
               let totalPriceValue = [[${category.categoryTotalPrice}]];
               let totalPrice = priceToString(totalPriceValue);
+
               $("#totalPice").text(totalPrice);
-              //처음 시작시 1번 일정 불러오기
-              itemList([[${param.day}]]);
+              let itemNum = [[${param.day}]];
+              let itemTxt = $(".day_select select option").eq(itemNum-1).text();
+              // 처음 시작시 일정 불러오기
+              itemList(itemNum);
+              console.log(itemNum);
+              $(".dayName").text(itemTxt);
+              $("#boardTravelDate").val(itemTxt);
 
-              console.log($(".day_select select").data("no",2))
-               //$(".day_select select").attr("data-no",2).prop("selected", true);
+              $(".day_select select option").eq(itemNum-1).attr("selected", "selected");
 
 
-           //   $("#itemDayName").val($(".dayName").text());
+              if (itemNum == 1){
+                  $("#thumbnailWarp").show();
+              }else{
+                  $("#thumbnailWarp").hide();
+              }
+
+
           });
 
-          daySelect.on('change',function(){
-              let dayCnt = daySelect.find("option:selected").data("cnt");
-              let dayVal = daySelect.find("option:selected").val();
-              $(".dayName").text(dayCnt);
-              $("#boardItemDay").val(dayVal);
-              if (dayVal>1){$("#thumbnailWarp").hide();
-              }else{$("#thumbnailWarp").show();}
-              $('#modalMsg').modal("show");
-              $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
-
-              // 리스트 변경하기
-              itemList(dayVal);
-          })
 
           function priceToString(price) {
               return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -161,28 +157,7 @@
           }
 
 
-          function itemMapInfoGet(){
-            $("#sortable li a").on('click',function (index,item) {
-                let itemEl = $(this).parents("li");
-                let dayNo = $(this).parents("li").data("no");
-                let itemCon = itemEl.find(".con");
-                let content = '';
 
-
-                if(itemEl.hasClass("action") == false){
-                    $("#sortable li").removeClass("action");
-                    itemEl.addClass("action");
-                    //$("#sortable li .con").slideUp();
-                    itemCon.slideDown();
-
-                }else {
-                    itemEl.removeClass("action");
-                    itemCon.slideUp();
-                }
-
-
-            });
-          }
 
 
       });

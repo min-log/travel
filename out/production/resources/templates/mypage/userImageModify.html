@@ -16,7 +16,7 @@
         <div class="profile_card rounded-3 p-5 mb-3 m-auto">
           <div class="userimg_wrap">
             <p class="userimg_box">
-              <img id="preview" sec:authorize="isAuthenticated" th:src="|/user/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+              <img id="preview" sec:authorize="isAuthenticated" th:src="|/user/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'" >
             </p>
             <label for="userImg" class="btn btn-dark btn-sm ">
               👆프로필 선택하기👆
