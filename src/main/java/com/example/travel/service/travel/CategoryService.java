@@ -21,9 +21,7 @@ public interface CategoryService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
-    Page<CategoryDTO> getCategoryList(Integer page, String order);
-    Page<CategoryDTO> searchCategory(Integer page, String order, String keyword);
-
+    Page<CategoryDTO> getCategoryList(Integer page, String order, String keyword);
 
 
     Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order,Integer size);

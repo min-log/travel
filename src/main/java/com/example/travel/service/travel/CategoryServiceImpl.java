@@ -60,25 +60,18 @@ public class CategoryServiceImpl implements CategoryService {
         return result;
     }
 
-    public Page<CategoryDTO> getCategoryList(Integer page, String order) {
-        log.info("전체 카테고리 리스트");
-        PageRequest pageRequest;
 
+    @Override
+    public Page<CategoryDTO> getCategoryList(Integer page, String order, String keyword) {
+        log.info("카테고리 리스트 검색");
+
+        String key = "%"+keyword+"%";
+        PageRequest pageRequest;
         pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
-        Page<Category> result = categoryRepository.findByCategoryOpen(true, pageRequest);
+        Page<Category> result = categoryRepository.findCategorySearch(true,key, pageRequest);
         Page<CategoryDTO> categoryDTOS = convertPage(result);
 
         return categoryDTOS;
-    }
-
-    @Override
-    public Page<CategoryDTO> searchCategory(Integer page, String order, String keyword) {
-        log.info("카테고리 리스트 검색");
-
-//        Page<Category> result = categoryRepository.searchCategory(true,"제주", 6,1);
-//        Page<CategoryDTO> categoryDTOS = convertPage(result);
-
-        return null;
     }
 
     @Override

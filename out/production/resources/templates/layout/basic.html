@@ -5,6 +5,21 @@
   <meta charset="UTF-8">
   <title>layout</title>
   <th:block th:replace="layout/config::config"></th:block>
+  <script type="text/javascript">
+    $(function () {
+        $("#btnKeyword").on('click',function () {
+
+            let keyword = document.getElementById('keyword').value;
+            console.log(keyword)
+            let url = '/board/boardList?k='+keyword;
+            location.href=(url);
+
+        })
+    })
+
+
+
+  </script>
 </head>
 <body>
   <th:block th:replace="layout/header::header"></th:block>

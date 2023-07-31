@@ -15,11 +15,18 @@
           </p>
           <p class="ml-2">
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
-              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/board/boardList(page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
-              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/board/boardList(page=${pageing.getPage()},order='createdAt')}">작성일</option>
+              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/board/boardList(k = ${param.k},page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
+              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/board/boardList(k = ${param.k},page=${pageing.getPage()},order='createdAt')}">작성일</option>
             </select>
           </p>
         </div>
+        <th:block th:if="|${categoryPage.getContent().size() <= 0}|">
+          <p class="text-center mt-5">
+            😭 찾으시는 지역의 컨텐츠가 없습니다. 😭<br />
+            ❤️ 다시 입력해주세요 ❤️<br /><br />
+            <a class="btn btn-outline-secondary" th:href="@{/board/boardList}">전체 목록 바로가기</a>
+          </p>
+        </th:block>
         <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
           <th:block th:each="list,i:${categoryPage.getContent()}">
             <li class="col" th:class="|col col_${list.categoryNo}|" >
@@ -76,13 +83,13 @@
         </ul>
         <div th:object="${pageing}" class="mt-5 text-center">
             <th:block th:if="${pageing.prev}">
-              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.start - 5})}" tabindex="-1"> < </a>
+              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(k = ${param.k},page = ${pageing.start - 5})}" tabindex="-1"> < </a>
             </th:block>
             <th:block th:each="page : ${pageing.pageList}">
-              <a  th:href="@{/board/boardList(page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
+              <a  th:href="@{/board/boardList(k = ${param.k},page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
             </th:block>
             <th:block th:if="${pageing.next}">
-              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(page = ${pageing.end + 1})}" tabindex="-1"> > </a>
+              <a class="btn btn-outline-secondary" th:href="@{/board/boardList(k = ${param.k},page = ${pageing.end + 1})}" tabindex="-1"> > </a>
             </th:block>
         </div>
       </div>

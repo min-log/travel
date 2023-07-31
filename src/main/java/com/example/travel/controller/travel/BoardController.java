@@ -33,10 +33,9 @@ public class BoardController {
 
         if(page == null) page= 1;
         if(order == null) order= "dateStart";
+        if (keyword == null) keyword = "";
 
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(page ,order);
-
-       // if (keyword != null) categoryPage = categoryService.searchCategory(page ,order,keyword);
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(page ,order,keyword);
 
 
         PageingDTO pageingDTO = new PageingDTO(categoryPage);

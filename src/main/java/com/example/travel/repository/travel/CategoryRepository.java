@@ -21,24 +21,11 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     @Query(value = "select c from Category c where c.userTravelNo=:no and c.categorySave = false ORDER BY c.createdAt")
     List<Category> getCategoryTemList(@Param(value = "no") Long no);
 
-    Page<Category> findByCategoryOpen(boolean open, Pageable pageable);
 
-
-//    @Query(value = "set @rownum :=2; " +
-//            "select  @rownum := @rownum+1 AS no, c.* " +
-//            "from (select b.category_name , b.date_start from category b " +
-//            "      where category_open=:open" +
-//            "          and category_name like '%제주%' " +
-//            "         or category_area like '%제주%' " +
-//            "         or category_area_details like '%제주%') c " +
-//            "where (@rownum:=0)=0 " +
-//            "order by date_start desc " +
-//            "limit 3,2 "
-//            , nativeQuery = true)
-//    Page<Category> searchCategory(boolean open,
-//                                 String key,
-//                                 int size ,
-//                                int page);
+    @Query(value = "select c from Category c where c.categorySave = true and c.categoryOpen = :open " +
+            "and (c.categoryArea like :key or c.categoryAreaDetails like :key or c.categoryName like :key)")
+    Page<Category> findCategorySearch(@Param("open") boolean open,
+                                      @Param("key") String keyword ,Pageable pageable);
 
 
     Page<Category> findByUserTravelNoAndCategorySave(Long no,boolean save, Pageable pageable);
