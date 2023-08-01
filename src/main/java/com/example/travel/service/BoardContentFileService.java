@@ -92,11 +92,13 @@ public class BoardContentFileService {
                 retStr += line + "\n";
             }
 
+            br.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         return retStr;
     }
@@ -120,7 +122,7 @@ public class BoardContentFileService {
 
 
     //파일 제거
-    public void removeFile(String folderPath,String fileName){
+    public boolean removeFile(String folderPath,String fileName){
         log.info("파일 제거 로직--------------");
 
         try{
@@ -129,13 +131,16 @@ public class BoardContentFileService {
             log.info(file);
             if (file.delete()){ //// f.delete 파일 삭제에 성공하면 true, 실패하면 false
                 log.info("파일이 삭제되었습니다.");
+                return true;
             }else {
                 log.info("파일삭제가 실패했습니다.");
+                return false;
             }
 
         }catch (Exception e){
             e.printStackTrace();
         }
+        return false;
     }
 
 }

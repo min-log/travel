@@ -12,9 +12,9 @@ public interface CategoryBoardService {
     public CategoryBoardDTO createCategoryBoard(CategoryBoardDTO categoryBoardDTO, MultipartFile file); // 저장
 
     public CategoryBoardDTO getCategoryBoard(Long categoryNo,int dayNo); // 저장 된 카테고리 게시판 가져오기
-    public boolean deleteCategoryBoardContent(Long boardNo); // 저장 된 카테고리 게시판 가져오기
+    public boolean deleteCategoryBoardFile(Long boardNo,boolean imgFile); // 저장 된 카테고리 게시판 가져오기
 
-    public List<CategoryBoardDTO> getCategoryBoardList(Long categoryNo); // 카테고리에 포함된 후기 게시판 리스트
+    public List<CategoryBoard> getCategoryBoardList(Long categoryNo); // 카테고리에 포함된 후기 게시판 리스트
 
     public boolean deleteCategoryBoard(Long categoryNo, int dayNo); // 게시글 하나 삭제
 

@@ -169,23 +169,18 @@ public class BoardFileService{
 
 
     //파일 제거
-    public ResponseEntity<Boolean> removeFile(String fileName){
+    public ResponseEntity<Boolean> removeFile(String fileName,String folderPath){
         log.info("이미지 제거 로직");
         String srcFileName = null;
-
         try {
-            log.info(fileName);
-
             srcFileName = URLDecoder.decode(fileName,"utf-8");
-            File file = new File(uploadPath+File.separator+srcFileName);
+            File file = new File(uploadPath+File.separator+folderPath+File.separator+srcFileName);
             log.info(file);
             boolean result = file.delete();
-
             File thumbnail = new File(file.getParent(),"s_"+file.getName());
             result = thumbnail.delete();
 
             return new ResponseEntity<>(result, HttpStatus.OK);
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return new ResponseEntity<>(false,HttpStatus.INTERNAL_SERVER_ERROR);

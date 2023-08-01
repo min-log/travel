@@ -1,14 +1,14 @@
 package com.example.travel.service.travel;
 
 import com.example.travel.domain.*;
-import com.example.travel.dto.travel.CategoryDTO;
-import com.example.travel.dto.travel.DayInfoDTO;
-import com.example.travel.dto.travel.LikeCategoryDTO;
-import com.example.travel.dto.travel.TagDTO;
+import com.example.travel.dto.travel.*;
 import com.example.travel.repository.travel.*;
+import com.example.travel.service.BoardContentFileService;
+import com.example.travel.service.BoardFileService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import groovyjarjarpicocli.CommandLine;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -31,14 +32,24 @@ import java.util.stream.Collectors;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl implements CategoryService, CategoryBoardService {
     final CategoryRepository categoryRepository;
     final HashtagRepository hashtagRepository;
     final TagRepository tagRepository;
     final ItemRepository itemRepository;
     final LikeCategoryRepository likeRepository;
 
+    //==========================================================================
+    //==========================================================================
+    //CategoryBoardService
     final CategoryBoardRepository categoryBoardRepository;
+    final CategoryImageRepository categoryImageRepository;
+    final FileContentRepository fileContentRepository;
+    final BoardFileService boardFileService; // 이미지 파일 저장
+    final BoardContentFileService boardContentFileService; // txt 파일 저장
+    private String folderPath = "categoryBoard";
+
+
 
     @Override
     public List<CategoryDTO> getCategoryTemList(Long no) {
@@ -164,8 +175,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<CategoryDTO> categoryDTOList = categoryPage.getContent()
                 .stream()
-                .map(i->categoryEntityToDto(i)
-                ) // Assuming CategoryDTO constructor takes a Category object
+                .map(i->categoryEntityToDto(i)) // Assuming CategoryDTO constructor takes a Category object
                 .collect(Collectors.toList());
 
         for (int i=0;i<categoryDTOList.size();i++){
@@ -317,21 +327,26 @@ public class CategoryServiceImpl implements CategoryService {
         // 1. 태그 제거
         // 2. 해쉬태그 제거
         // 3. 해쉬태그 중간 맵핑 제거
-        // 4. 카테고리 제거
-        // 5. 카테고리 후기 제거
+        // 4. 카테고리 후기 제거
+        // 5. 카테고리 제거
 
         hashTagDelete(no);
-        // 카테고리 후기 제거
-        List<CategoryBoard> categoryBoardList = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(no);
+        // 4. 카테고리 후기 제거
+        List<CategoryBoard> categoryBoardList = getCategoryBoardList(no); //boardCategoryNo
+
         if (categoryBoardList != null){
+
             log.info("카테고리 후기가 존재한다면 제거");
+            log.info(categoryBoardList);
+
             for(int i = 0; i < categoryBoardList.size();i++){
                 CategoryBoard categoryBoard = categoryBoardList.get(i);
-                categoryBoardRepository.delete(categoryBoard);
+                log.info("categoryBoard : {}",categoryBoard);
+                deleteCategoryBoard(categoryBoard.getBoardNo(),categoryBoard.getBoardItemDay());
             }
         }
 
-        categoryRepository.delete(category); //4. 카테고리제거
+        categoryRepository.delete(category); //5. 카테고리제거
         log.info("카테고리가 없으면 false 반환");
         return true;
     }
@@ -489,6 +504,229 @@ public class CategoryServiceImpl implements CategoryService {
 
         return none;
     }
+
+
+    //==========================================================================
+    //==========================================================================
+    //CategoryBoardService
+
+    @Override
+    public CategoryBoardDTO createCategoryBoard(CategoryBoardDTO categoryBoardDTO, MultipartFile file) {
+        log.info("CategoryBoard 저장 로직 --------------------");
+        // 0. CategoryBoard에 저장 될 타이틀 명 임시 저장
+        String title = categoryBoardDTO.getBoardTit();
+
+        log.info("화면에서 가져온 객체 : {}",categoryBoardDTO);
+        //1. 기존 후기가 존재한다면 파일 제거
+        if (categoryBoardDTO.getBoardNo() != null){
+            //전달 받는 이미지 파일 유무
+            boolean imgFile = true;
+            if (file == null) imgFile = false;
+            deleteCategoryBoardFile(categoryBoardDTO.getBoardNo(),imgFile);
+        }
+
+        // 2. 저장될 boardContent - 파일 명으로 대채
+        // 2-1 . 파일 명으로 저장될 타이틀 공백 앞 뒤 제거 및 공백 _ 대채 변경
+        String img_title = title.trim().replace(" ", "_");
+        categoryBoardDTO.setBoardTit(img_title);
+
+        // 2-2. 내용에 들어있는 태그 특수문자로 변경하여 저장
+        String replace = getReplace(categoryBoardDTO.getBoardContent());
+        categoryBoardDTO.setBoardContent(replace);
+
+        // 2-3. 실제 txt 파일 저장 -> 저장된 파일 명 반환
+        String contentSave = boardContentFileService.createBoardContent(categoryBoardDTO, folderPath);
+        if (contentSave == null){
+            log.info("컨텐츠 저장이 실패했습니다.");
+            return null;
+        }
+
+        // CategoryBoard 저장
+        categoryBoardDTO.setBoardNo(categoryBoardDTO.getBoardNo());
+        categoryBoardDTO.setBoardTit(title);
+        categoryBoardDTO.setBoardContent(contentSave);
+        CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
+        CategoryBoard save = categoryBoardRepository.save(categoryBoard);
+
+        // 카테고리 업데이트 --> 후기 존재 true 로 변경
+        log.info("categoryBoardDTO.getBoardCategoryNo() : {}",categoryBoardDTO.getBoardCategoryNo());
+        CategoryDTO category = getCategory(categoryBoardDTO.getBoardCategoryNo());
+        category.setBoardExistence(true);
+        categoryUpdate(category);
+        CategoryBoardDTO result = categoryBoardEntityToDto(save);
+
+        // 썸네일 저장 로직 ---------------------------------------
+        if (file == null) {
+            log.info("썸네일 없음");
+            return result;
+        }
+        // 썸네일 저장 로직 ---------------------------------------
+        JsonObject categoryThumbnail = boardFileService.createImageThumbnail(file, "categoryThumbnail",save);
+        if (categoryThumbnail == null) {
+            // 썸네일 저장 되지 않고 오류 생길 경우 --저장된 게시글도 제거
+            log.info("이미지 저장 실패");
+            categoryBoardRepository.delete(save);
+            return null;
+        }
+        log.info("이미지 저장 성공");
+        String asString = categoryThumbnail.get("url").getAsString();
+        result.setBoardImg(asString);
+
+        return result;
+    }
+
+
+    @Override
+    public CategoryBoardDTO getCategoryBoard(Long categoryNo,int dayNo) {
+        Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
+        if (board.isPresent()){
+            CategoryBoard categoryBoard = board.get();
+            String content = boardContentFileService.readBoardContent(folderPath, categoryBoard.getBoardContent());
+            CategoryBoardDTO resultCategoryBoard = findResultCategoryBoard(categoryBoard);
+            resultCategoryBoard.setBoardContent(content);
+
+            return resultCategoryBoard;
+        }else{
+            log.info("찾는 게시물이 없습니다.");
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteCategoryBoardFile(Long boardNo,boolean imgFile){
+        log.info("파일 board No : {}",boardNo);
+
+        Optional<CategoryBoard> entity = categoryBoardRepository.findById(boardNo);
+        log.info("entity : {}",entity);
+        if (entity.isPresent()){
+            CategoryBoard categoryBoard = entity.get();
+            log.info("파일 제거될 board 객체 : {}",categoryBoard);
+            CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
+            String removeFileName = categoryBoard.getBoardContent();
+            // 1. 컨텐츠 txt파일 제거
+            boolean fileRemove = boardContentFileService.removeFile(folderPath, removeFileName);
+            if (fileRemove){
+                log.info("파일은 제거 되었고 DB 제거 !");
+                Optional<FileContent> fileContentByOriginFileName = fileContentRepository.getFileContentByOriginFileName(removeFileName);
+                if (fileContentByOriginFileName.isPresent()){
+                    log.info("fileContentByOriginFileName");
+                    FileContent fileContent = fileContentByOriginFileName.get();
+                    fileContentRepository.delete(fileContent);
+                }
+            }
+
+
+            //fileContentRepository.delete();
+            // 2. 이미지 파일 제거 true
+            if (imgFile){
+                Optional<CategoryImage> img = categoryImageRepository.getCategoryImageByBoardNo(categoryBoard);
+                if (img.isPresent()){ // 이미지 있을 경우
+                    log.info("이미지 제거");
+                    CategoryImage categoryImage = img.get();
+                    boardFileService.removeFile(categoryImage.getOriginFileName(),"categoryThumbnail");  // 실제 이미지 제거
+                    categoryImageRepository.delete(categoryImage); //DB 이미지 제거
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+    @Override
+    public List<CategoryBoard> getCategoryBoardList(Long categoryNo) {
+        List<CategoryBoard> categoryBoardList = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+        return categoryBoardList;
+    }
+
+
+    @Override
+    public boolean deleteCategoryBoard(Long categoryNo, int dayNo) {
+        log.info("카테고리 후기 제거 ------------");
+        Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
+        if (!board.isPresent()){
+            log.info("찾으시는 게시물이 없습니다.");
+            return false;
+        }else {
+            CategoryBoard categoryBoard = board.get();
+            log.info("존재하는 게시물 정보: {}", categoryBoard);
+            //1. 기존 후기가 존재한다면 파일 제거
+            boolean imgFile = false; //전달 받는 이미지 파일 유무
+            if (categoryBoard.getBoardItemDay() == 1) imgFile = true;
+            deleteCategoryBoardFile(categoryBoard.getBoardNo(),imgFile);
+
+            categoryBoardRepository.delete(categoryBoard);
+            log.info("삭제... 후");
+            // 카테고리 후기 검색
+            List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+            if (list.isEmpty()) {
+                log.info("후기가 존재 하지 않을 시 카테고리 업데이트 ------------");
+                CategoryDTO category = getCategory(categoryNo);
+                category.setBoardExistence(false); // 카테고리 후기 존재 수정
+                categoryUpdate(category);
+            }
+            return true;
+        }
+    }
+
+
+
+    //저장 결과 전달
+    CategoryBoardDTO findResultCategoryBoard(CategoryBoard categoryBoard){
+        CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
+        if (categoryBoardDTO != null) {
+            CategoryBoard categoryBoard1 = categoryBoardDtoToEntity(categoryBoardDTO);
+            Optional<CategoryImage> img = categoryImageRepository.getCategoryImageByBoardNo(categoryBoard1);
+            if (img.isPresent()){
+                CategoryImage categoryImage = img.get();
+                log.info(categoryImage);
+                categoryBoardDTO.setBoardImg("/upload/" + categoryImage.getPath() + "/"+categoryImage.getThumbnailName());
+            }
+        }
+        return categoryBoardDTO;
+    }
+
+    //마크업 변경
+    public static String getReplace(String srcString) {
+        String rtnStr = null;
+        try{
+            StringBuffer strTxt = new StringBuffer("");
+            char chrBuff;
+            int len = srcString.length();
+            for(int i = 0; i < len; i++) {
+                chrBuff = (char)srcString.charAt(i);
+                switch(chrBuff) {
+                    case '<':
+                        strTxt.append("&lt;");
+                        break;
+                    case '>':
+                        strTxt.append("&gt;");
+                        break;
+                    case '&':
+                        strTxt.append("&amp;");
+                        break;
+                    default:
+                        strTxt.append(chrBuff);
+                }
+            }
+
+
+            rtnStr = strTxt.toString();
+
+        }catch(Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+
+        return rtnStr;
+
+    }
+
 
 
 }
