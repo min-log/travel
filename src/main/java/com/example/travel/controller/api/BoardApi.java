@@ -3,20 +3,15 @@ package com.example.travel.controller.api;
 import com.example.travel.dto.travel.CategoryBoardDTO;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.ItemDTO;
-import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryBoardService;
-import com.example.travel.service.travel.CategoryBoardServiceImpl;
 import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.travel.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -173,11 +168,10 @@ public class BoardApi {
     public ResponseEntity<CategoryBoardDTO> postWriterSave(@RequestPart(value = "itemCon") CategoryBoardDTO categoryBoardDTO,
                                          @RequestPart(value = "boardFile", required = false) MultipartFile boardFile
     ){
-
         log.info("게시판 생성 =================================");
         log.info("categoryBoardDTO : {}",categoryBoardDTO);
         log.info("boardFile : {}",boardFile);
-        categoryBoardService.updateCategoryBoard(categoryBoardDTO.getBoardCategoryNo());
+
         CategoryBoardDTO result = categoryBoardService.createCategoryBoard(categoryBoardDTO, boardFile);
         if (result == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 

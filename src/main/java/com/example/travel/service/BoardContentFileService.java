@@ -122,12 +122,12 @@ public class BoardContentFileService {
     //파일 제거
     public void removeFile(String folderPath,String fileName){
         log.info("파일 제거 로직--------------");
-        String srcFileName = null;
+
         try{
-            srcFileName = URLDecoder.decode(fileName,"utf-8");
-            File file = new File(uploadPath + File.separator +File.separator + folderPath + File.separator+ File.separator +srcFileName);
+            String fileUrl = uploadPath + File.separator + folderPath + File.separator;
+            File file = new File(fileUrl, fileName);
             log.info(file);
-            if (file.delete()){
+            if (file.delete()){ //// f.delete 파일 삭제에 성공하면 true, 실패하면 false
                 log.info("파일이 삭제되었습니다.");
             }else {
                 log.info("파일삭제가 실패했습니다.");

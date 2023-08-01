@@ -41,41 +41,53 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
     @Override
     public CategoryBoardDTO createCategoryBoard(CategoryBoardDTO categoryBoardDTO, MultipartFile file) {
         log.info("CategoryBoard 저장 로직 --------------------");
+        // 0. CategoryBoard에 저장 될 타이틀 명 임시 저장
         String title = categoryBoardDTO.getBoardTit();
 
         log.info("화면에서 가져온 객체 : {}",categoryBoardDTO);
-        //파일 명으로 저장될 타이틀 공백 앞 뒤 제거 및 변경
+        //1. 기존 후기가 존재한다면 제거
+        deleteCategoryBoardContent(categoryBoardDTO.getBoardCategoryNo());
+
+
+
+        // 2. 저장될 boardContent - 파일 명으로 대채
+            // 2-1 . 파일 명으로 저장될 타이틀 공백 앞 뒤 제거 및 공백 _ 대채 변경
         String img_title = title.trim().replace(" ", "_");
         categoryBoardDTO.setBoardTit(img_title);
-        //태그 특수문자로 변경하여 저장
+
+        // 2-2. 내용에 들어있는 태그 특수문자로 변경하여 저장
         String replace = getReplace(categoryBoardDTO.getBoardContent());
         categoryBoardDTO.setBoardContent(replace);
 
-        // txt 파일 저장
+        // 2-3. 실제 txt 파일 저장 -> 저장된 파일 명 반환
         String contentSave = boardContentFileService.createBoardContent(categoryBoardDTO, folderPath);
         if (contentSave == null){
             log.info("컨텐츠 저장이 실패했습니다.");
             return null;
         }
 
-        // 컨텐츠 저장
+
+
+
+        // CategoryBoard 저장
         categoryBoardDTO.setBoardTit(title);
         categoryBoardDTO.setBoardContent(contentSave);
         CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
         CategoryBoard save = categoryBoardRepository.save(categoryBoard);
 
-        // 카테고리 업데이트
+        // 카테고리 업데이트 --> 후기 존재 true 로 변경
         log.info("categoryBoardDTO.getBoardCategoryNo() : {}",categoryBoardDTO.getBoardCategoryNo());
         CategoryDTO category = categoryService.getCategory(categoryBoardDTO.getBoardCategoryNo());
         category.setBoardExistence(true);
         categoryService.categoryUpdate(category);
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
 
+        // 썸네일 저장 로직 ---------------------------------------
         if (file == null) {
             log.info("썸네일 없음");
             return result;
         }
-
+        // 썸네일 저장 로직 ---------------------------------------
         JsonObject categoryThumbnail = boardFileService.createImageThumbnail(file, "categoryThumbnail",save);
         if (categoryThumbnail == null) {
             // 썸네일 저장 되지 않고 오류 생길 경우 --저장된 게시글도 제거
@@ -108,18 +120,17 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
     }
 
     @Override
-    public boolean updateCategoryBoard(Long boardNo){
+    @Transactional
+    public boolean deleteCategoryBoardContent(Long boardNo){
         Optional<CategoryBoard> entity = categoryBoardRepository.findById(boardNo);
         if (entity.isPresent()){
-            log.info("업데이트 될 객체 : {}",boardNo);
+            log.info("파일 제거될 board 객체 넘버 : {}",boardNo);
             CategoryBoard categoryBoard = entity.get();
             CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
             // 1. 컨텐츠 txt파일 제거
             boardContentFileService.removeFile(folderPath,categoryBoard.getBoardContent());
-
             return true;
         }
-
         return false;
     }
 
@@ -134,25 +145,30 @@ public class CategoryBoardServiceImpl implements CategoryBoardService {
 
 
     @Override
+    @Transactional
     public boolean deleteCategoryBoard(Long categoryNo, int dayNo) {
         log.info("카테고리 후기 제거 ------------");
-        CategoryBoardDTO categoryBoardDTO = getCategoryBoard(categoryNo, dayNo);
-
-        if (categoryBoardDTO == null){
+        Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
+        if (!board.isPresent()){
+            log.info("찾으시는 게시물이 없습니다.");
             return false;
+        }else {
+            CategoryBoard categoryBoard = board.get();
+            log.info("존재하는 게시물 정보: {}", categoryBoard);
+            // 1. 컨텐츠 txt파일 제거
+            deleteCategoryBoardContent(categoryBoard.getBoardCategoryNo());
+            categoryBoardRepository.delete(categoryBoard);
+            log.info("삭제... 후");
+            // 카테고리 후기 검색
+            List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+            if (list.isEmpty()) {
+                log.info("후기가 존재 하지 않을 시 카테고리 업데이트 ------------");
+                CategoryDTO category = categoryService.getCategory(categoryNo);
+                category.setBoardExistence(false); // 카테고리 후기 존재 수정
+                categoryService.categoryUpdate(category);
+            }
+            return true;
         }
-
-        CategoryBoard categoryBoard = categoryBoardDtoToEntity(categoryBoardDTO);
-        categoryBoardRepository.delete(categoryBoard);
-
-        List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
-        if (list.isEmpty()){
-            log.info("저장된 후기가 없다면");
-            CategoryDTO category = categoryService.getCategory(categoryNo);
-            category.setBoardExistence(false); // 카테고리 후기 존재 수정
-            categoryService.categoryUpdate(category);
-        }
-        return true;
     }
 
 
