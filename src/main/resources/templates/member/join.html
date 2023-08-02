@@ -7,7 +7,7 @@
     <div>
       <h2 class="tit text-center mb-4">회원가입</h2>
 
-      <form id="joinForm" th:action="@{/join}" enctype="multipart/form-data" th:method="post" class="box content_box" >
+      <form id="joinForm" th:action="@{/member/join}" enctype="multipart/form-data" th:method="post" class="box content_box" >
         <input th:type="hidden" name="idCheckValue" id="idCheckValue" value="false">
         <input th:type="hidden" name="emailCheckValue" id="emailCheckValue" value="false">
         <input th:field="*{userEmail}" name="userEmail" id="userEmail" th:errorclass="err" class="form-control" type="hidden">
@@ -328,7 +328,7 @@
 
           $.ajax({
               type : 'get',
-              url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+              url : '/mailCheck/mail?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
               success : function (data) {
                   //console.log("data : {}",data);
                   msg  += "<div class='text-center'>";

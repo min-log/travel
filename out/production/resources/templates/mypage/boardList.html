@@ -38,12 +38,20 @@
                     <img th:src="${list.boardImg}" alt="여행썸내일">
                   </p>
                   <div class="con">
-                    <p class="address_info mt-1">
+                    <p class="btn_up">
+                      <a th:href="@{/travel/view(no=${list.categoryNo})}" title="수정하기"><i class="bi bi-sticky-fill"></i></a>
+                      <a th:href="@{/travel/categoryDelete(categoryNo=${list.categoryNo})}" title="삭제하기">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                        </svg>
+                      </a>
+                    </p>
+                    <div class="address_info mt-1">
                       <span class="point-color" th:text="${list.categoryArea}">제주도</span>
                       <th:block th:if="${list.categoryAreaDetails != ''}">
                         / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
                       </th:block>
-                    </p>
+                    </div>
                     <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
                     <div class="mt-1">
                       <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
@@ -70,9 +78,9 @@
                 </div>
                 <!-- end : progress_wrap-->
                 <div class="btn-group border-top">
-                  <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn border-end">일정상세 <i class="bi bi-map-fill"></i></a>
+                  <a th:href="@{/board/view(no=${list.categoryNo})}" class="btn border-end">일정상세 <i class="bi bi-map-fill"></i></a>
                   <th:block th:if="${list.boardExistence}">
-                    <a th:href="@{/travel/post(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
                   </th:block>
                 </div>
               </div>

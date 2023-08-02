@@ -122,7 +122,7 @@
                 if(pwValue != '' && pwNew != '' ){
                   $.ajax({
                       type:'get',
-                      url:'/user/userPassword?id='+idValue+'&pw='+pwValue,
+                      url:'/userApi/userPassword?id='+idValue+'&pw='+pwValue,
                       success:function (data){
                         console.log(data);
                         if (data) {

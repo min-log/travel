@@ -29,7 +29,7 @@ import java.util.List;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/userApi")
 public class UserApi {
 
     @Value("${spring.servlet.multipart.location}")

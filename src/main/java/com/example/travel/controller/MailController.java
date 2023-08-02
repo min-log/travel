@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
-@RestController("/")
+@RestController("/mailCheck")
 @RequiredArgsConstructor
 public class MailController {
 
     private final MailSendService mailSendService;
     //이메일 인증
-    @GetMapping("/mailCheck")
+    @GetMapping("/mail")
     @ResponseBody
     public String mailCheck(@Param(value = "email") String email) throws Exception {
         System.out.println("이메일 인증 요청이 들어옴!");

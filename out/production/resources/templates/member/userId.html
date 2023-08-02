@@ -80,8 +80,8 @@
       </div>
       <!--end :  tab content-->
       <div class=" pt-4 pb-4 mt-2 text-center border-top">
-        <a th:href="@{/loginForm}">로그인</a> |
-        <a th:href="@{/join}">회원가입</a>
+        <a th:href="@{/member/loginForm}">로그인</a> |
+        <a th:href="@{/member/join}">회원가입</a>
       </div>
     </div>
   </div>
@@ -148,7 +148,7 @@
 
           $.ajax({
               type : 'get',
-              url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+              url : '/mailCheck/mail?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
               success : function (data) {
                   msg  += "<div class='text-center'>";
                   msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";

@@ -272,17 +272,16 @@ input.err {}
 .board_content .btn-group .btn:hover {background:var(--color-main);color:#fff;}
 .tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
 .tag.point {background:var(--color-main);color:#fff !important;}
-.btn_heart {position: absolute;top:0;right:0;z-index: 1;width:18px;height:18px;}
+.board_content .btn_up {position: absolute;top:0;right:0;z-index: 1;display: flex;align-items: center;}
+.board_content .btn_up .bi {width:18px;height:18px;font-size:18px !important;}
+.board_content .btn_up .bi-sticky-fill {color:var(--color-main);}
+.board_content .btn_up a + a {margin-left:5px;}
 .btn_heart .bi {font-size:18px;position:absolute;right:0;top:0;}
 .btn_heart .bi.bi-heart-fill {position: absolute;right:0;top:0;z-index:1;}
 /*게시판 상세페이지*/
 .veiw_top .date {font-weight:bold}
 .veiw_top .area,
 .veiw_top .area span {font-weight:bold;font-size:12px;color:var(--color-main);}
-/*.veiw_top .veiw_info p *,*/
-/*.veiw_top .veiw_info p {color:#5c636a;font-size:12px;}*/
-
-
 .item_veiw_con .top {width:100%;line-height:40px !important;}
 .item_veiw_con .top > * {
     display: inline-block;
@@ -335,13 +334,24 @@ input.err {}
 .note-modal-backdrop {display:none !important;}
 .note-modal-content {z-index:100;position: absolute;top:50%;left:50%;transform:translate(-25%,-25%);margin:0;}
 
-.comments_wrap {padding-bottom:100px;}
-.commonts_input {position: sticky;bottom: -20px;left:0;margin-left:-20px;width:calc(100% + 40px);background:#fff;padding:20px;
+.comments_wrap {padding-bottom:50px;}
+.comments_input {position: sticky;bottom: -20px;left:0;margin-bottom: -20px;margin-left:-20px;width:calc(100% + 40px);background:#fff;padding:20px;
     background: #ddd;
     display:flex;
     align-items: center;
     justify-content: center;
 
 }
-.commonts_input .bi {}
-.commonts_input input {width:70%;margin-right:5px;margin-left:5px;}
+.comments_input .bi {}
+.comments_input input {width:70%;margin-right:5px;margin-left:5px;}
+#commentsList {}
+#commentsList .comm {margin-top:10px;border: 1px solid #dadada;
+    padding: 10px;
+    border-radius: 5px;}
+#commentsList .comm.comm_me{border: 2px solid var(--color-main);}
+#commentsList .comm.comm_me .comm_con {color: var(--color-main);font-weight: bold;}
+#commentsList .comm.comm_me a svg {vertical-align: auto}
+#commentsList .comm.comm_me a path {color: var(--color-main);}
+#commentsList .comm .comm_id {}
+#commentsList .comm .comm_con {}
+#commentsList .comm .comm_con {}

@@ -27,7 +27,7 @@ import java.util.List;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/boardApi")
 public class BoardApi {
     final CategoryService categoryService;
     final CategoryBoardService categoryBoardService;
@@ -148,8 +148,6 @@ public class BoardApi {
             HttpSession httpSession
     ){
         log.info("카테고리 좋아요 -----------------");
-        log.info("no : " + no);
-
         UserTravelDTO userT = (UserTravelDTO)httpSession.getAttribute("userT");
         if (userT == null){ //유저가 있을때만
             return -1;
@@ -189,7 +187,6 @@ public class BoardApi {
             @RequestParam(value = "day") int dayNo
     ){
         boolean result = categoryBoardService.deleteCategoryBoard(no, dayNo);
-
         return result;
     }
 
@@ -210,8 +207,17 @@ public class BoardApi {
         log.info("commentsDTO : {}",commentsDTO);
         CommentsDTO comments = commentsService.createComments(commentsDTO);
         if (comments == null) return null;
-
         return comments;
+    }
+
+
+
+    @GetMapping("/commDelete")
+    public Long commentDelete(@RequestParam(value = "no") Long commNo){
+        log.info("댓글 삭제----------------");
+        Long no = commentsService.deleteComments(commNo);
+        if (no == null) return null;
+        return no;
     }
 
 

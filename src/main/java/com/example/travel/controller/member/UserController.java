@@ -28,7 +28,7 @@ import java.util.Map;
 
 @Log4j2
 @Controller
-@RequestMapping("/")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -47,7 +47,7 @@ public class UserController {
     }
 
 
-    @PostMapping("join")
+    @PostMapping("/join")
     public String userJoin(@Valid @ModelAttribute("userTravel") UserDTO user,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes
@@ -78,7 +78,7 @@ public class UserController {
 
     //==========================================================
     //로그인 페이지
-    @GetMapping("loginForm")
+    @GetMapping("/loginForm")
     public String login(
                         @RequestParam(value = "error", required = false) String error, // 로그인 실패시 전달되는 파라미터
                         @RequestParam(value = "exception", required = false) String exception, // 로그인 실패시 전달되는 파라미터
@@ -112,12 +112,12 @@ public class UserController {
 
     //==========================================================
     // 아이디 찾기
-    @GetMapping("member/userId")
+    @GetMapping("/userId")
     public String userIdSearch(Model model){
         model.addAttribute("userTravel",new UserDTO()); // 빈 객체 전달 필요
         return "member/userId";
     }
-    @PostMapping("member/userIdCheck")
+    @PostMapping("/userIdCheck")
     public String userIdCheck(@ModelAttribute("userTravel") UserDTO user ,Model model){
         String Result = userService.userGetName(user.getName(), user.getUserEmail());
         log.info("Result = {}",Result);
@@ -134,7 +134,7 @@ public class UserController {
     }
 
 
-    @GetMapping("member/userPassword")
+    @GetMapping("/userPassword")
     public String userPasswordSearch(Model model,HttpServletRequest request){
         model.addAttribute("userTravel",new UserDTO()); // 빈 객체 전달 필요
 
@@ -147,7 +147,7 @@ public class UserController {
         return "member/userPassword";
     }
 
-    @PostMapping("member/userPasswordModify")
+    @PostMapping("/userPasswordModify")
     public String userPasswordCheck(@ModelAttribute("userTravel") UserDTO user ,Model model,
             HttpServletRequest request,
             RedirectAttributes redirect){
@@ -174,7 +174,7 @@ public class UserController {
     }
 
     //비밀번호 변경
-    @PostMapping("member/userModify")
+    @PostMapping("/userModify")
     public String userPasswordModify(@ModelAttribute("userTravel") UserDTO user ,
                                      Model model,
                                      RedirectAttributes redirectAttributes){

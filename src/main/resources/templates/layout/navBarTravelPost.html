@@ -112,7 +112,7 @@
               let itemListCon='';
               let todayPrice= 0;
               $.ajax({
-                  url: '/board/itemList',
+                  url: '/boardApi/itemList',
                   type: "get",
                   data: {itemDay:e,cateNo:[[${param.no}]]},
                   dataType: 'json',

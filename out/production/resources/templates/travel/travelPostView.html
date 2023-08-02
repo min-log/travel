@@ -75,7 +75,7 @@
 
         function boardFormDelete(){
             $.ajax({
-                url:"/board/postDelete?no=" + [[${param.no}]] + "&day="+ [[${param.day}]],
+                url:"/boardApi/postDelete?no=" + [[${param.no}]] + "&day="+ [[${param.day}]],
                 type:'get',
                 success:function (data) {
                     if (data){

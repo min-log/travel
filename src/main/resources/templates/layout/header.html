@@ -26,7 +26,7 @@
           <a href="#" class="link-dark text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
             <p class="profile_image_wrap">
               <img sec:authorize="isAnonymous()" src="/img/profile_img.png" alt="유저이미지" class="rounded-circle">
-              <img sec:authorize="isAuthenticated" th:src="|/user/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+              <img sec:authorize="isAuthenticated" th:src="|/userApi/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
             </p>
             <i class="bi bi-arrow-down-short"></i>
 
@@ -37,8 +37,8 @@
                 소중한 여행을 계획하고 기록해보세요. ✏️
               </li>
               <li class="border-top pt-2">
-                <a class="dropdown-item" th:href="@{/loginForm}">로그인</a>
-                <a class="dropdown-item" th:href="@{/join}">회원가입</a>
+                <a class="dropdown-item" th:href="@{/member/loginForm}">로그인</a>
+                <a class="dropdown-item" th:href="@{/member/join}">회원가입</a>
               </li>
             </ul>
             <ul sec:authorize="isAuthenticated()">

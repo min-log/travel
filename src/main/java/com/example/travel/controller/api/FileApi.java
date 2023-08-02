@@ -16,7 +16,7 @@ import java.net.http.HttpResponse;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/file")
+@RequestMapping("/fileApi")
 public class FileApi {
 
     final BoardFileService boardFileService;
