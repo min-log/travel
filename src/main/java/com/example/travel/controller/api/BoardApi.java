@@ -2,10 +2,12 @@ package com.example.travel.controller.api;
 
 import com.example.travel.dto.travel.CategoryBoardDTO;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.CommentsDTO;
 import com.example.travel.dto.travel.ItemDTO;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryBoardService;
 import com.example.travel.service.travel.CategoryService;
+import com.example.travel.service.travel.CommentsService;
 import com.example.travel.service.travel.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -28,6 +31,7 @@ import java.util.List;
 public class BoardApi {
     final CategoryService categoryService;
     final CategoryBoardService categoryBoardService;
+    final CommentsService commentsService;
     final ItemService itemService;
 
     @GetMapping("/categoryTemList")
@@ -190,6 +194,25 @@ public class BoardApi {
     }
 
 
+
+    @GetMapping("/commList")
+    public List<CommentsDTO> commentList(@RequestParam("no") Long no){
+        log.info("댓글 가져오기----------------");
+        List<CommentsDTO> list = new ArrayList<>();
+        list = commentsService.getCommentsList(no);
+        return list;
+    }
+
+
+    @PostMapping("/commSave")
+    public CommentsDTO commentSave(@ModelAttribute(value = "comment") CommentsDTO commentsDTO){
+        log.info("댓글 저장----------------");
+        log.info("commentsDTO : {}",commentsDTO);
+        CommentsDTO comments = commentsService.createComments(commentsDTO);
+        if (comments == null) return null;
+
+        return comments;
+    }
 
 
 }

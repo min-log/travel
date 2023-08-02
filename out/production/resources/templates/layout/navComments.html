@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="navComments">
+  <div class="comments_wrap">
+    <h4 class="mt-4 pt-4 border-top"><i class="bi bi-chat-dots"></i>
+      댓글</h4>
+    <ul th:id="commontsList" class="commonts_cont">
+    </ul>
+  </div>
+  <form id="commentsForm" class="commonts_input">
+    <!--start 시큐리티 추가 -->
+    <input class="csrf_input" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input class="csrf_input" type="hidden" th:name="${_csrf.getHeaderName()}">
+    <!--end 시큐리티 추가 -->
+    <input id="commCategory" name="commCategory" th:value="${param.no}" style="display:none" readonly>
+    <th:block sec:authorize="isAuthenticated()">
+      <input id="commUser" name="commUser" th:value="${session.userT.userId}" style="display:none" readonly>
+      <input id="commUserNo" name="commUserNo" th:value="${session.userT.userNo}" style="display:none" readonly>
+    </th:block>
+    <i class="bi bi-chat-dots"></i>
+    <input id="commCont" name="commCont" type="text" placeholder="댓글을 남겨주세요." class="form-control">
+    <a class="btn btn-dark btn-sm" href="javascript:commentBtn();">전송</a>
+  </form>
+
+
+
+
+  <!-- 댓글 기능 -->
+  <script type="text/javascript">
+
+      const commontsList = $("#commontsList");
+      const commUserNo = $("#commUserNo").val();
+
+
+      function commentBtn(){
+        /* Post 메서드 시큐리티 추가 */
+        let headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+        let token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
+
+        console.log("버튼 클릭! ------------------------------");
+
+        let commUser = $("#commUser").val();
+        let commCont = $("#commCont");
+        if(commUser==null){
+            alert("로그인이 필요한 기능입니다.");
+            return false;
+        }
+
+        let comment = $("#commentsForm").serialize();
+        let con ='';
+        //console.log("comment : "+ comment);
+        $.ajax({
+            url :"/board/commSave",
+            type:"post",
+            data: comment,
+            dataType:'json',
+            beforeSend : function(xhr)
+            {
+                xhr.setRequestHeader(headerName, token);
+            },
+            success:function (data) {
+                if (data == null){
+                    alert("댓글이 없습니다.");
+                }else{
+                    alert("댓글이 성공했습니다." + data);
+
+                    con +='<li class="comm comm_update">';
+                    con +='        <span class="comm_id">'+ data.commUser +'</span>';
+                    con +='        <span class="comm_con">'+ data.commCont +'</span>';
+                    con +='        <p class="btn-group"><a class="btn btn-sm btn-outline-secondary" href="javascript:commDelete('+ data.commId +')">삭제</a></p>' +
+                        '      </li>';
+                    commontsList.append(con);
+                    commCont.val("");
+
+                }
+
+            },
+            error:function (data) {
+                alert("댓글이 등록되지 않았습니다. 관리자 문의 해주세요.");
+            }
+        });
+
+      }
+
+      function commDelete(e){
+          alert(e)
+      }
+
+      function commontList(){
+          console.log("commontList" + commUserNo);
+          let con='';
+          $.ajax({
+              url :"/board/commList?no="+[[${param.no}]],
+              type:"get",
+              success:function (data) {
+                  console.log(data);
+                  console.log(" i commUser: " + data[0].commUser);
+                  if (data.size == 0){
+                      alert("댓글이 없습니다.");
+                  }else{
+                      for(var i=0 in data){
+                          con +='<li class="comm">';
+                          con +='        <span class="comm_id">'+ data[i].commUser +'</span>';
+                          con +='        <span class="comm_con">'+ data[i].commCont  +'</span>';
+                          if(commUserNo == data[i].commUserNo){
+                            con +='        <p class="btn-group"><a class="btn btn-sm btn-outline-secondary" href="javascript:commDelete('+ data[i].commId +')">삭제</a></p>';
+                          }
+                          con +=    '      </li>';
+                          commontsList.html(con);
+                      }
+                  }
+
+              },
+              error:function (data) {
+                  alert("댓글이 등록되지 않았습니다.");
+              }
+          });
+      }
+      $(document).ready(function () {
+          commontList();
+      })
+  </script>
+
+
+</th:block>
+</body>
+</html>

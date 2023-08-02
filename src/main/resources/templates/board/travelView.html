@@ -12,7 +12,7 @@
                 <div class="flex-column ">
                     <div class="top veiw_top" >
                         <div class="up">
-                            <a th:href="@{/travel/post(no=${category.categoryNo},day=1)}"  title="기록하기">
+                            <a th:href="@{/board/postView(no=${category.categoryNo},day=1)}"  title="기록하기">
                                 <i class="bi bi-pen-fill"></i>
                             </a>
                         </div>
@@ -130,12 +130,6 @@
                         <!-- end : sortable -->
                     </div>
                     <!-- end : top -->
-                    <div class="bottom mt-5">
-                        <div class="btn-group">
-                            <a th:href="@{/travel/category(no=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">수정</a>
-                            <a th:href="@{/travel/categoryDelete(categoryNo=${category.categoryNo})}" class="btn btn-outline-secondary" type="button" style="width:100%">삭제</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -257,7 +251,6 @@
 
             });
         </script>
-        <!-- end -->
 
         <div class="content" style="padding:0;">
             <div id="mapMenuWrap" class="bg_white" style="display:none">

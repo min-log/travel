@@ -103,7 +103,7 @@ footer {height:85px}
 .nav-tabs .nav-link {color:#888;}
 .tab-content {padding:20px 0;}
 .content_nav {display: flex;align-items: flex-start;height: 100%;position: relative;}
-.navbar {width: 540px;position: sticky;display: flex;top: 85px;border-right: 1px solid #dee2e6;flex-direction: column;height: calc(100vh - 85px);justify-content: flex-start;box-sizing: border-box;background: #fff;align-items: center;transition:all 0.5s;z-index:10;}
+.navbar {width: 540px;position: sticky;display: flex;top: 85px;border-right: 1px solid #dee2e6;flex-direction: column;height: calc(100vh - 85px);justify-content: flex-start;box-sizing: border-box;background: #fff;align-items: center;transition:all 0.5s;z-index:10;padding:0;}
 .navbar_wrap {position:relative;height:100%;width:100%;padding:20px 20px;overflow:hidden;box-sizing:border-box;transition:all 0.2s;overflow-y: auto;}
 .navbar_wrap > .flex-column {display: flex;justify-content: space-between;height: 100%;width: 100%;}
 .navbar_wrap > .flex-column .top {height:auto;}

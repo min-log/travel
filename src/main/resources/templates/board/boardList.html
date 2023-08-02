@@ -72,9 +72,9 @@
                 </div>
                 <!-- end :card-body -->
                 <div class="btn-group border-top">
-                  <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
+                  <a th:href="@{/board/view(no=${list.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
                   <th:block th:if="${list.boardExistence}">
-                    <a th:href="@{/travel/post(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
                   </th:block>
                 </div>
               </div>

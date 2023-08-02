@@ -75,7 +75,7 @@ public class TravelController {
                                RedirectAttributes redirectAttributes) {
 
         log.info(" 아이템 생성 페이지 --------------------");
-
+        log.info("categoryDTO : {}",categoryDTO);
         //log.info(tags);
         CategoryDTO result = categoryService.categorySave(categoryDTO);
         if (result == null){
