@@ -72,6 +72,7 @@ public interface CategoryService {
                 .categoryTotalPrice(category.getCategoryTotalPrice())
                 .viewNum(category.getViewNum())
                 .boardExistence(category.getBoardExistence())
+                .boardImg(category.getBoardImg())
                 .build();
 
         return result;
@@ -98,6 +99,7 @@ public interface CategoryService {
                 .categoryTotalPrice(categoryDTO.getCategoryTotalPrice())
                 .viewNum(categoryDTO.getViewNum())
                 .boardExistence(categoryDTO.getBoardExistence())
+                .boardImg(categoryDTO.getBoardImg())
                 .build();
         return result;
     }

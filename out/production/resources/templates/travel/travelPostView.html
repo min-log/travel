@@ -30,7 +30,7 @@
                             <span th:text="*{boardTravelDate}"></span>
                         </td>
                     </tr>
-                    <th:block>
+                    <th:block th:if="*{boardItemDay == 1}">
                         <tr>
                             <th>썸네일</th>
                             <td>

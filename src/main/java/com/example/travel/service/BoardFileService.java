@@ -136,6 +136,7 @@ public class BoardFileService{
             CategoryImage save = categoryImageRepository.save(categoryImage);
 
             //화면에 전달할 DTO 생성
+            jsonObject.addProperty("fileName", (String)File.separator +"upload"+File.separator + folderPathMake + File.separator + thumbnailName);
             jsonObject.addProperty("url", thumbnailSaveName);
             jsonObject.addProperty("responseCode", "succcess");
 

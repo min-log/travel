@@ -2,7 +2,6 @@ package com.example.travel.dto.travel;
 
 
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -37,6 +36,7 @@ public class CategoryDTO {
     private int viewNum; // 카테고리 조회 수
 
     private Boolean boardExistence; // 카테고리 후기 존재 유무
+    private String boardImg; //카테고리 후기 이미지
 
 
 }

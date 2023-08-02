@@ -24,14 +24,19 @@
 <!--            </select>-->
 <!--          </p>-->
         </div>
+        <th:block th:if="|${categoryPage.getContent().size() <= 0}|">
+          <p class="text-center mt-5">
+            저장된 여행이 없습니다.
+          </p>
+        </th:block>
         <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
           <th:block th:each="list,i:${categoryPage.getContent()}">
             <li class="col">
               <div class="card">
                 <div class="card-body">
-<!--                  <p class="img">-->
-<!--                    <img src="" alt="여행썸내일">-->
-<!--                  </p>-->
+                  <p class="img" th:if="${list.boardImg}">
+                    <img th:src="${list.boardImg}" alt="여행썸내일">
+                  </p>
                   <div class="con">
                     <p class="address_info mt-1">
                       <span class="point-color" th:text="${list.categoryArea}">제주도</span>

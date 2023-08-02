@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     final BoardFileService boardFileService; // 이미지 파일 저장
     final BoardContentFileService boardContentFileService; // txt 파일 저장
     private String folderPath = "categoryBoard";
+    private String folderPathImg = "categoryThumbnail";
 
 
 
@@ -333,16 +335,11 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         hashTagDelete(no);
         // 4. 카테고리 후기 제거
         List<CategoryBoard> categoryBoardList = getCategoryBoardList(no); //boardCategoryNo
-
         if (categoryBoardList != null){
-
-            log.info("카테고리 후기가 존재한다면 제거");
-            log.info(categoryBoardList);
-
             for(int i = 0; i < categoryBoardList.size();i++){
+                log.info("후기 번째 : {}" , i);
                 CategoryBoard categoryBoard = categoryBoardList.get(i);
-                log.info("categoryBoard : {}",categoryBoard);
-                deleteCategoryBoard(categoryBoard.getBoardNo(),categoryBoard.getBoardItemDay());
+                deleteCategoryBoard(no,categoryBoard.getBoardItemDay());
             }
         }
 
@@ -511,6 +508,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     //CategoryBoardService
 
     @Override
+    @Transactional
     public CategoryBoardDTO createCategoryBoard(CategoryBoardDTO categoryBoardDTO, MultipartFile file) {
         log.info("CategoryBoard 저장 로직 --------------------");
         // 0. CategoryBoard에 저장 될 타이틀 명 임시 저장
@@ -551,13 +549,13 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         // 카테고리 업데이트 --> 후기 존재 true 로 변경
         log.info("categoryBoardDTO.getBoardCategoryNo() : {}",categoryBoardDTO.getBoardCategoryNo());
         CategoryDTO category = getCategory(categoryBoardDTO.getBoardCategoryNo());
-        category.setBoardExistence(true);
-        categoryUpdate(category);
         CategoryBoardDTO result = categoryBoardEntityToDto(save);
 
         // 썸네일 저장 로직 ---------------------------------------
         if (file == null) {
             log.info("썸네일 없음");
+            category.setBoardExistence(true);
+            categoryUpdate(category);
             return result;
         }
         // 썸네일 저장 로직 ---------------------------------------
@@ -571,6 +569,11 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         log.info("이미지 저장 성공");
         String asString = categoryThumbnail.get("url").getAsString();
         result.setBoardImg(asString);
+        category.setBoardExistence(true);
+        String boardImgName = categoryThumbnail.get("fileName").getAsString();
+        log.info("boardImgName : {}",boardImgName);
+        category.setBoardImg(boardImgName);
+        categoryUpdate(category);
 
         return result;
     }
@@ -594,19 +597,15 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
 
     @Override
     public boolean deleteCategoryBoardFile(Long boardNo,boolean imgFile){
-        log.info("파일 board No : {}",boardNo);
-
+        log.info("후기 파일 및 이미지 제거---------------------------------");
         Optional<CategoryBoard> entity = categoryBoardRepository.findById(boardNo);
-        log.info("entity : {}",entity);
         if (entity.isPresent()){
             CategoryBoard categoryBoard = entity.get();
-            log.info("파일 제거될 board 객체 : {}",categoryBoard);
             CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
             String removeFileName = categoryBoard.getBoardContent();
             // 1. 컨텐츠 txt파일 제거
             boolean fileRemove = boardContentFileService.removeFile(folderPath, removeFileName);
             if (fileRemove){
-                log.info("파일은 제거 되었고 DB 제거 !");
                 Optional<FileContent> fileContentByOriginFileName = fileContentRepository.getFileContentByOriginFileName(removeFileName);
                 if (fileContentByOriginFileName.isPresent()){
                     log.info("fileContentByOriginFileName");
@@ -614,9 +613,6 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
                     fileContentRepository.delete(fileContent);
                 }
             }
-
-
-            //fileContentRepository.delete();
             // 2. 이미지 파일 제거 true
             if (imgFile){
                 Optional<CategoryImage> img = categoryImageRepository.getCategoryImageByBoardNo(categoryBoard);
@@ -644,8 +640,10 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
 
 
     @Override
+    @Transactional
     public boolean deleteCategoryBoard(Long categoryNo, int dayNo) {
         log.info("카테고리 후기 제거 ------------");
+        log.info("categoryNo : {} , dayNo : {}",categoryNo,dayNo);
         Optional<CategoryBoard> board = categoryBoardRepository.getGategoryBoardVer(categoryNo,dayNo);
         if (!board.isPresent()){
             log.info("찾으시는 게시물이 없습니다.");
@@ -657,15 +655,15 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
             boolean imgFile = false; //전달 받는 이미지 파일 유무
             if (categoryBoard.getBoardItemDay() == 1) imgFile = true;
             deleteCategoryBoardFile(categoryBoard.getBoardNo(),imgFile);
-
             categoryBoardRepository.delete(categoryBoard);
-            log.info("삭제... 후");
             // 카테고리 후기 검색
             List<CategoryBoard> list = categoryBoardRepository.getCategoryBoardByBoardCategoryNo(categoryNo);
+
             if (list.isEmpty()) {
                 log.info("후기가 존재 하지 않을 시 카테고리 업데이트 ------------");
                 CategoryDTO category = getCategory(categoryNo);
                 category.setBoardExistence(false); // 카테고리 후기 존재 수정
+                category.setBoardImg(null);
                 categoryUpdate(category);
             }
             return true;

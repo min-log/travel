@@ -2,11 +2,9 @@ package com.example.travel.domain;
 
 
 import lombok.*;
-import org.springframework.data.jpa.repository.Modifying;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,6 +34,7 @@ public class Category extends BaseEntity{
 
     private int viewNum; // 카테고리 조회 수
     private Boolean boardExistence; // 카테고리 후기 존재 유무
+    private String boardImg; //카테고리 후기 이미지
 
 
 
