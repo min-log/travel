@@ -258,9 +258,8 @@ input.err {}
 .board_top * {display:inline-block}
 .board_top select {width: 150px;}
 .board_content .card {height:100%}
-.board_content .card-body {display: flex;}
-.board_content .card-body {display: flex;align-items: center;}
-.board_content .card-body .img {width:100px;height: 100px;border-radius: 4px;overflow: hidden;}
+.board_content .card-body {display: flex;align-items: flex-start;}
+.board_content .card-body .img {width:100px;height: 100px;border-radius: 4px;overflow: hidden;display:flex;align-items: center;}
 .board_content .card-body .img img {width:100%;height: auto}
 .board_content .card-body .con {width:100%;box-sizing:border-box;position:relative;font-size:12px;}
 .board_content .card-body .con .bi {font-size:14px;}
@@ -282,6 +281,14 @@ input.err {}
 .veiw_top .date {font-weight:bold}
 .veiw_top .area,
 .veiw_top .area span {font-weight:bold;font-size:12px;color:var(--color-main);}
+.veiw_top .img {width: 100%;
+    height: 230px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;}
+.veiw_top .img img {width:100%}
 .item_veiw_con .top {width:100%;line-height:40px !important;}
 .item_veiw_con .top > * {
     display: inline-block;

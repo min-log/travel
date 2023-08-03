@@ -40,7 +40,7 @@ public class BoardController {
         if(order == null) order= "dateStart";
         if (keyword == null) keyword = "";
 
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(page ,order,keyword);
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(6,page ,order,keyword);
 
 
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
@@ -74,6 +74,7 @@ public class BoardController {
     ){
         log.info("상세페이지");
         CategoryDTO categoryDTO = categoryService.getCategory(no);
+        categoryService.categoryViewNumUpdate(no);// 조회수 증가
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         log.info("days {}" , days.getDay());
         log.info("days info {}" , days.getDayInfo());
@@ -103,6 +104,7 @@ public class BoardController {
         log.info(dayNo);
 
         CategoryDTO categoryDTO = categoryService.getCategory(no);
+        categoryService.categoryViewNumUpdate(no);// 조회수 증가
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();

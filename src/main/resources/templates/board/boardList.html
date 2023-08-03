@@ -17,6 +17,7 @@
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
               <option th:selected="${orderCk} == 'dateStart'" th:value="@{/board/boardList(k = ${param.k},page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
               <option th:selected="${orderCk} == 'createdAt'" th:value="@{/board/boardList(k = ${param.k},page=${pageing.getPage()},order='createdAt')}">작성일</option>
+              <option th:selected="${orderCk} == 'viewNum'" th:value="@{/board/boardList(k = ${param.k},page=${pageing.getPage()},order='viewNum')}">인기순</option>
             </select>
           </p>
         </div>
@@ -32,9 +33,11 @@
             <li class="col" th:class="|col col_${list.categoryNo}|" >
               <div class="card">
                 <div class="card-body">
-                  <p class="img" th:if="${list.boardImg}">
-                    <img th:src="${list.boardImg}" alt="여행썸내일">
-                  </p>
+
+                    <p class="img" th:if="${list.boardImg}">
+                      <img th:src="${list.boardImg}" alt="여행썸내일">
+                    </p>
+
                   <div class="con">
                     <div class="address_info mt-1">
                       <p class="btn_up">

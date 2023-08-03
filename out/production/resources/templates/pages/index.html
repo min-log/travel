@@ -4,9 +4,133 @@
     layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
     <div class="container-fluid">
-        <div>
-            main
+        <div id="mainBanner">
+            main 소개 배너 우ㅣ치
         </div>
+
+        <div class="sec_board_img">
+            <h4 class="tit text-center mb-2">인기 게시물</h4>
+            <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">
+                <th:block th:each="list,i:${categoryPage.getContent()}">
+                    <li class="col" th:class="|col col_${list.categoryNo}|" >
+                        <div class="card">
+                            <div class="card-body">
+
+                                <p class="img" th:if="${list.boardImg}">
+                                    <img th:src="${list.boardImg}" alt="여행썸내일">
+                                </p>
+
+                                <div class="con">
+                                    <div class="address_info mt-1">
+                                        <p class="btn_up">
+                                            <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
+                                                <i class="bi bi-heart"></i>
+                                                <th:block th:each="likes,i:${likeList}">
+                                                    <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
+                                                </th:block>
+                                            </a>
+                                        </p>
+                                        <span class="point-color" th:text="${list.categoryArea}">제주도</span>
+                                        <th:block th:if="${list.categoryAreaDetails != ''}">
+                                            / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
+                                        </th:block>
+                                    </div>
+                                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
+                                    <div class="mt-1">
+                                        <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                                        <p class="travel_date mt-1" style="display:inline-block">
+                                            ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                                            -
+                                            <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                                        </p>
+                                    </div>
+                                    <p class="mt-1"><i class="bi bi-clock"></i>
+                                        작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
+                                    <p class="travel_people mt-1">
+                                        <i class="bi bi-emoji-smile"></i>
+                                        <span class="txt_info" style="color: #333">작정자 : </span>
+                                        <span class="tag point" th:text="${list.categoryWriter}"></span>
+                                        <th:block th:each="tagItem,i:${list.tagList}" th:if="${i.size > 0}" >
+                                            <span class="">인원 : </span>
+                                            <span th:text="${i.size} + 1" class="tag"></span>
+                                        </th:block>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- end :card-body -->
+                            <div class="btn-group border-top">
+                                <a th:href="@{/board/view(no=${list.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
+                                <th:block th:if="${list.boardExistence}">
+                                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                                </th:block>
+                            </div>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+        <div class="sec_board_new">
+            <h4 class="tit text-center mb-2">최근 게시물</h4>
+            <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
+                <th:block th:each="listNew,i:${categoryPageNew.getContent()}">
+                    <li class="col" th:class="|col col_${listNew.categoryNo}|" >
+                        <div class="card">
+                            <div class="card-body">
+
+                                <p class="img" th:if="${listNew.boardImg}">
+                                    <img th:src="${listNew.boardImg}" alt="여행썸내일">
+                                </p>
+
+                                <div class="con">
+                                    <div class="address_info mt-1">
+                                        <p class="btn_up">
+                                            <a th:href="|javascript:btnLike(${listNew.categoryNo})|" title="찜하기" class="btn_heart">
+                                                <i class="bi bi-heart"></i>
+                                                <th:block th:each="likes,i:${likeList}">
+                                                    <i th:if="${likes.categoryId == listNew.categoryNo}" class="bi bi-heart-fill"></i>
+                                                </th:block>
+                                            </a>
+                                        </p>
+                                        <span class="point-color" th:text="${listNew.categoryArea}">제주도</span>
+                                        <th:block th:if="${listNew.categoryAreaDetails != ''}">
+                                            / <span class="point-color" th:text="${listNew.categoryAreaDetails}">제주도</span>
+                                        </th:block>
+                                    </div>
+                                    <h5 th:text="${listNew.categoryName}" class="card-title">동물농장 여행</h5>
+                                    <div class="mt-1">
+                                        <span><i class="bi bi-calendar-week"></i> 일정 : [[${listNew.dateTxt} - 1 ]] 박 [[${listNew.dateTxt}]] 일</span>
+                                        <p class="travel_date mt-1" style="display:inline-block">
+                                            ( <span class="travel_day_start" th:text="${listNew.dateStart}">2023-08-11</span>
+                                            -
+                                            <span class="travel_day_end" th:text="${listNew.dateEnd}">2023-08-20</span> )
+                                        </p>
+                                    </div>
+                                    <p class="mt-1"><i class="bi bi-clock"></i>
+                                        작성일 : [[${#temporals.format(listNew.createdAt,'yyyy-MM-dd')}]]</p>
+                                    <p class="travel_people mt-1">
+                                        <i class="bi bi-emoji-smile"></i>
+                                        <span class="txt_info" style="color: #333">작정자 : </span>
+                                        <span class="tag point" th:text="${listNew.categoryWriter}"></span>
+                                        <th:block th:each="tagItem,i:${listNew.tagList}" th:if="${i.size > 0}" >
+                                            <span class="">인원 : </span>
+                                            <span th:text="${i.size} + 1" class="tag"></span>
+                                        </th:block>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- end :card-body -->
+                            <div class="btn-group border-top">
+                                <a th:href="@{/board/view(no=${listNew.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
+                                <th:block th:if="${listNew.boardExistence}">
+                                    <a th:href="@{/board/postView(no=${listNew.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                                </th:block>
+                            </div>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+
     </div>
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

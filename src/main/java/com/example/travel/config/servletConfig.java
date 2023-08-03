@@ -10,18 +10,18 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 public class servletConfig implements WebMvcConfigurer {
 
-//    @Bean
-//    public ViewResolver viewResolver(){
-//        // VIEW 지정
-//        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-//        // 접두사(ex./WEB-INF/views/main.jsp)
-//        resolver.setPrefix("/WEB-INF/View/");
-//        // 접미사
-//        resolver.setSuffix(".html");
-//        //resolver.setSuffix(".jsp");
-//
-//        return resolver;
-//    }
+    @Bean
+    public ViewResolver viewResolver(){
+        // VIEW 지정
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        // 접두사(ex./WEB-INF/views/main.jsp)
+        resolver.setPrefix("/templates/");
+        // 접미사
+        resolver.setSuffix(".html");
+        //resolver.setSuffix(".jsp");
+
+        return resolver;
+    }
 
     // 주소창 입력값
     private String connectPath = "/upload/**";

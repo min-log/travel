@@ -42,11 +42,8 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     
     final CommentsService commentsService; //댓글
 
-    final CommentsService commentsService; //댓글
 
-    //==========================================================================
-    //==========================================================================
-    //CategoryBoardService
+    //CategoryBoardService -----------------------------------------------------
     final CategoryBoardRepository categoryBoardRepository;
     final CategoryImageRepository categoryImageRepository;
     final FileContentRepository fileContentRepository;
@@ -79,12 +76,12 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
 
 
     @Override
-    public Page<CategoryDTO> getCategoryList(Integer page, String order, String keyword) {
+    public Page<CategoryDTO> getCategoryList(Integer size,Integer page, String order, String keyword) {
         log.info("카테고리 리스트 검색");
 
         String key = "%"+keyword+"%";
         PageRequest pageRequest;
-        pageRequest = PageRequest.of(page - 1, 6, Sort.by(order).ascending());
+        pageRequest = PageRequest.of(page - 1, size, Sort.by(order).descending());
         Page<Category> result = categoryRepository.findCategorySearch(true,key, pageRequest);
         Page<CategoryDTO> categoryDTOS = convertPage(result);
 
@@ -515,6 +512,16 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         }
 
         return none;
+    }
+
+    @Override
+    public void categoryViewNumUpdate(Long categoryNo) {
+        Category category = categoryRepository.getOne(categoryNo);
+        CategoryDTO categoryDTO = categoryEntityToDto(category);
+        int viewNum = categoryDTO.getViewNum();
+        categoryDTO.setViewNum(viewNum + 1);
+        Category result = categoryDtoToEntity(categoryDTO);
+        categoryRepository.save(result);
     }
 
 

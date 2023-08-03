@@ -120,7 +120,7 @@ public class BoardFileService{
             String thumbnailSaveName = uploadPath + File.separator + folderPathMake + File.separator + thumbnailName;
             File thumbnailFile = new File(thumbnailSaveName);
             //썸네일 저장
-            Thumbnailator.createThumbnail(savePath.toFile(),thumbnailFile,200,200);
+            Thumbnailator.createThumbnail(savePath.toFile(),thumbnailFile,400,400);
 
             log.info("?");
             log.info("board : {}",board);

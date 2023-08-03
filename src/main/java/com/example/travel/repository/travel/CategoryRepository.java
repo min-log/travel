@@ -28,7 +28,10 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
                                       @Param("key") String keyword ,Pageable pageable);
 
 
+
     Page<Category> findByUserTravelNoAndCategorySave(Long no,boolean save, Pageable pageable);
+
+
 
 
 

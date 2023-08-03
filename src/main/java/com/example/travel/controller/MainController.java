@@ -1,11 +1,16 @@
 package com.example.travel.controller;
 
 import com.example.travel.domain.UserImage;
+import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.repository.member.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
+import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.FileService;
+import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,7 @@ public class MainController {
 
     final FileService service;
     final UserImageRepository userImageRepository;
+    private final CategoryService categoryService;
 
 
     @Transactional
@@ -63,8 +69,20 @@ public class MainController {
     @GetMapping(value = {"","main"})
     public String main(
             HttpServletRequest request,
-            Model model
-      ){
+            Model model,
+            HttpSession session){
+
+
+
+
+
+        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(6,1,"viewNum","");
+        model.addAttribute("categoryPage",categoryPage);
+
+        Page<CategoryDTO> categoryPageNew = categoryService.getCategoryList(4,1 ,"createdAt","");
+        model.addAttribute("categoryPageNew",categoryPageNew);
+
+
 
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
