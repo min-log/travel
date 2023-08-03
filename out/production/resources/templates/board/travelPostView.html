@@ -15,6 +15,11 @@
                 <div class="flex-column ">
                     <div class="top veiw_top" >
                         <div class="up">
+<!--                            <th:block th:if='${session.userT}'>-->
+<!--                                <a th:if="${session.userT.userNo} == ${category.userTravelNo}" th:href="@{/travel/post(no=${category.categoryNo},day=1)}"  title="수정하기">-->
+<!--                                    <i class="bi bi-sticky-fill"></i>-->
+<!--                                </a>-->
+<!--                            </th:block>-->
                             <a th:href="@{/board/view(no=${category.categoryNo})}"  title="지도보러가기">
                                 <i class="bi bi-map-fill"></i>
                             </a>

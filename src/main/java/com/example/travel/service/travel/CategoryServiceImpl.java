@@ -40,6 +40,8 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     final ItemRepository itemRepository;
     final LikeCategoryRepository likeRepository;
 
+    final CommentsService commentsService; //댓글
+
     //==========================================================================
     //==========================================================================
     //CategoryBoardService
@@ -330,9 +332,20 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         // 2. 해쉬태그 제거
         // 3. 해쉬태그 중간 맵핑 제거
         // 4. 카테고리 후기 제거
-        // 5. 카테고리 제거
+        // 5. 댓글 제거
+        // 6. 카테고리 제거
+        hashTagDelete(no); //1/2/3
 
-        hashTagDelete(no);
+        List<CommentsDTO> commentsList = commentsService.getCommentsList(no);
+        if (commentsList != null){
+            log.info("댓글 제거 -------------");
+            for (int i=0;i<commentsList.size();i++){
+                log.info("i : {}", i);
+                commentsService.deleteComments(commentsList.get(i).getCommNo());
+            }
+
+        }
+
         // 4. 카테고리 후기 제거
         List<CategoryBoard> categoryBoardList = getCategoryBoardList(no); //boardCategoryNo
         if (categoryBoardList != null){
@@ -343,7 +356,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
             }
         }
 
-        categoryRepository.delete(category); //5. 카테고리제거
+        categoryRepository.delete(category); // 6. 카테고리 제거
         log.info("카테고리가 없으면 false 반환");
         return true;
     }

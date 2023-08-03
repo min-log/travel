@@ -25,7 +25,16 @@ public class CommentsServiceImpl implements CommentsService{
         log.info("저장 하려는 객체 : {}",comments);
         Comments save = commentsRepository.save(comments);
         CommentsDTO result = commentsEntityToDTO(save);
+        log.info(result.getCommNo());
         return result;
+    }
+
+    @Override
+    public Long deleteComments(Long no) {
+        Comments comments = commentsRepository.getOne(no);
+        commentsRepository.delete(comments);
+
+        return no;
     }
 
 

@@ -43,10 +43,10 @@ public class SecurityConfig {
                 .antMatchers("/admin/**").hasRole("ADMIN")
         ;
         http.formLogin()
-                .loginPage("/loginForm")
+                .loginPage("/member/loginForm")
                 .loginProcessingUrl("/login_proc")
                 .defaultSuccessUrl("/security-login", true) // 회원정보 저장:  두번째 인자가 true일경우 무조건 로그인시 해당 페이지 이동
-                .failureUrl("/loginForm")
+                .failureUrl("/member/loginForm")
                 .failureHandler(loginFailHandler);
 
         //소셜 로그인 구글 / 네이버 / 카카오

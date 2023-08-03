@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentsDTO {
-    private Long commId;
+    private Long commNo;
     private Long commCategory;
     private String commUser;
     private Long commUserNo;
