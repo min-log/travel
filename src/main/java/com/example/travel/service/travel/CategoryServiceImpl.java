@@ -39,6 +39,8 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     final TagRepository tagRepository;
     final ItemRepository itemRepository;
     final LikeCategoryRepository likeRepository;
+    
+    final CommentsService commentsService; //댓글
 
     final CommentsService commentsService; //댓글
 
