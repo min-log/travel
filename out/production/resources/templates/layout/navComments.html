@@ -52,7 +52,7 @@
         let con ='';
         //console.log("comment : "+ comment);
         $.ajax({
-            url :"/board/commSave",
+            url :"/boardApi/commSave",
             type:"post",
             data: comment,
             dataType:'json',
@@ -92,7 +92,7 @@
           console.log("commontList" + commUserNo);
           let con='';
           $.ajax({
-              url :"/board/commList?no="+[[${param.no}]],
+              url :"/boardApi/commList?no="+[[${param.no}]],
               type:"get",
               success:function (data) {
                   console.log(data);

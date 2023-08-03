@@ -50,7 +50,7 @@
         con = '';
         $.ajax({
             type : 'get',
-            url : 'board/categoryTemList?tem='+data,
+            url : 'boardApi/categoryTemList?tem='+data,
             success:function (data){
                 if(data.length == 0){
                     conTem.hide();
@@ -85,7 +85,7 @@
             //true는 확인버튼을 눌렀을 때 코드 작성
             $.ajax({
                 type : 'get',
-                url : 'board/categoryDelete?no='+date,
+                url : 'boardApi/categoryDelete?no='+date,
                 success:function (data){
                     categoryTemList(temVel);
                 },

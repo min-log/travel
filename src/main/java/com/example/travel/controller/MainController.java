@@ -29,7 +29,7 @@ public class MainController {
 
 
     @Transactional
-    @GetMapping("/security-login")
+    @GetMapping("security-login")
     public String securityLogin(@AuthenticationPrincipal UserTravelAdapter user,
                                 HttpSession session) {
         log.info("회원 로그인 여부에 따른 세션");

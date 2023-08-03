@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="656ddcd7-5457-4e29-957e-dba84633973e" name="travl_db@localhost Mapping">
+      <data-sources db="ea723d08-e62b-4332-8f55-96e5065ea83c" />
+      <scope>
+        <node kind="schema" qname="travl_db" />
+      </scope>
+    </mapping>
+  </component>
+</project>

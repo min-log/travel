@@ -5,14 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
-@RestController("/")
 @RequiredArgsConstructor
+@RestController
+@RequestMapping("/mail")
 public class MailController {
-
     private final MailSendService mailSendService;
     //이메일 인증
     @GetMapping("/mailCheck")

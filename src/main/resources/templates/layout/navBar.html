@@ -9,7 +9,7 @@
     <div class="navbar_wrap scrollBar">
       <div class="profile_card ">
         <p class="profile_image_wrap border">
-          <img sec:authorize="isAuthenticated" th:src="|/user/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+          <img sec:authorize="isAuthenticated" th:src="|/userApi/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
         </p>
         <p class="id m-3" th:if="${session.userT != null}" th:text="${session.userT.userId}"></p>
         <a th:href="@{/mypage/userImageModify}" class="btn btn-sm btn-outline-secondary">회원 사진 변경하기</a>

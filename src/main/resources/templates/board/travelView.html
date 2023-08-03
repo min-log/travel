@@ -52,7 +52,7 @@
                         <p class="mt-3"></p>
 
                         <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
-                            <form id="itemForm" method="post" th:action="@{/board/itemSave}">
+                            <form id="itemForm" method="post" th:action="@{/boardApi/itemSave}">
                                 <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
                                 <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
                                 <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
@@ -185,7 +185,7 @@
                     let itemListCon='';
                     let todayPrice= 0;
                     $.ajax({
-                        url: '/board/itemList',
+                        url: '/boardApi/itemList',
                         type: "get",
                         data: {itemDay:e,cateNo:[[${param.no}]]},
                         dataType: 'json',

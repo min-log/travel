@@ -1,6 +1,4 @@
 // common javascript
-
-
 // navBar click event
 $(function (){
     let navBox = $(".navbar");

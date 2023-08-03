@@ -148,7 +148,7 @@
 
           $.ajax({
               type : 'get',
-              url : '/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
+              url : '/mail/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
               success : function (data) {
                   msg  += "<div class='text-center'>";
                   msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";

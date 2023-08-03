@@ -118,7 +118,7 @@
                     let itemListCon='';
                     let todayPrice= 0;
                     $.ajax({
-                        url: '/board/itemList',
+                        url: '/boardApi/itemList',
                         type: "get",
                         data: {itemDay:e,cateNo:[[${param.no}]]},
                         dataType: 'json',
@@ -239,7 +239,7 @@
 
         function boardFormDelete(){
             $.ajax({
-                url:"/board/postDelete?no=" + [[${param.no}]] + "&day="+ [[${param.day}]],
+                url:"/boardApi/postDelete?no=" + [[${param.no}]] + "&day="+ [[${param.day}]],
                 type:'get',
                 success:function (data) {
                     if (data){

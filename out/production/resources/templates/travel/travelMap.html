@@ -42,7 +42,7 @@
                         <p class="mt-3"></p>
 
                         <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
-                            <form id="itemForm" method="post" th:action="@{/board/itemSave}">
+                            <form id="itemForm" method="post" th:action="@{/boardApi/itemSave}">
                                 <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
                                 <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
                                 <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
@@ -220,7 +220,7 @@
                 let dayVal = daySelect.find("option:selected").val();
                 let item = $("#itemForm").serialize();
                 $.ajax({
-                    url:"/board/itemSave",
+                    url:"/boardApi/itemSave",
                     type:'POST',
                     data: item, // 전송 데이터
                     dataType: 'json', // 전송 데이터 형식
@@ -253,7 +253,7 @@
                 let itemDay = $("input[name=itemDay]").val();
                 console.log(itemNo);
                 $.ajax({
-                    url:'/board/itemDelete?no='+itemNo,
+                    url:'/boardApi/itemDelete?no='+itemNo,
                     type:'get',
                     success:function (data) {
                         $('#modalMsg').modal("show");
@@ -289,7 +289,7 @@
                 let jsonData = storageSave();
                 console.log(jsonData);
                 $.ajax({
-                    url:'/board/StorageSave',
+                    url:'/boardApi/StorageSave',
                     type:'get',
                     dataType: 'json',
                     data: {"jsonData" : jsonData},
@@ -311,7 +311,7 @@
                 console.log(jsonData);
                 console.log(categoryNo);
                 $.ajax({
-                    url:'/board/StorageTotalSave',
+                    url:'/boardApi/StorageTotalSave',
                     type:'get',
                     dataType: 'json',
                     data: {"jsonData" : jsonData,"categoryNo":categoryNo},
@@ -334,7 +334,7 @@
                 let category = $('input[name=categoryId]').val();
                 let itemListCon='';
                 $.ajax({
-                    url: '/board/itemList',
+                    url: '/boardApi/itemList',
                     type: "get",
                     data: {itemDay:e,cateNo:category},
                     dataType: 'json',
@@ -375,7 +375,7 @@
                     $.ajax({
                         type: 'get',
                         dataType: 'json',
-                        url:'/board/itemGet?no='+dayNo,
+                        url:'/boardApi/itemGet?no='+dayNo,
                         success:function (data) {
                             let arr=[];
                             arr = data;

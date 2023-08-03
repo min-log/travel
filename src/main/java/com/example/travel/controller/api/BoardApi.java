@@ -27,7 +27,7 @@ import java.util.List;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/board")
+@RequestMapping("/boardApi")
 public class BoardApi {
     final CategoryService categoryService;
     final CategoryBoardService categoryBoardService;
