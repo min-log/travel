@@ -89,6 +89,28 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     }
 
     @Override
+    public Page<CategoryDTO> getCategoryImgList(Integer size, Integer page, String order) {
+        log.info("인기 카테고리 리스트 (후기 이미지 존재)----");
+        PageRequest pageRequest;
+        pageRequest = PageRequest.of(page - 1, size, Sort.by(order).descending());
+        Page<Category> result = categoryRepository.findCategoryImgSearch(true, pageRequest);
+        Page<CategoryDTO> categoryDTOS = convertPage(result);
+
+        return categoryDTOS;
+    }
+
+    @Override
+    public Page<CategoryDTO> getCategoryPopularityList(Integer size, Integer page, String order) {
+        log.info("인기 카테고리 리스트 ----");
+        PageRequest pageRequest;
+        pageRequest = PageRequest.of(page - 1, size, Sort.by(order).descending());
+        Page<Category> result = categoryRepository.findCategoryPopularitySearch(true, pageRequest);
+        Page<CategoryDTO> categoryDTOS = convertPage(result);
+
+        return categoryDTOS;
+    }
+
+    @Override
     public Page<CategoryDTO> getCategoryMYPage(Long no, Integer page, String order,Integer size) {
         log.info("내 카테고리 리스트 전달");
         log.info("page : {}",page);

@@ -76,8 +76,13 @@ public class MainController {
 
 
 
-        Page<CategoryDTO> categoryPage = categoryService.getCategoryList(6,1,"viewNum","");
-        model.addAttribute("categoryPage",categoryPage);
+        Page<CategoryDTO> categoryPageImg = categoryService.getCategoryImgList(6,1,"viewNum");
+        model.addAttribute("categoryPageImg",categoryPageImg);
+
+
+        Page<CategoryDTO> categoryPagePopularity = categoryService.getCategoryPopularityList(15,1,"viewNum");
+        model.addAttribute("categoryPagePopularity",categoryPagePopularity);
+
 
         Page<CategoryDTO> categoryPageNew = categoryService.getCategoryList(4,1 ,"createdAt","");
         model.addAttribute("categoryPageNew",categoryPageNew);

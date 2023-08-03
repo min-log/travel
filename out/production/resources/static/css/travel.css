@@ -362,3 +362,14 @@ input.err {}
 #commentsList .comm .comm_id {}
 #commentsList .comm .comm_con {}
 #commentsList .comm .comm_con {}
+
+
+/*main----------------------------------------------*/
+.board_wrap {display:flex}
+.board_wrap .box {width:50%;overflow:hidden;}
+/**/
+.board_content_img {display:flex;}
+.board_content_img li {boarder:1px solid #ccc;border-radius:5px;padding:5px;}
+.board_ranking {}
+.board_ranking li {boarder:1px solid #ccc;border-radius:5px;padding:5px;}
+

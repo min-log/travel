@@ -22,7 +22,10 @@ public interface CategoryService {
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
     Page<CategoryDTO> getCategoryList(Integer size,Integer page, String order, String keyword);
+    Page<CategoryDTO> getCategoryImgList(Integer size,Integer page, String order);
+    Page<CategoryDTO> getCategoryPopularityList(Integer size,Integer page, String order);
 
+    //마이페이지 카테고리 리스트
 
     Page<CategoryDTO> getCategoryMYPage(Long no,Integer page ,String order,Integer size);
 
