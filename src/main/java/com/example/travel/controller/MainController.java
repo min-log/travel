@@ -2,6 +2,7 @@ package com.example.travel.controller;
 
 import com.example.travel.domain.UserImage;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.dto.travel.RankingDTO;
 import com.example.travel.repository.member.UserImageRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -89,6 +91,13 @@ public class MainController {
 
         Page<CategoryDTO> categoryPageNew = categoryService.getCategoryList(4,1 ,"createdAt","");
         model.addAttribute("categoryPageNew",categoryPageNew);
+
+
+        UserTravelDTO userT = (UserTravelDTO)session.getAttribute("userT");
+        if (userT != null){ //유저가 있을때만
+            List<LikeCategoryDTO> likeList = categoryService.categoryLikeList(userT.getUserNo());
+            model.addAttribute("likeList",likeList);
+        }
 
 
 

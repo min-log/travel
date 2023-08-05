@@ -33,14 +33,12 @@
                   <p class="img" th:if="${list.boardImg}">
                     <img th:src="${list.boardImg}" alt="여행썸내일">
                   </p>
+
                   <div class="con">
                     <div class="address_info mt-1">
                       <p class="btn_up">
                         <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
-                          <i class="bi bi-heart"></i>
-                          <th:block th:each="likes,i:${likeList}">
-                            <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
-                          </th:block>
+                          <i class="bi bi-heart-fill"></i>
                         </a>
                       </p>
                       <span class="point-color" th:text="${list.categoryArea}">제주도</span>
@@ -72,9 +70,9 @@
                 </div>
                 <!-- end :card-body -->
                 <div class="btn-group border-top">
-                  <a th:href="@{/travel/view(no=${list.categoryNo})}" class="btn border-end">일정상세 <i class="bi bi-map-fill"></i></a>
+                  <a th:href="@{/board/view(no=${list.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
                   <th:block th:if="${list.boardExistence}">
-                    <a th:href="@{/travel/post(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
                   </th:block>
                 </div>
               </div>
@@ -93,64 +91,9 @@
             </th:block>
         </div>
       </div>
-
-
     </div>
   </div>
-
-
-  <script type="text/javascript">
-    $(document).ready(function (){
-
-        let today = new Date();
-        console.log("today : "+today);
-
-        $(".board_content li").each(function (index, item) {
-           let startDay = $(this).find(".travel_day_start").text();
-           let startEnd = $(this).find(".travel_day_end").text();
-           console.log("startDay : "+ startDay);
-            startDay = new Date(startDay);
-            startEnd = new Date(startEnd);
-            var total = startEnd - startDay;
-            var perc = today - startDay;
-
-
-
-            const totalDay = Math.floor(total / (1000*60*60*24));
-            const totalHour = Math.floor((total / (1000*60*60)) % 24);
-            const totalMin = Math.floor((total / (1000*60)) % 60);
-            const totalSec = Math.floor(total / 1000 % 60);
-            console.log(  index+" - totalDay ) "+ totalDay+"일 "+ totalHour+"시간 " +totalMin +"분 " +totalSec+"초");
-
-            const diffDay = Math.floor(perc / (1000*60*60*24));
-            const diffHour = Math.floor((perc / (1000*60*60)) % 24);
-            const diffMin = Math.floor((perc / (1000*60)) % 60);
-            const diffSec = Math.floor(perc / 1000 % 60);
-            console.log( index+") "+ diffDay+"일 "+ diffHour+"시간 " +diffMin +"분 " +diffSec+"초");
-
-
-            console.log("startDay" + startDay);
-            console.log("startEnd" + startEnd);
-
-
-            console.log(index  + "그래서... : " + (totalDay-diffDay)*0.01);
-            console.log(index  + "그래서... : " + (totalDay-diffDay) + "%");
-
-
-
-            console.log("************************");
-            console.log("************************");
-            console.log("************************");
-            console.log("************************");
-            console.log("************************");
-
-
-
-        });
-
-    });
-  </script>
-
+  <script th:src="@{/js/boardList.js}"></script>
 </th:block>
 </html>
 

@@ -20,10 +20,11 @@
                             </a>
                         </div>
                         <div th:object="${category}">
-                            <div class="img" th:if="|${category.boardImg}!=null|">
-                                <img th:src="${category.boardImg}" alt="">
-                            </div>
-
+                            <th:block th:if="|${category.boardImg != null}|">
+                                <div class="img">
+                                    <img th:src="${category.boardImg}" alt="">
+                                </div>
+                            </th:block>
                             <p class="area text-center">
                                 <span th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:text="*{categoryArea}"></span>
                                 <th:block th:if="*{categoryAreaDetails != ''}">  /

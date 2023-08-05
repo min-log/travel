@@ -2,6 +2,7 @@ package com.example.travel.controller.member;
 
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.travel.CategoryDTO;
+import com.example.travel.dto.travel.LikeCategoryDTO;
 import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.security.dto.UserTravelAdapter;
@@ -192,6 +193,8 @@ public class MypageController {
         UserTravelDTO userT = (UserTravelDTO) session.getAttribute("userT");
         Page<CategoryDTO> categoryPage = categoryService.getCategoryMYPage(userT.getUserNo(), page ,order,6);
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
+
+
 
         log.info("categoryPage : {}",categoryPage);
         log.info("pageingDTO {}",pageingDTO);
