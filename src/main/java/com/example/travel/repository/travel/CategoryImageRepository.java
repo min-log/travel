@@ -13,4 +13,5 @@ public interface CategoryImageRepository extends JpaRepository<CategoryImage,Lon
 
     Optional<CategoryImage> getCategoryImageByBoardNo(CategoryBoard categoryBoard);
 
+
 }

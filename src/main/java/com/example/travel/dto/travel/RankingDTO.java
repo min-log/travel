@@ -2,20 +2,14 @@ package com.example.travel.dto.travel;
 
 import lombok.*;
 
-
-@ToString
-@Setter
 @Getter
-@RequiredArgsConstructor
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
+@ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RankingDTO {
     private Long rankNo;
-    private String rankTitle;
-    private int rankSearchNum;
-
-    public void rankAdd(int num){
-        this.rankSearchNum = this.rankSearchNum + 1;
-    }
+    private String title;
+    private int searchNum;
 }

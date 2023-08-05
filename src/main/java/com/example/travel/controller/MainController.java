@@ -3,11 +3,13 @@ package com.example.travel.controller;
 import com.example.travel.domain.UserImage;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.PageingDTO;
+import com.example.travel.dto.travel.RankingDTO;
 import com.example.travel.repository.member.UserImageRepository;
 import com.example.travel.security.dto.UserTravelAdapter;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.FileService;
 import com.example.travel.service.travel.CategoryService;
+import com.example.travel.service.travel.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -31,7 +33,8 @@ public class MainController {
 
     final FileService service;
     final UserImageRepository userImageRepository;
-    private final CategoryService categoryService;
+    final CategoryService categoryService;
+    final RankingService rankingService;
 
 
     @Transactional
@@ -73,8 +76,8 @@ public class MainController {
             HttpSession session){
 
 
-
-
+        Page<RankingDTO> rankingDTOS = rankingService.rankingList();
+        model.addAttribute("rankingList",rankingDTOS);
 
         Page<CategoryDTO> categoryPageImg = categoryService.getCategoryImgList(6,1,"viewNum");
         model.addAttribute("categoryPageImg",categoryPageImg);

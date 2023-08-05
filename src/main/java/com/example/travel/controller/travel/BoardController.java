@@ -4,6 +4,7 @@ import com.example.travel.dto.travel.*;
 import com.example.travel.security.dto.UserTravelDTO;
 import com.example.travel.service.travel.CategoryBoardService;
 import com.example.travel.service.travel.CategoryService;
+import com.example.travel.service.travel.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import java.util.List;
 public class BoardController {
     final CategoryService categoryService;
     final CategoryBoardService categoryBoardService;
+    final RankingService rankingService;
 
     @GetMapping("/boardList")
     public String categoryList(
@@ -38,14 +40,23 @@ public class BoardController {
 
         if(page == null) page= 1;
         if(order == null) order= "dateStart";
-        if (keyword == null) keyword = "";
+        if(keyword == null) keyword = "";
+
 
         Page<CategoryDTO> categoryPage = categoryService.getCategoryList(6,page ,order,keyword);
 
-
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
-        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
 
+        if(!keyword.equals("")) { //키워드 검색 시 , 내용이 존재한다면
+            if(!pageingDTO.getPageList().isEmpty()){
+                rankingService.rankingUp(keyword);
+            }
+        }
+
+
+
+
+        log.info("pageingDTO.getPage() : {} ",pageingDTO.getPage());
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
