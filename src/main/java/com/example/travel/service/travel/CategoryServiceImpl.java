@@ -355,6 +355,8 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         // 4. 카테고리 후기 제거
         // 5. 댓글 제거
         // 6. 카테고리 제거
+        // 7. 좋아요한 카테고리 제거
+
         hashTagDelete(no); //1/2/3
 
         List<CommentsDTO> commentsList = commentsService.getCommentsList(no);
@@ -374,6 +376,16 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
                 log.info("후기 번째 : {}" , i);
                 CategoryBoard categoryBoard = categoryBoardList.get(i);
                 deleteCategoryBoard(no,categoryBoard.getBoardItemDay());
+            }
+        }
+        List<LikeCategory> likeAll = likeRepository.findAll();
+        if (likeAll != null){
+            // 좋아요한 카테고리 제거
+            log.info("like 존재");
+            for (LikeCategory i : likeAll){
+                if (no == i.getCategoryId()){
+                    likeRepository.delete(i);
+                }
             }
         }
 

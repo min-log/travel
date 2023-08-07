@@ -135,46 +135,6 @@ public class TravelController {
         return "redirect:/mypage/boardList";
     }
 
-    @GetMapping("/view")
-    public String categoryVeiw(
-            Authentication authentication,
-            @RequestParam(value = "no") long no,
-            Model model,
-            RedirectAttributes redirectAttributes
-    ){
-
-
-        log.info("상세페이지");
-        CategoryDTO categoryDTO = categoryService.getCategory(no);
-        DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
-        log.info("days {}" , days.getDay());
-        log.info("days info {}" , days.getDayInfo());
-        LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
-        int dayOfMonth = localDate.getDayOfMonth();
-
-        ItemDTO item = ItemDTO.builder().categoryId(no).build();
-
-        model.addAttribute("category",categoryDTO);
-        model.addAttribute("days",days);
-        model.addAttribute("startDay",dayOfMonth);
-        model.addAttribute("item",item);
-
-
-
-        // 비공개 글의 경우 해당 유저의 글이 아닐 시 페이지 접근 막기
-        boolean categoryOpen = categoryDTO.isCategoryOpen();
-        if (categoryOpen == false){
-            boolean userCk = userCk(authentication, categoryDTO);
-            if (userCk == false){
-                redirectAttributes.addFlashAttribute("msg","접속 할 수 없는 페이지 입니다.");
-                return "redirect:/board/boardList";
-            }
-        }
-
-        return "travel/travelView";
-    }
-
-
 
 
 

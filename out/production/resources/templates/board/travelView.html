@@ -143,7 +143,6 @@
         </div>
 
 
-
         <script type="text/javascript">
             let itemNo; // 아이템 넘버
             let modal =$('#modalMsg');
@@ -245,6 +244,13 @@
                             $("#sortable li").removeClass("action");
                             itemEl.addClass("action");
                             itemCon.slideDown();
+
+                            let startMapX =  itemEl.data('map-x');
+                            let startMapY =  itemEl.data('map-y');
+                            let endMapX =  itemEl.next('li').data('map-x');
+                            let endMapY =  itemEl.next('li').data('map-Y');
+                            tMapPost(startMapX,startMapY,endMapX,endMapY);
+
                         }else {
                             itemEl.removeClass("action");
                             itemCon.slideUp();
@@ -253,11 +259,44 @@
                 }
 
 
-
-
-
-
             });
+
+
+
+
+            function tMapPost(startMapX,startMapY,endMapX,endMapY) {
+                console.log("전달7");
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        accept: 'application/json',
+                        appKey: 'xOlDvGyoTo8WYlGZ2pZVe5Q5zw1Nypk53yuXhc9C',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        startX: startMapX,
+                        startY: startMapY,
+                        endX: endMapX,
+                        endY: endMapY,
+                        lang: 0,
+                        format: 'json',
+                        count: 10,
+                        ///searchDttm: '202301011200'
+                    })
+                };
+
+                fetch('https://apis.openapi.sk.com/transit/routes', options)
+                    .then(response => response.json())
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    });
+
+            }
+
+
         </script>
 
         <div class="content" style="padding:0;">
@@ -342,6 +381,7 @@
             setTimeout(function (){
                 let places = myMerkerSet();
                 displayPlaces(places);
+                mapLine();
             },100);
         }
 
@@ -479,6 +519,31 @@
 
 
 
+        //라인 생성
+        function mapLine(){
+            console.log("지도 선 그리기")
+            let linePath=[];
+            let distance;
+
+            for(let i=0;i<positions.length;i++){
+                console.log(positions[i].latlng);
+                linePath.push(positions[i].latlng);
+
+            }//end for
+            // 지도에 표시할 선을 생성합니다
+            const polyline = new kakao.maps.Polyline({
+                path: linePath, // 선을 구성하는 좌표배열 입니다
+                strokeWeight: 5, // 선의 두께 입니다
+                strokeColor: "#FFAE00", // 선의 색깔입니다
+                strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: "solid", // 선의 스타일입니다
+            });
+
+            //lineLine.push(drawLine);
+            polyline.setMap(map);
+
+
+        }
 
     });
 

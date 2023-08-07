@@ -11,6 +11,14 @@
             <div class="navbar_wrap scrollBar">
                 <div class="flex-column ">
                     <div class="top" >
+                        <th:block th:if="${category.categorySave == true}">
+                            <div class="up">
+                                <a th:href="@{/travel/post(no=${category.categoryNo},day=1)}"  title="기록하기">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+                            </div>
+                        </th:block>
+
                         <div th:object="${category}">
                             <p class="text-center mb-1 txt_info">stap 2 > 여행 상세계획</p>
                             <h3 class="text-center" th:text="*{categoryName}">

@@ -277,6 +277,9 @@ input.err {}
 .board_content .btn_up a + a {margin-left:5px;}
 .btn_heart .bi {font-size:18px;position:absolute;right:0;top:0;}
 .btn_heart .bi.bi-heart-fill {position: absolute;right:0;top:0;z-index:1;}
+.board_content .top_btn {display:flex;justify-content: space-between;align-items: center;}
+.board_content .top_btn a {font-size:12px;font-weight:bold;}
+.board_content .top_btn .bi {width:18px;height:18px;font-size:18px !important;}
 /*게시판 상세페이지*/
 .veiw_top .date {font-weight:bold}
 .veiw_top .area,

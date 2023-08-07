@@ -24,7 +24,6 @@ public class Item extends BaseEntity {
     private int itemNumber; // DAY 안에서 순서
     private int itemAccount; // 비용
     private String itemInfo; // 정보 내용
-    private String itemContent; // 회원 컨텐츠
     private String itemTime; // 도착 시간
 
     //kakao api

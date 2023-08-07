@@ -16,7 +16,8 @@ pc.add("(min-width: 1000px)", () => {
         .to(".bg",  {y: 120,scale:1.5}, 0)
         .to(".bg_4",  { y: -20,x:-200,scale:1.6}, 0)
         .to(".bg_3",  { y: 100,x:-200,scale:1.5}, 0)
-        .from(".txt",  { y: 200,opacity:-3}, 0);
+        .from(".txt",  {scale:0.4}, 0)
+        .from(".txt .t_2",  { y: 200,opacity:-3}, 0);
 
 
 
