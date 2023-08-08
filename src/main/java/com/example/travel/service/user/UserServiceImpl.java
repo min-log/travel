@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         MultipartFile userImg = userDto.getUserImg();
 
 
-        log.info("저장하자");
+        log.info("프로필 저장");
         UserImage imageDTO = fileService.createImageDTO(userImg,"profile");
         UserImage save = userImageRepository.save(imageDTO);
         entity.updateUserImage(save);
@@ -58,6 +58,19 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public UserTravel userAdminSave(UserDTO userDto) {
+        log.info("관리자 회원가입 ==========================");
+        log.info("userSaveDTO : {}" , userDto);
+        userDto.setUserSocial(false);
+        userDto.setUserImg(null);
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword())); // 패스워드 암호화
+        UserTravel entity = dtoToEntity(userDto); //entity 변경
+        entity.roleAdd(UserRole.ADMIN); // 권한 추가
+        UserTravel result = userRepository.save(entity);
+
+        return result;
+    }
 
 
     @Override
@@ -110,15 +123,12 @@ public class UserServiceImpl implements UserService {
         log.info(userId);
 
         try {
-                Optional<UserTravel> i = userRepository.getUserPullByUserId(userId);
-                if (i.isPresent()){
-                    log.info("USER가 존재할 경우 : {}",i);
-                    log.info(i.get().getUserImg().getOriginFileName());
-                    log.info(i.get().getUserId());
-                    log.info(i.get().getUserId());
+                //Optional<UserTravel> i = userRepository.getUserPullByUserId(userId);
+            UserTravel userTravelByUserId = userRepository.getUserTravelByUserId(userId);
 
-                    UserTravel userTravel = i.get();
-                    UserResponseDTO userResponseDTO = entityToResponseDto(userTravel);
+            if (userTravelByUserId != null){
+                    log.info("USER가 존재할 경우 : {}",userTravelByUserId);
+                    UserResponseDTO userResponseDTO = entityToResponseDto(userTravelByUserId);
                     userResponseDTO.setPassword(passwordEncoder.encode(userDTO.getPassword())); // 패스워드 암호화
 
                     UserTravel entity = responseDtoToEntity(userResponseDTO); //entity 변경
@@ -314,5 +324,7 @@ public class UserServiceImpl implements UserService {
         List<String> userTravelList = userRepository.getUserTravelList();
         return userTravelList;
     }
+
+
 
 }

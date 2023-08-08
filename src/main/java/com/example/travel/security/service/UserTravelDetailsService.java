@@ -19,7 +19,6 @@ import java.util.Optional;
 public class UserTravelDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final UserImageRepository userImageRepository;
 
 
     @Transactional
@@ -30,31 +29,13 @@ public class UserTravelDetailsService implements UserDetailsService {
         Optional<UserTravel> userResult = userRepository.getUserByUserIdAndUserSocial(username, false);
         UserTravel userTravel = userResult.get();
 
-        String userId = userTravel.getUserId();
-        log.info("user : {}", userId);
+        log.info("user : {}", userTravel.getUserId());
         if (!userResult.isPresent()) {
             log.info("실패");
             throw new UsernameNotFoundException("Check Email or Social");
         }
-
-        UserTravelAdapter userTravelAdapter = userS(userId);
-
-
-        return userTravelAdapter;
-
+        return new UserTravelAdapter(userTravel);
     }
 
 
-    private UserTravelAdapter userS(String userId) {
-        Optional<UserTravel> result = userRepository.getUserPullByUserId(userId);
-        if (result.isPresent()){
-            UserTravel userTravel1 = result.get();
-            System.out.println(userTravel1);
-            System.out.println(userTravel1.getUserImg().getOriginFileName());
-            return new UserTravelAdapter(userTravel1);
-        }else{
-            System.out.println("없음");
-            return null;
-        }
-    }
 }

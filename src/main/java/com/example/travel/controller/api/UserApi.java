@@ -1,6 +1,7 @@
 package com.example.travel.controller.api;
 
 import com.example.travel.domain.UserImage;
+import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.security.dto.UserTravelDTO;
@@ -35,6 +36,18 @@ public class UserApi {
     private String uploadPath;
     private final UserService userService;
     final PasswordEncoder passwordEncoder;
+
+
+//    @GetMapping("/userRoll")
+//    public Boolean userRoll(@RequestParam("id") String id){
+//        UserRole userRole = UserRole.USER;
+//        UserRole userRoll = userService.getUserRoll(id, userRole);
+//        if (userRoll == null){
+//            return false;
+//        }
+//
+//        return true;
+//    }
     @Transactional
     @GetMapping("/userPassword")
     public Boolean userPassword(

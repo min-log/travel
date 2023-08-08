@@ -265,7 +265,12 @@
 
 
             function tMapPost(startMapX,startMapY,endMapX,endMapY) {
-                console.log("전달7");
+
+                console.log("startMapX : "+ startMapX);
+                console.log("startMapY : "+ startMapY);
+                console.log("endMapX : "+ endMapX);
+                console.log("endMapY : "+ endMapY);
+
                 const options = {
                     method: 'POST',
                     headers: {
@@ -274,25 +279,24 @@
                         'content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        startX: startMapX,
-                        startY: startMapY,
-                        endX: endMapX,
-                        endY: endMapY,
+                        startX: 126.51530966206293,
+                        startY: 33.23738579332568,
+                        endX: 126.622427178874,
+                        endY: 33.2541126906325,
+                        count: 1,
                         lang: 0,
-                        format: 'json',
-                        count: 10,
-                        ///searchDttm: '202301011200'
+                        format: 'json'
                     })
                 };
 
                 fetch('https://apis.openapi.sk.com/transit/routes', options)
                     .then(response => response.json())
-                    .then(response => {
-                        console.log(response);
+                    .then(data => {
+                        console.log("값을 잘 받는지 확인");
+                        console.log(data);
+                        console.log(data.metaData.requestParameters.endY);
                     })
-                    .catch(err => {
-                        console.error(err)
-                    });
+                    .catch((error) => console.log(error))
 
             }
 

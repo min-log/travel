@@ -116,7 +116,7 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
         userOAuth.updateUserImage(ImageSaveResult);
         UserTravel save = userRepository.save(userOAuth);  // 회원 저장
         UserTravelAdapter userTravelAdapter = new UserTravelAdapter(save, oAuth2User.getAttributes());
-        userTravelAdapter.setProfile(ImageSaveResult.getOriginFileName());
+
         return userTravelAdapter;
 
     }

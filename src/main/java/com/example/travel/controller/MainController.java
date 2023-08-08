@@ -14,6 +14,7 @@ import com.example.travel.service.travel.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -45,30 +48,24 @@ public class MainController {
                                 HttpSession session) {
         log.info("회원 로그인 여부에 따른 세션");
         if (user != null){
-            log.info("로그인"); String profile = user.getProfile();
-            String img=null;
-            try{
-                    Optional<UserImage> byOriginFileName = userImageRepository.findByOriginFileName(profile);
-                    if (byOriginFileName.isPresent()){
-                        UserImage userImage = byOriginFileName.get();
-                        String originFileName = userImage.getOriginFileName();
-                        img = originFileName;
-                        log.info(img);
-                        user.setProfile(img);
-                        log.info(user.getPath());
-                    }else {
-                        log.info("이미지 없음");
-                    }
-            }catch (Exception e){
-                log.info("동일한 이미지 있음,소셜 기본 이미지 일때");
-                e.printStackTrace();
+            log.info("로그인");
+
+            Collection<GrantedAuthority> authorities = user.getAuthorities();
+            for(GrantedAuthority i :authorities){
+                log.info( "GrantedAuthority : {}" , i);
+                String string = i.toString();
+                user.setRoll(string);
+                session.setAttribute("userT",user);
+                if (string.equals("ROLE_ADMIN") ){
+                    return "redirect:/admin/a/main";
+                }
             }
-            session.setAttribute("userT",user);
+            return "redirect:/main";
         }else{
             log.info("로그아웃");
             session.removeAttribute("userT");
+            return "redirect:/main";
         }
-        return "redirect:/main";
     }
 
     @GetMapping(value = {"","main"})

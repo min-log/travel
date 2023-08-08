@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .antMatchers("/travel").hasRole("USER")
                 .antMatchers("/travel/**").hasRole("USER")
                 .antMatchers("/admin").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin/a/**").hasRole("ADMIN")
         ;
         http.formLogin()
                 .loginPage("/member/loginForm")

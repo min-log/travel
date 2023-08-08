@@ -14,6 +14,8 @@ import java.util.Set;
 
 public interface UserService {
     public UserTravel userSave(UserDTO userSaveDTO); // user 저장
+    public UserTravel userAdminSave(UserDTO userSaveDTO); // user 관리자 저장
+
     public UserDTO userGetNo(Long no); // user 가져오기
     public int userGetId(String id); // user id 체크
     public Boolean userGetEmail(String email); // user Email 체크
@@ -40,6 +42,8 @@ public interface UserService {
 
     //고객 리스트
     public List<String> userList();
+
+
 
     //entity - dto  : 받는 값
     default UserTravel dtoToEntity(UserDTO dto){

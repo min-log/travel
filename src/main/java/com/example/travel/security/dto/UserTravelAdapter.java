@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserTravelAdapter extends UserTravelDTO implements Serializable {
     private UserTravel userTravel;
+    private String roll;
 
     public UserTravelAdapter(
             UserTravel userTravel
@@ -29,8 +30,6 @@ public class UserTravelAdapter extends UserTravelDTO implements Serializable {
                 userTravel.getPassword(),
                 userTravel.getUserSocial(),
                 userTravel.getUserNo(),
-                userTravel.getUserImg().getOriginFileName(),
-                userTravel.getUserImg().getPath(),
                 userTravel.getRoleSet().stream().map( i-> new SimpleGrantedAuthority("ROLE_"+i.name())).collect(Collectors.toSet()));
         this.userTravel = userTravel;
     }
@@ -41,8 +40,6 @@ public class UserTravelAdapter extends UserTravelDTO implements Serializable {
                 userTravel.getPassword(),
                 userTravel.getUserSocial(),
                 userTravel.getUserNo(),
-                userTravel.getUserImg().getOriginFileName(),
-                userTravel.getUserImg().getPath(),
                 userTravel.getRoleSet().stream().map( i-> new SimpleGrantedAuthority("ROLE_"+i.name())).collect(Collectors.toSet())
                 , attr);
     }

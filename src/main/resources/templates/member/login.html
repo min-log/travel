@@ -63,7 +63,22 @@
     </div>
   </div>
 
-
+<script>
+    function userRoll(){
+        let id = $('#modalJoin #username').val();
+        console.log(id)
+        $.ajax({
+            url:"/userApi/userRoll?id="+id,
+            type:'get',
+            success:function (data) {
+                console.log(data)
+            },
+            error:function (data) {
+                console.log(data)
+            }
+        })
+    }
+</script>
 
   <!-- Modal -->
   <script type="text/javascript" th:if="${error != null || cng != null || joinSuccess != null}">

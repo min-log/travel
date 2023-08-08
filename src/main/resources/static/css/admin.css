@@ -1,0 +1,4 @@
+#admin-wrap {height:100vh;}
+#admin-content {overflow:hidden;display: flex;padding-right:0;}
+#admin-header {border-right:1px solid #ccc}
+#admin-content #content {padding:100px 20px;overflow:hidden;overflow-y:auto}

@@ -1,6 +1,7 @@
 package com.example.travel.repository.member;
 
 import com.example.travel.domain.UserImage;
+import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -52,6 +53,9 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     Optional<UserTravel> getUserByPasswordAndUserEmail(@Param(value = "id") String id,@Param(value = "name") String name,@Param(value = "email")String email);
 
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query(value = "select m from UserTravel m right outer join UserImage e on m.userImg = e where m.userId = :id" )
+    @Query(value = "select m from UserTravel m where m.userId = :id")
     public Optional<UserTravel> getUserPullByUserId(@Param(value = "id") String id);
+
+
+
 }

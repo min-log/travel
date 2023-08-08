@@ -52,7 +52,6 @@ public class MypageController {
         model.addAttribute("categoryLikePage",categoryLikePage);
 
 
-
         log.info("마이페이지");
         Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request); // redirect 에러메시지
         if(flashMap!=null) {
@@ -95,10 +94,6 @@ public class MypageController {
         if (profileImage != null){
             redirectAttributes.addFlashAttribute("modal","이미지가 변경되었습니다.");
             log.info("변경된 이미지 명 : {}",profileImage);
-            user.setProfile(profileImage);
-            user.setPath("true");
-            session.setAttribute("userT",user);
-
             return "redirect:/mypage";
         }else{
             redirectAttributes.addFlashAttribute("modal","이미지 변경이 실패 했습니다.");
