@@ -34,35 +34,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/mypage").hasRole("USER")
-                .antMatchers("/mypage/**").hasRole("USER")
-                .antMatchers("/travel").hasRole("USER")
-                .antMatchers("/travel/**").hasRole("USER")
-                .antMatchers("/admin").permitAll()
-                .antMatchers("/admin/a/**").hasRole("ADMIN")
-        ;
-        http.formLogin()
+                .antMatchers("/","/admin").permitAll()
+                .antMatchers("/mypage").hasAnyRole("USER","ADMIN")
+                .antMatchers("/mypage/**").hasAnyRole("USER","ADMIN")
+                .antMatchers("/travel").hasAnyRole("USER","ADMIN")
+                .antMatchers("/travel/**").hasAnyRole("USER")
+                .antMatchers("/admin/m/**").hasRole("ADMIN")
+        .and().formLogin()
                 .loginPage("/member/loginForm")
                 .loginProcessingUrl("/login_proc")
                 .defaultSuccessUrl("/security-login", true) // 회원정보 저장:  두번째 인자가 true일경우 무조건 로그인시 해당 페이지 이동
                 .failureUrl("/member/loginForm")
-                .failureHandler(loginFailHandler);
+                .failureHandler(loginFailHandler)
 
         //소셜 로그인 구글 / 네이버 / 카카오
-        http.oauth2Login()
-                .defaultSuccessUrl("/security-login" ,true); // 회원정보 저장; //소셜 로그인 구글 추가
+        .and().oauth2Login()
+                .defaultSuccessUrl("/security-login" ,true) // 회원정보 저장; //소셜 로그인 구글 추가
 
         // 자동 로그인
-        http.rememberMe()
+        .and().rememberMe()
                 .rememberMeParameter("remember")
                 .tokenValiditySeconds(60*60*24*7)
                 .alwaysRemember(false) // 사용자가 체크박스를 활성화하지 않아도 항상 실행, default: false
-                .userDetailsService(userDetailService); //기능 사용시 정보 필요
+                .userDetailsService(userDetailService) //기능 사용시 정보 필요
 
-        http.logout()
+        .and().logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/security-login");
+                .logoutSuccessUrl("/security-login")
+        //접근권한 없는 페이지 이동
+        .and()
+                .exceptionHandling().accessDeniedPage("/access-denied");
 
 
         //http.headers().frameOptions().sameOrigin(); // 스마트 에디터 오류 수정 -- 네이버
@@ -70,6 +71,9 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
+
 
 
     // RequestRejectedException 오류 제거

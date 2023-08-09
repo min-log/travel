@@ -1,14 +1,86 @@
-index.html<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/basic}">
 <th:block layout:fragment="content">
-
   <div id="content" class="content_box">
-    <h2 class="tit text-center mb-4">관리자 페이지 메인</h2>
+    <h2 class="tit text-center mb-4">[[${title}]]</h2>
     <div>
-
+      <div class="board_wrap" th:object="${categoryPage}">
+      <div class="board_top mb-3 ">
+        <div class="left">
+          <form th:action="@{/admin/m/BoardTravel}" method="get">
+            <input type="text" name="k" placeholder="검색어를 입력하세요." class="form-control" >
+            <button class="btn btn-dark" type="submit">검색</button>
+          </form>
+        </div>
+        <div class="right">
+          <p>
+            total <span th:text="${categoryPage.getTotalElements()}">2</span>
+          </p>
+          <p class="ml-2">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" onchange="window.open(value,'_self')" >
+              <option th:selected="${orderCk} == 'dateStart'" th:value="@{/admin/m/BoardTravel(k = ${param.k},page=${pageing.getPage()},order='dateStart')}" >여행 시작일</option>
+              <option th:selected="${orderCk} == 'createdAt'" th:value="@{/admin/m/BoardTravel(k = ${param.k},page=${pageing.getPage()},order='createdAt')}">작성일</option>
+              <option th:selected="${orderCk} == 'viewNum'" th:value="@{/admin/m/BoardTravel(k = ${param.k},page=${pageing.getPage()},order='viewNum')}">인기순</option>
+            </select>
+          </p>
+        </div>
+      </div>
+      <table class="table">
+        <colgroup>
+          <col style="width:50px">
+          <col>
+          <col>
+          <col>
+          <col>
+          <col>
+          <col style="width:50px">
+        </colgroup>
+        <thead>
+        <tr>
+          <th class="text-bg-dark" scope="col">번호</th>
+          <th class="text-bg-dark" scope="col">제목</th>
+          <th class="text-bg-dark" scope="col">작성자</th>
+          <th class="text-bg-dark" scope="col">시/도</th>
+          <th class="text-bg-dark" scope="col">공개 여부</th>
+          <th class="text-bg-dark" scope="col">작성일</th>
+          <th class="text-bg-dark" scope="col">삭제</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <th:block th:each="list,i:${categoryPage.getContent()}">
+            <tr>
+              <th scope="row">[[${i.index + 1}]]</th>
+              <td>[[${list.categoryName}]]</td>
+              <td>[[${list.categoryWriter}]]</td>
+              <td>[[${list.categoryArea}]]</td>
+              <td>[[${list.categoryOpen}]]</td>
+              <td>[[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</td>
+              <td>
+                <a th:href="@{/admin/m/categoryDelete(categoryNo=${list.categoryNo})}" class="btn btn-sm btn-dark">
+                  <svg style="color: #fff" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                    <path  style="color: #fff" d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                  </svg>
+                </a>
+              </td>
+            </tr>
+          </th:block>
+        </tbody>
+      </table>
     </div>
+    <div th:object="${pageing}" class="mt-5 text-center">
+      <th:block th:if="${pageing.prev}">
+        <a class="btn btn-outline-secondary" th:href="@{/admin/m/BoardTravel(k = ${param.k},page = ${pageing.start - 5})}" tabindex="-1"> < </a>
+      </th:block>
+      <th:block th:each="page : ${pageing.pageList}">
+        <a  th:href="@{/admin/m/BoardTravel(k = ${param.k},page = ${page})}" th:text="${page}" class="btn btn-outline-secondary"  th:class="'btn btn-outline-secondary '+${pageing.page == page ? 'active':''}"    ></a>
+      </th:block>
+      <th:block th:if="${pageing.next}">
+        <a class="btn btn-outline-secondary" th:href="@{/admin/m/BoardTravel(k = ${param.k},page = ${pageing.end + 1})}" tabindex="-1"> > </a>
+      </th:block>
+    </div>
+
   </div>
 
 

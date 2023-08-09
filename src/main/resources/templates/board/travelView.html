@@ -248,7 +248,7 @@
                             let startMapX =  itemEl.data('map-x');
                             let startMapY =  itemEl.data('map-y');
                             let endMapX =  itemEl.next('li').data('map-x');
-                            let endMapY =  itemEl.next('li').data('map-Y');
+                            let endMapY =  itemEl.next('li').data('map-y');
                             tMapPost(startMapX,startMapY,endMapX,endMapY);
 
                         }else {
@@ -279,10 +279,10 @@
                         'content-type': 'application/json'
                     },
                     body: JSON.stringify({
-                        startX: 126.51530966206293,
-                        startY: 33.23738579332568,
-                        endX: 126.622427178874,
-                        endY: 33.2541126906325,
+                        startX: startMapX,
+                        startY: startMapY,
+                        endX: endMapX,
+                        endY: endMapY,
                         count: 1,
                         lang: 0,
                         format: 'json'
@@ -294,7 +294,13 @@
                     .then(data => {
                         console.log("값을 잘 받는지 확인");
                         console.log(data);
-                        console.log(data.metaData.requestParameters.endY);
+                        console.log(data.metaData.plan.itineraries);
+                        console.log(data.metaData.plan.itineraries.length);
+                        console.log("Titem : " + Titem)
+                        for(let i=0;i < data.metaData.plan.itineraries.length;i++){
+                            console.log("Titem - r: " + data.metaData.plan.itineraries[i])
+
+                        }
                     })
                     .catch((error) => console.log(error))
 

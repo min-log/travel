@@ -22,6 +22,8 @@ public interface CategoryService {
 
     List<CategoryDTO> getCategoryTemList(Long no); //임시 저장 리스트
     Page<CategoryDTO> getCategoryList(Integer size,Integer page, String order, String keyword);
+    Page<CategoryDTO> getCategoryListAdmin(Integer size,Integer page, String order, String keyword);
+
     Page<CategoryDTO> getCategoryImgList(Integer size,Integer page, String order);
     Page<CategoryDTO> getCategoryPopularityList(Integer size,Integer page, String order);
 

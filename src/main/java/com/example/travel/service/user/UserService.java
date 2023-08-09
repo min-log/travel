@@ -5,9 +5,8 @@ import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
-import com.example.travel.security.dto.UserTravelDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -42,6 +41,15 @@ public interface UserService {
 
     //고객 리스트
     public List<String> userList();
+
+
+
+    public Page<UserDTO> userListAdmin(Integer size,Integer page, String order, String keyword,Integer role);
+
+
+
+    public List<String> userGenderGraph();
+
 
 
 

@@ -42,6 +42,12 @@ public class MainController {
     final RankingService rankingService;
 
 
+    @GetMapping("/access-denied")
+    public String showAccessDeniedPage() {
+        return "pages/access-denied";
+    }
+
+
     @Transactional
     @GetMapping("security-login")
     public String securityLogin(@AuthenticationPrincipal UserTravelAdapter user,
@@ -57,7 +63,7 @@ public class MainController {
                 user.setRoll(string);
                 session.setAttribute("userT",user);
                 if (string.equals("ROLE_ADMIN") ){
-                    return "redirect:/admin/a/main";
+                    return "redirect:/admin/m/main";
                 }
             }
             return "redirect:/main";

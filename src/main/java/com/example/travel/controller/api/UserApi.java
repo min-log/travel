@@ -38,16 +38,6 @@ public class UserApi {
     final PasswordEncoder passwordEncoder;
 
 
-//    @GetMapping("/userRoll")
-//    public Boolean userRoll(@RequestParam("id") String id){
-//        UserRole userRole = UserRole.USER;
-//        UserRole userRoll = userService.getUserRoll(id, userRole);
-//        if (userRoll == null){
-//            return false;
-//        }
-//
-//        return true;
-//    }
     @Transactional
     @GetMapping("/userPassword")
     public Boolean userPassword(

@@ -1,8 +1,6 @@
 package com.example.travel.service.user;
 
-import com.example.travel.domain.UserImage;
-import com.example.travel.domain.UserRole;
-import com.example.travel.domain.UserTravel;
+import com.example.travel.domain.*;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.member.UserImageRepository;
@@ -10,7 +8,7 @@ import com.example.travel.repository.member.UserRepository;
 import com.example.travel.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -323,6 +322,39 @@ public class UserServiceImpl implements UserService {
     public List<String> userList() {
         List<String> userTravelList = userRepository.getUserTravelList();
         return userTravelList;
+    }
+
+    @Override
+    public Page<UserDTO> userListAdmin(Integer size,Integer page, String order, String keyword,Integer role) {
+        PageRequest pageRequest;
+
+        Sort sort = Sort.by(order).ascending();
+
+
+        pageRequest = PageRequest.of(page - 1, size,sort);
+        keyword = "%" + keyword + "%";
+        Page<UserTravel> userList = userRepository.findAllByRoleSet(keyword,pageRequest,role);
+        Page<UserDTO> userDTOPage = convertPage(userList);
+        return userDTOPage;
+    }
+
+    @Override
+    public List<String> userGenderGraph() {
+        log.info("회원 성별 비율--------------");
+        List<String> genderGraph = userRepository.findGenderGraph();
+        return genderGraph;
+    }
+
+
+    Page<UserDTO> convertPage(Page<UserTravel> userPage) {
+
+        List<UserDTO> userDTOS = userPage.getContent()
+                .stream()
+                .map(i->entityToDto(i)) // Assuming CategoryDTO constructor takes a Category object
+                .collect(Collectors.toList());
+
+
+        return new PageImpl<>(userDTOS, PageRequest.of(userPage.getNumber(), userPage.getSize()), userPage.getTotalElements());
     }
 
 

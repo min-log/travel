@@ -27,6 +27,12 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     Page<Category> findCategorySearch(@Param("open") boolean open,
                                       @Param("key") String keyword ,Pageable pageable);
 
+
+    @Query(value = "select c from Category c where c.categorySave = true " +
+            "and (c.categoryArea like :key or c.categoryAreaDetails like :key or c.categoryName like :key)")
+    Page<Category> findCategoryAllSearch(@Param("key") String keyword ,Pageable pageable);
+
+
     @Query(value = "select c from Category c where c.categorySave = true and c.categoryOpen = :open and c.boardImg != null")
     Page<Category> findCategoryImgSearch(@Param("open") boolean open, Pageable pageable);
 

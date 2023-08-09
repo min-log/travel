@@ -1,5 +1,6 @@
 package com.example.travel.security.service;
 
+import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
 import com.example.travel.repository.member.UserImageRepository;
 import com.example.travel.repository.member.UserRepository;
@@ -24,16 +25,23 @@ public class UserTravelDetailsService implements UserDetailsService {
     @Transactional
     @Override
     public UserTravelAdapter loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("확인 중 ");
+        log.info("로그인 로직");
 
         Optional<UserTravel> userResult = userRepository.getUserByUserIdAndUserSocial(username, false);
         UserTravel userTravel = userResult.get();
-
         log.info("user : {}", userTravel.getUserId());
         if (!userResult.isPresent()) {
             log.info("실패");
             throw new UsernameNotFoundException("Check Email or Social");
         }
+//        for (UserRole userRole : userTravel.getRoleSet()) {
+//            log.info("userRole -> {}" ,userRole);
+//            if (userRole.toString().equals("ADMIN")){
+//                throw new UsernameNotFoundException("ROLE_ADMIN");
+//            }
+//        }
+
+
         return new UserTravelAdapter(userTravel);
     }
 

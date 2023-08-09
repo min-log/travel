@@ -1,16 +1,14 @@
 package com.example.travel.repository.member;
 
-import com.example.travel.domain.UserImage;
-import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
-import org.apache.catalina.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +21,7 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     Optional<UserTravel> getUserTravelByUserEmail(String email); //회원 이메일 유무 확인
 
     //전체 회원 아이디 리스트
-    @Query(value = "select m.user_id from user_travel m", nativeQuery = true)
+    @Query(value = "select m.user_id from user_travel m join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no where utrs.role_set = 0", nativeQuery = true)
     List<String> getUserTravelList();
 
 
@@ -57,5 +55,21 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
     public Optional<UserTravel> getUserPullByUserId(@Param(value = "id") String id);
 
 
+
+    // 관리자 회원 리스트
+    @Query(value = "select u.* from (select m.*,r.role_set from user_travel m " +
+            "        left outer join user_travel_role_set r " +
+            "        on m.user_no = r.user_travel_user_no ) u" +
+            "            where u.role_set = :role and (u.name like :key or u.user_id like :key or u.user_email like :key)",nativeQuery = true)
+    Page<UserTravel> findAllByRoleSet(@Param("key") String keyword , Pageable pageable,@Param("role") Integer role);
+
+
+    //user 사용자 비율
+    @Query(value = "select u.user_gender as graphTitle, count(u.user_gender) as graphValue " +
+            "from (select m.* from user_travel m " +
+            "join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
+            "where utrs.role_set = 0) u group by u.user_gender " +
+            "HAVING u.user_gender is not null ", nativeQuery = true)
+    public List<String> findGenderGraph();
 
 }

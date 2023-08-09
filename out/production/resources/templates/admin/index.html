@@ -6,8 +6,38 @@
 
   <div id="content" class="content_box">
     <h2 class="tit text-center mb-4">관리자 페이지 메인</h2>
-    <div>
+    <div class="border-top pt-4 pb-4">
+      <h3>회원 연령 비율</h3>
+      <div>
+        <p>10</p>
+        <p>20</p>
+        <p>30</p>
+        <p>40</p>
+        <p>50</p>
+        <p>60</p>
+        <p>70이상</p>
+      </div>
+    </div>
 
+    <div class="border-top pt-4 pb-4">
+      <h3>회원 성별 비율</h3>
+      <div>
+        <p>남</p>
+        <p>여</p>
+      </div>
+    </div>
+    <div class="border-top pt-4 pb-4">
+      <h3>인기 검색어</h3>
+      <div>
+        <div class="keywordWrap">
+          <i class="bi bi-search"></i>
+          <ul th:object="${rankingList}">
+            <th:block th:each="keyword,i:${rankingList}">
+              <li><a th:href="@{/board/boardList(k=${keyword.title})}">[[${keyword.title}]]</a></li>
+            </th:block>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 

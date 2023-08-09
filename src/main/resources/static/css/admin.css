@@ -1,4 +1,10 @@
 #admin-wrap {height:100vh;}
-#admin-content {overflow:hidden;display: flex;padding-right:0;}
+#admin-content {overflow:hidden;overflow-y:auto;padding-right:0;}
 #admin-header {border-right:1px solid #ccc}
 #admin-content #content {padding:100px 20px;overflow:hidden;overflow-y:auto}
+
+.board_top {display:flex;width: 100%;justify-content: space-between;    align-items: center;}
+.board_top .left {width:60%}
+.board_top .left input {display:inline-block;width:calc(100% - 70px);}
+.board_top .left button {display:inline-block}
+.board_top .right p {display:inline-block}
