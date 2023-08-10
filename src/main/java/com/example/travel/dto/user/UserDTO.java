@@ -40,9 +40,11 @@ public class UserDTO {
     @NotBlank(message = "연락처 : 연락처를 입력하세요.")
     private String userPhone;
 
-    @NotBlank(message = "생년월일 : 생년월일 6자리를 입력하세요.")
-    @Length(min = 6,max = 6,message = "생년월일 : 생년월일 6자리를 입력하세요.")
+    @NotBlank(message = "생년월일 : 생년월일 8자리를 입력하세요.")
+    @Length(min = 8,max = 8,message = "생년월일 : 생년월일 6자리를 입력하세요.")
     private String userBirthday;
+
+    private int userAge; //나이
 
     //주소
     private String addressPostcode;

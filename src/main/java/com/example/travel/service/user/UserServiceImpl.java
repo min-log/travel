@@ -1,6 +1,7 @@
 package com.example.travel.service.user;
 
 import com.example.travel.domain.*;
+import com.example.travel.dto.user.Graph;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.member.UserImageRepository;
@@ -14,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +45,20 @@ public class UserServiceImpl implements UserService {
         // 일반회원 가입
         userDto.setUserSocial(false);
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword())); // 패스워드 암호화
+
+        // 회원 나이 계산
+        LocalDateTime now = LocalDateTime.now();
+        String userBirthday = userDto.getUserBirthday();
+        int userYear = Integer.parseInt(userBirthday.substring(0, 4));
+        int year = now.getYear();
+        int age  = year - userYear;
+
+        log.info("나이 userYear : {}",userYear);
+        log.info("나이 year : {}",year);
+        log.info("나이 age : {}",age);
+
+        userDto.setUserAge(age);
+
         UserTravel entity = dtoToEntity(userDto); //entity 변경
         entity.roleAdd(UserRole.USER); // 권한 추가
 
@@ -339,10 +358,82 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> userGenderGraph() {
+    public List<Graph> userGenderGraph() {
         log.info("회원 성별 비율--------------");
-        List<String> genderGraph = userRepository.findGenderGraph();
-        return genderGraph;
+        List<String[]> genderGraph = userRepository.findGenderGraph();
+        List<Graph> graphListGender = new ArrayList<>();
+        //임의의 초기값
+        Graph userGenderW = Graph.builder().graphTitle("userGenderW").graphVal("0").build();
+        Graph userGenderM = Graph.builder().graphTitle("userGenderM").graphVal("0").build();
+        graphListGender.add(userGenderW);
+        graphListGender.add(userGenderM);
+
+        if (genderGraph != null) {
+            for (String[] i :genderGraph){
+                log.info("i 0: {}", i[0]);
+                log.info("i 1: {}", i[1]);
+                if (i[0].equals("userGenderW")){ //여성일 경우
+                    graphListGender.remove(0);
+                    graphListGender.add(0,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                }else {
+                    graphListGender.remove(1);
+                    graphListGender.add(1,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                }
+
+            }
+        }
+
+
+        return graphListGender;
+    }
+
+    @Override
+    public List<Graph> userAgeGraph() {
+        log.info("회원연령 비율 ----------------------");
+        List<String[]> graph = userRepository.findAgeGraph();
+        List<Graph> graphList = new ArrayList<>();
+        //임의의 초기값
+        graphList.add(Graph.builder().graphTitle("10대").graphVal("0").build());
+        graphList.add(Graph.builder().graphTitle("20대").graphVal("0").build());
+        graphList.add(Graph.builder().graphTitle("30대").graphVal("0").build());
+        graphList.add(Graph.builder().graphTitle("40대").graphVal("0").build());
+        graphList.add(Graph.builder().graphTitle("50대 이상").graphVal("0").build());
+        graphList.add(Graph.builder().graphTitle("기타").graphVal("0").build());
+        
+        if (graph != null) {
+            for (String[] i :graph){
+                log.info("i 0: {}", i[0]);
+                log.info("i 1: {}", i[1]);
+                if (i[0].equals("10대")){ //여성일 경우
+                    graphList.remove(0);
+                    graphList.add(0,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                } else if (i[0].equals("20대")){ //여성일 경우
+                    graphList.remove(1);
+                    graphList.add(1,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                } else if (i[0].equals("30대")){ //여성일 경우
+                    graphList.remove(2);
+                    graphList.add(2,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                } else if (i[0].equals("40대")){ //여성일 경우
+                    graphList.remove(3);
+                    graphList.add(3,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                } else if (i[0].equals("50대 이상")){ //여성일 경우
+                    graphList.remove(4);
+                    graphList.add(4,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                } else if (i[0].equals("기타")){ //여성일 경우
+                    graphList.remove(5);
+                    graphList.add(5,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());
+                }
+
+            }
+        }
+        return graphList;
+    }
+
+    @Override
+    public int userTotal() {
+        int allUserNumber = userRepository.findAllUserNumber();
+
+        return allUserNumber;
     }
 
 

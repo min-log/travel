@@ -23,6 +23,7 @@ public class UserTravel extends BaseEntity {
     private String password;
     private String name;
     private String userBirthday;
+    private int userAge;
     private String userGender;
     private String userPhone;
 

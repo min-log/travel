@@ -65,11 +65,39 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
 
 
     //user 사용자 비율
-    @Query(value = "select u.user_gender as graphTitle, count(u.user_gender) as graphValue " +
+    @Query(value = "select u.user_gender as graphTitle, count(u.user_gender) as graphVal " +
             "from (select m.* from user_travel m " +
             "join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
             "where utrs.role_set = 0) u group by u.user_gender " +
             "HAVING u.user_gender is not null ", nativeQuery = true)
-    public List<String> findGenderGraph();
+    public List<String[]> findGenderGraph();
+
+
+    //회원 연령대
+    @Query(value = "SELECT CASE " +
+            "            WHEN c.user_age = 0 THEN '기타' " +
+            "            WHEN c.user_age BETWEEN 10 AND 19 THEN '10대' " +
+            "            WHEN c.user_age BETWEEN 20 AND 29 THEN '20대' " +
+            "            WHEN c.user_age BETWEEN 30 AND 39 THEN '30대' " +
+            "            WHEN c.user_age BETWEEN 40 AND 49 THEN '40대' " +
+            "            WHEN c.user_age >= 50 THEN '50대 이상' " +
+            "    END AS age_group " +
+            "     , COUNT(*) total_cnt " +
+            "FROM(select m.* from user_travel m " +
+            "                         join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
+            "     where utrs.role_set = 0) AS c " +
+            "GROUP BY age_group " +
+            "ORDER BY age_group" , nativeQuery = true)
+    public List<String[]> findAgeGraph();
+
+
+
+    // 회원
+    @Query(value = "select COUNT(*) " +
+            "from (select m.* from user_travel m " +
+            "      join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
+            "      where utrs.role_set = 0) u" , nativeQuery = true)
+    public int findAllUserNumber();
+
 
 }

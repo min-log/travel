@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <th>생년월일 <span class="txt_info ck">*</span></th>
-            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="생년월일 6자리를 입력하세요." maxlength="6"></td>
+            <td><input th:field="*{userBirthday}"  name="userBirthday" id="userBirthday" th:errorclass="err" class="form-control" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" placeholder="생년월일 8자리를 입력하세요." maxlength="8"></td>
           </tr>
 
           <tr>

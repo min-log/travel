@@ -3,6 +3,7 @@ package com.example.travel.service.user;
 import com.example.travel.domain.UserImage;
 import com.example.travel.domain.UserRole;
 import com.example.travel.domain.UserTravel;
+import com.example.travel.dto.user.Graph;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
 import org.springframework.data.domain.Page;
@@ -39,16 +40,18 @@ public interface UserService {
     //회원 프로필 변경
     public String userProfileImage(UserDTO userDTO);
 
+
+
     //고객 리스트
     public List<String> userList();
 
-
-
+    //관리자 페이지  ------------------------------
     public Page<UserDTO> userListAdmin(Integer size,Integer page, String order, String keyword,Integer role);
 
+    public List<Graph> userGenderGraph();
+    public List<Graph> userAgeGraph();
 
-
-    public List<String> userGenderGraph();
+    public int userTotal();
 
 
 
@@ -64,6 +67,7 @@ public interface UserService {
                 .userBirthday(dto.getUserBirthday())
                 .userGender(dto.getUserGender())
                 .userPhone(dto.getUserPhone())
+                .userAge(dto.getUserAge())
                 //.userImg((UserImage)dto.getUserImg())
                 .address(dto.getAddress())
                 .addressPostcode(dto.getAddressPostcode())
@@ -91,6 +95,7 @@ public interface UserService {
                 .password(userTravel.getPassword())
                 .name(userTravel.getName())
                 .userBirthday(userTravel.getUserBirthday())
+                .userAge(userTravel.getUserAge())
                 .userGender(userTravel.getUserGender())
                 .userPhone(userTravel.getUserPhone())
                 //.userImg((MultipartFile)userTravel.getUserImg())

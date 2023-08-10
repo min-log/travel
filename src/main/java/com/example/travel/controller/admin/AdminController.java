@@ -3,23 +3,31 @@ package com.example.travel.controller.admin;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.PageingDTO;
 import com.example.travel.dto.travel.RankingDTO;
+import com.example.travel.dto.user.Graph;
 import com.example.travel.dto.user.PageingUserDTO;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.service.travel.CategoryBoardService;
 import com.example.travel.service.travel.CategoryService;
 import com.example.travel.service.travel.RankingService;
 import com.example.travel.service.user.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.minidev.json.JSONArray;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Log4j2
@@ -37,12 +45,15 @@ public class AdminController {
     public String adminMain(Model model){
         Page<RankingDTO> rankingDTOS = rankingService.rankingList();
         model.addAttribute("rankingList",rankingDTOS);
-        List<String> genderG = userService.userGenderGraph();
-        for(String i: genderG){
-            log.info(i);
-        }
+        List<Graph> genderGraph = userService.userGenderGraph();
+        List<Graph> userAgeGraph = userService.userAgeGraph();
+        int userTotal = userService.userTotal();
 
-        model.addAttribute("genderG",genderG);
+
+
+        model.addAttribute("userTotal",userTotal);
+        model.addAttribute("genderGraph",genderGraph);
+        model.addAttribute("ageGraph",userAgeGraph);
         model.addAttribute("title","메인");
         return "admin/index";
     }

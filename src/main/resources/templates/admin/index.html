@@ -3,27 +3,237 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layout/basic}">
 <th:block layout:fragment="content">
-
+  <script th:src="@{/js/demo/Chart.min.js}"></script>
   <div id="content" class="content_box">
     <h2 class="tit text-center mb-4">관리자 페이지 메인</h2>
     <div class="border-top pt-4 pb-4">
-      <h3>회원 연령 비율</h3>
-      <div>
-        <p>10</p>
-        <p>20</p>
-        <p>30</p>
-        <p>40</p>
-        <p>50</p>
-        <p>60</p>
-        <p>70이상</p>
+      <div class="pt-4 pb-4">
+        <h3>총 회원 수 : [[${userTotal}]]</h3>
+        <p class="txt_info">※ 기타 : 소셜 로그인 회원 등 정보 미입력 사용자</p>
+      </div>
+      <div class="pt-4 pb-4 border-top">
+        <h3>회원 연령</h3>
+        <div style="width:700px;margin: 0 auto;">
+          <canvas id="myBarChart" style="display: block; height: 300px; width: 100%;" class="chartjs-render-monitor"></canvas>
+        </div>
+        <div style="display:flex;" class="mt-3">
+          <th:block th:each="list ,i:${ageGraph}">
+            <p th:class="|age_${i.index} ps-2 pe-2|">
+              <b style="color:#cccccc;">● </b> [[${list.graphTitle}]] :
+              <span class="txt">[[${list.graphVal}]]</span>
+            </p>
+          </th:block>
+        </div>
       </div>
     </div>
+    <script>
+
+        let age_0 = Number(document.querySelector(".age_0 .txt").innerHTML);
+        let age_1 = Number(document.querySelector(".age_1 .txt").innerHTML);
+        let age_2 = Number(document.querySelector(".age_2 .txt").innerHTML);
+        let age_3 = Number(document.querySelector(".age_3 .txt").innerHTML);
+        let age_4 = Number(document.querySelector(".age_4 .txt").innerHTML);
+        let age_5 = Number(document.querySelector(".age_5 .txt").innerHTML);
+
+
+        let age_all = age_0 + age_1 +age_2 + age_3 + age_4;
+        console.log(age_all)
+        console.log((age_1/age_all)*100)
+        console.log((age_2/age_all)*100)
+
+
+
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        function number_format(number, decimals, dec_point, thousands_sep) {
+            // *     example: number_format(1234.56, 2, ',', ' ');
+            // *     return: '1 234,56'
+            number = (number + '').replace(',', '').replace(' ', '');
+            var n = !isFinite(+number) ? 0 : +number,
+                prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                s = '',
+                toFixedFix = function(n, prec) {
+                    var k = Math.pow(10, prec);
+                    return '' + Math.round(n * k) / k;
+                };
+            // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+            s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+            if (s[0].length > 3) {
+                s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+            }
+            if ((s[1] || '').length < prec) {
+                s[1] = s[1] || '';
+                s[1] += new Array(prec - s[1].length + 1).join('0');
+            }
+            return s.join(dec);
+        }
+
+        // Bar Chart Example
+        var ctx = document.getElementById("myBarChart");
+        var myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["10대", "20대", "30대", "40대", "50대 이상", "기타"],
+                datasets: [{
+                    label: "Revenue",
+                    backgroundColor: "#cccccc",
+                    hoverBackgroundColor: "#2595ff",
+                    borderColor: "#2595ff",
+                    data: [(age_0/age_all)*100, (age_1/age_all)*100, (age_2/age_all)*100, (age_3/age_all)*100, (age_4/age_all)*100, (age_5/age_all)*100],
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'month'
+                        },
+                        gridLines: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 6
+                        },
+                        maxBarThickness: 25,
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            max: 100,
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            // Include a dollar sign in the ticks
+                            callback: function(value, index, values) {
+                                return number_format(value) + "%";
+                            }
+                        },
+                        gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    titleMarginBottom: 10,
+                    titleFontColor: '#6e707e',
+                    titleFontSize: 14,
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                    callbacks: {
+                        label: function(tooltipItem, chart) {
+                            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ':' + number_format(tooltipItem.yLabel) + '%';
+                        }
+                    }
+                },
+            }
+        });
+
+    </script>
 
     <div class="border-top pt-4 pb-4">
-      <h3>회원 성별 비율</h3>
+      <h3>회원 성별</h3>
       <div>
-        <p>남</p>
-        <p>여</p>
+        <div style="width:500px;margin: 0 auto;">
+          <canvas id="myPieChart" style="width: 100%"></canvas>
+        </div>
+        <div style="display:flex;" class="mt-3">
+          <th:block th:each="list ,i:${genderGraph}">
+            <p th:class="|gender_${list.graphTitle} ps-2 pe-2|">
+              <th:block th:if="|${list.graphTitle == 'userGenderW'}|">
+                <b style="color:#4E73DFFF;">● </b> 여성 :
+                <span class="txt">[[${list.graphVal}]]</span>
+              </th:block>
+              <th:block th:if="|${list.graphTitle == 'userGenderM'}|">
+                <b style="color:#1CC88AFF;">● </b> 남성 :
+                <span class="txt">[[${list.graphVal}]]</span>
+              </th:block>
+            </p>
+          </th:block>
+          <p class="ps-2 pe-2"><b style="color:#cccccc;">● </b>  기타 : <span th:text="${userTotal} - ${genderGraph.size}"></span></p>
+        </div>
+        <!-- Page level plugins -->
+
+        <script>
+            let gender_w = Number(document.querySelector(".gender_userGenderW .txt").innerHTML);
+            let gender_m = Number(document.querySelector(".gender_userGenderM .txt").innerHTML);
+            let gender_e = [[${userTotal}]] - (gender_m + gender_w) ;
+            let gender_all = [[${userTotal}]];
+            console.log(gender_all)
+            console.log((gender_m/gender_all)*100)
+            console.log((gender_w/gender_all)*100)
+
+
+
+
+
+
+            // Set new default font family and font color to mimic Bootstrap's default styling
+            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#858796';
+
+            // Pie Chart Example
+            var ctx = document.getElementById("myPieChart");
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["여성", "남성","기타"],
+                    datasets: [{
+                        data: [(gender_w/gender_all)*100, (gender_m/gender_all)*100,(gender_e/gender_all)*100],
+                        backgroundColor: ['#4e73df', '#1cc88a','#cccccc'],
+                        hoverBackgroundColor: ['#2e59d9', '#17a673','rgba(100,100,100,0.39)'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 20,
+                        yPadding: 20,
+                        displayColors: false,
+                        caretPadding: 20,
+                    },
+                    legend: {
+                        display: false
+                    },
+                    cutoutPercentage: 60,
+                },
+            });
+
+        </script>
+        <!-- Page level custom scripts -->
+<!--        <script th:src="@{/js/demo/chart-bar-demo.js}"></script>-->
+
       </div>
     </div>
     <div class="border-top pt-4 pb-4">

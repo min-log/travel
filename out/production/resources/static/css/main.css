@@ -35,7 +35,7 @@
 .board_ranking .rank_tit {font-weight:bold;font-size:18px}
 
 .sec_board_keyword {background:#a1e0ff;}
-.keywordWrap {border:2px solid var(--color-main);padding:5px 40px 5px 5px;border-radius:5px;position:relative;background:#fff;}
+keywordWrap. {border:2px solid var(--color-main);padding:5px 40px 5px 5px;border-radius:5px;position:relative;background:#fff;}
 .keywordWrap .bi {position: absolute;top:12px;right:10px;}
 .keywordWrap .bi:before{font-size: 24px;
     font-weight: bold !important;
