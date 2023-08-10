@@ -13,7 +13,13 @@
                 <div class="flex-column ">
                     <div class="top veiw_top" >
                         <div class="up">
-                            <a th:href="@{/board/view(no=${category.categoryNo})}"  title="지도보러가기">
+                            <a class="" href="javascript:void(0);" onclick="pageprint()"><img src="../images/icon_print.png" alt="">
+                                <i class="bi bi-printer-fill"></i>
+                            </a>
+                            <a href="javascript:sharePopupShow()" class="round_btn ml-2">
+                                <i class="bi bi-share-fill" style="font-size:14px"></i>
+                            </a>
+                            <a th:href="@{/board/view(no=${category.categoryNo})}" class="ml-2"  title="지도보러가기">
                                 <i class="bi bi-map-fill"></i>
                             </a>
                         </div>
@@ -157,9 +163,7 @@
 
                             todayPrice = priceToString(todayPrice); // 가격 원단위 추가
                             todayTotalPrice.text(todayPrice);
-
                             itemListWrap.html(itemListCon);
-                            itemMapInfoGet();
                         }
                     })
                 }
@@ -172,39 +176,19 @@
         </script>
 
 
+        <!-- end : navbar -->
 
 
+        <div class="content" th:object="${board}">
+            <p class="text-center txt_info">작성일 : <span class="txt_info" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd')}"></span></p>
 
+            <p class="text-center mt-2"> <i class="bi bi-calendar-week"></i> <span th:text="*{boardTravelDate}"></span></p>
+            <h3 class="tit text-center mt-2" th:text="*{boardTit}">제목</h3>
 
-
-
-        <div class="content">
-            <h3 class="tit text-center">글쓰기</h3>
-            <div id="BoardView" th:object="${board}">
-                <table class="board-top">
-                    <colgroup>
-                        <col style="width:20%">
-                        <col style="width:80%">
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th>제목</th>
-                        <td>
-                            <span th:text="*{boardTit}"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>여행 일자</th>
-                        <td>
-                            <span th:text="*{boardTravelDate}"></span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="board-content-wrap">
-                    <div id="boardContent" th:text="*{boardContent}"></div>
-                </div>
+            <div class="board-content-wrap">
+                <div id="boardContent" th:text="*{boardContent}"></div>
             </div>
+
         </div>
     </div>
     <!-- 페이지 로딩시 초기화 -->

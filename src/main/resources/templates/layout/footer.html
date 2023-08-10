@@ -40,5 +40,44 @@
 
 
 
+
+  <div class="modal fade" id="popupShare" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" >SNS 공유</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-message">
+            <div>
+              <!-- 페이스북 공유 버튼 -->
+              <a href="" onclick="window.open(url_combine_fb, '', 'scrollbars=no, width=600, height=600'); return false;">
+                <img th:src="@{/img/icon_sns_f.png}">
+              </a>
+              <!-- 트위터 공유 버튼 -->
+              <a href="" onclick="window.open(url_combine_tw, '', 'scrollbars=no, width=600, height=600'); return false;">
+                <img th:src="@{/img/icon_sns_t.png}">
+              </a>
+              <!-- 네이버 공유 버튼 -->
+              <a href="" onclick="window.open(url_combine_naver, '', 'scrollbars=no, width=600, height=600'); return false;">
+                <img th:src="@{/img/icon_sns_n.png}">
+              </a>
+
+            </div>
+            <div class="ringk mt-2">
+              <input id="myInput" class="form-control" value="http://edenbios.cafe24.com/index.php?mid=productList&amp;category=540&amp;document_srl=924" readonly="">
+              <button onclick="copy_to_clipboard()" class="btn btn-dark">복사</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
 </th:block>
 </html>

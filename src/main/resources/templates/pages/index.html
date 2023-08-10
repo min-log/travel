@@ -42,7 +42,7 @@
         <div class="sec_box sec_board_img">
             <div class="container">
                 <h4 class="tit text-center mb-2">인기 여행지</h4>
-                <p class="subTitle text-center mb-5">Travel Road 인기 게시물과 검색어를 볼수 있어요!</p>
+                <p class="subTitle text-center mb-5">즐겨 찾는 인기 여행지를 확인해보세요.</p>
                 <div class="board_wrap">
                 <div class="box">
                     <div class="board_content_img_wrap">
@@ -75,7 +75,7 @@
                     <ul class="board_ranking">
                         <th:block th:each="rank,i:${categoryPagePopularity.getContent()}">
                             <li>
-                                <a href="">
+                                <a th:href="@{/board/view(no=${rank.categoryNo})}">
                                     <p class="point-color">
                                         [[${rank.categoryArea}]]
                                         <th:block th:if="${rank.categoryAreaDetails != ''}">

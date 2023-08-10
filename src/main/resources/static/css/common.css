@@ -104,15 +104,19 @@ footer {height:85px}
 .tab-content {padding:20px 0;}
 .content_nav {display: flex;align-items: flex-start;height: 100%;position: relative;}
 .navbar {width: 540px;position: sticky;display: flex;top: 85px;border-right: 1px solid #dee2e6;flex-direction: column;height: calc(100vh - 85px);justify-content: flex-start;box-sizing: border-box;background: #fff;align-items: center;transition:all 0.5s;z-index:10;padding:0;}
-.navbar_wrap {position:relative;height:100%;width:100%;padding:20px 20px;overflow:hidden;box-sizing:border-box;transition:all 0.2s;overflow-y: auto;}
+.navbar_wrap {position:relative;height:100%;width:100%;padding:50px 20px 20px;overflow:hidden;box-sizing:border-box;transition:all 0.2s;overflow-y: auto;}
 .navbar_wrap > .flex-column {display: flex;justify-content: space-between;height: 100%;width: 100%;}
 .navbar_wrap > .flex-column .top {height:auto;}
 .navbar_wrap > .flex-column .bottom .btn-group {width:100%}
 .btn.btn-outline-secondary .bi:before {color:#6c757d}
 .navbar_wrap h3,
 .navbar_wrap h4 {font-weight:bold;}
-.navbar_wrap .up {position: absolute;top:10px;right:10px;}
-.navbar_wrap .up a {    border: 2px solid #2595ff;
+.navbar_wrap .up {position: absolute;top:10px;right:10px;display:flex}
+.round_btn {display: flex;
+    align-items: center;
+    justify-content: center;}
+.navbar_wrap .up a,
+.round_btn {    border: 2px solid #2595ff;
     width: 30px;
     height: 30px;
     display: inline-block;
@@ -121,7 +125,8 @@ footer {height:85px}
     align-content: baseline;
     justify-content: center;
     background: #eee;}
-.navbar_wrap .up .bi {font-size: 16px;color: #2595ff;}
+.navbar_wrap .up .bi,
+.round_btn .bi {font-size: 16px;color: #2595ff;}
 .navbar_wrap .bottom {margin-bottom:20px}
 .list-storage {}
 .list-storage li {border-bottom:1px #dee2e6 dashed;padding:5px 5px;display:flex;justify-content: space-between;}

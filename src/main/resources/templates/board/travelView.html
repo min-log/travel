@@ -12,8 +12,14 @@
                 <div class="flex-column ">
                     <div class="top veiw_top" >
                         <div class="up">
+                            <a class="" href="javascript:void(0);" onclick="pageprint()"><img src="../images/icon_print.png" alt="">
+                                <i class="bi bi-printer-fill"></i>
+                            </a>
+                            <a href="javascript:sharePopupShow()" class="round_btn ml-2">
+                                <i class="bi bi-share-fill" style="font-size:14px"></i>
+                            </a>
                             <th:block th:if="${category.boardExistence}">
-                                <a th:href="@{/board/postView(no=${category.categoryNo},day=1)}"  title="기록보기">
+                                <a th:href="@{/board/postView(no=${category.categoryNo},day=1)}" class="ml-2" title="기록보기">
                                     <i class="bi bi-pen-fill"></i>
                                 </a>
                             </th:block>

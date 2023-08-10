@@ -39,6 +39,7 @@ input.err {}
 .mail-check-box #timerUp i {vertical-align: middle;line-height: 100% !important;margin-left:5px;display: flex;align-items: center;}
 .mail-check-box #timerUp #timer {vertical-align: middle;}
 
+
 /*mypage*/
 
 
@@ -365,3 +366,11 @@ input.err {}
 #commentsList .comm .comm_id {}
 #commentsList .comm .comm_con {}
 #commentsList .comm .comm_con {}
+
+#popupShare .modal-message {text-align:center}
+#popupShare .modal-message a + a {margin-left:10px;}
+#popupShare .modal-message a img {width:30px;height:auto}
+#popupShare .modal-message .ringk {display:flex}
+#popupShare .modal-message .ringk .btn {width:100px}
+
+.board-content-wrap {margin-top:50px;}
