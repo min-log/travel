@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import net.minidev.json.JSONArray;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -154,6 +155,22 @@ public class AdminController {
         categoryService.categoryDelete(no);
         redirectAttributes.addFlashAttribute("msg","게시물이 삭제되었습니다.");
         return "redirect:/admin/m/BoardTravel";
+    }
+
+
+    @GetMapping("/userDelete")
+    public String userDelete(@Param(value = "no") Long no,
+                             RedirectAttributes redirectAttributes){
+        log.info("회원 제거 -----------");
+        boolean result = userService.userDeleteNo(no);
+        if (result){
+            redirectAttributes.addFlashAttribute("msg","회원이 삭제되었습니다.");
+            return "redirect:/admin/m/BoardUser";
+        }
+
+        redirectAttributes.addFlashAttribute("msg","회원이 삭제가 실패했습니다.");
+        return "redirect:/admin/m/BoardUser";
+
     }
 
 }

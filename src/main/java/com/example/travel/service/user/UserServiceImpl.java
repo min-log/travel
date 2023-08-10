@@ -1,12 +1,15 @@
 package com.example.travel.service.user;
 
 import com.example.travel.domain.*;
+import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.user.Graph;
 import com.example.travel.dto.user.UserDTO;
 import com.example.travel.dto.user.UserResponseDTO;
 import com.example.travel.repository.member.UserImageRepository;
 import com.example.travel.repository.member.UserRepository;
+import com.example.travel.repository.travel.CategoryRepository;
 import com.example.travel.service.FileService;
+import com.example.travel.service.travel.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.*;
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     // 이미지 관련 추가
     private final FileService fileService;
     private final UserImageRepository userImageRepository;
+    private final CategoryService categoryService;
 
 
     @Override
@@ -210,20 +214,54 @@ public class UserServiceImpl implements UserService {
         }
 
         log.info("존재하는 회원");
-        
-        UserImage userImg = userTravel.getUserImg();
-        String originFileName = userImg.getOriginFileName();
-        String uuid = userImg.getUuid();
-        String path = userImg.getPath();
-        String fileName = path + "\\" + uuid + "_" +originFileName;
 
-        log.info(userImg.getId());
-        int deleteRole = userRepository.deleteByUserRole(userNo); // user권한제거
+
+
+
+        boolean result = delete(userTravel);
+
+        return result;
+    }
+
+
+
+    @Transactional
+    @Override
+    public boolean userDeleteNo(Long no) {
+        log.info("관리자 강제 회원 탈퇴 --------------");
+        UserTravel user = userRepository.getOne(no);
+        boolean delete = delete(user);
+        return delete;
+    }
+
+    @Transactional
+    public boolean delete(UserTravel user){
+        //회원의 카테고리 제거
+        List<CategoryDTO> categoryList = categoryService.categoryUserList(user.getUserNo());
+        if (!categoryList.isEmpty()){
+            log.info("카테고리 존재");
+            for(CategoryDTO i :categoryList){
+                log.info("카테고리 제거 번호 : {}", i.getCategoryNo());
+                categoryService.categoryDelete(i.getCategoryNo());
+            }
+        }
+
+        //이미지 제거
+        UserImage userImg = user.getUserImg();
+        if (userImg != null){
+            String originFileName = userImg.getOriginFileName();
+            String uuid = userImg.getUuid();
+            String path = userImg.getPath();
+            String fileName = path + "\\" + uuid + "_" +originFileName;
+            fileService.removeFile(fileName);//실제 이미지 제거
+        }
+
+        int deleteRole = userRepository.deleteByUserRole(user.getUserNo()); // user권한제거
         System.out.println(deleteRole);
-        int deleteUser = userRepository.deleteByUserId(id); // user제거
+        int deleteUser = userRepository.deleteByUserId(user.getUserId()); // user제거
         System.out.println(deleteUser);
-        fileService.removeFile(fileName);//실제 이미지 제거
-        int deleteImage = userImageRepository.deleteByUserImage(userNo);// user이미지 제거
+
+        int deleteImage = userImageRepository.deleteByUserImage(user.getUserNo());// user이미지 제거
         System.out.println(deleteImage);
 
         if (deleteRole > 0 && deleteUser > 0 && deleteImage > 0){
@@ -231,7 +269,6 @@ public class UserServiceImpl implements UserService {
         }else {
             return  false;
         }
-
     }
 
     //아이디 찾기

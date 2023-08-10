@@ -94,38 +94,27 @@ public class UserApi {
         UserImage userImage = userService.userGetProfileImage(no);
         String fileOriginName = userImage.getOriginFileName();
         String path = userImage.getPath();
-        File file;
+        File file = new File(uploadPath + File.separator + "profile_img.png");
+        log.info("file fileOriginName : " + fileOriginName);
 
         try{
-            if (path == null){
-                file = new File(uploadPath + File.separator + "profile_img.png");
-                log.info("file : " + file);
+            HttpHeaders headers = new HttpHeaders();
+            //MIME타입 처리
 
-                HttpHeaders headers = new HttpHeaders();
-                //MIME타입 처리
-                headers.add("Content-Type" , Files.probeContentType(file.toPath()));
-                // 파일 데이터처리
-                result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
-
-            } else {
+            if (path != null){ // 전달 받은 이미지 경로 가 있다면
                 file = new File(uploadPath + File.separator + path + File.separator + fileOriginName);
-                log.info("file : " + file);
-                HttpHeaders headers = new HttpHeaders();
-                //MIME타입 처리
-                headers.add("Content-Type" , Files.probeContentType(file.toPath()));
-                // 파일 데이터처리
-                result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+                log.info("file New : " + file);
             }
+            log.info("file --------------------------------");
+            headers.add("Content-Type" , Files.probeContentType(file.toPath()));
+            // 파일 데이터처리
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
 
-
+            return result;
         }catch ( Exception e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
-        return result;
 
     }
 

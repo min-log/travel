@@ -348,7 +348,6 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
     public boolean categoryDelete(long no) { // no = 카테고리 번호
         log.info("카테고리 제거 로직 ---------------");
 
-
         Optional<Category> categorys = categoryRepository.findById(no);
         Category category = categorys.get();
 
@@ -569,6 +568,13 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
         categoryDTO.setViewNum(viewNum + 1);
         Category result = categoryDtoToEntity(categoryDTO);
         categoryRepository.save(result);
+    }
+
+    @Override
+    public  List<CategoryDTO>  categoryUserList(Long categoryNo) {
+        List<Category> categoryByUserTravelNo = categoryRepository.getCategoryByUserTravelNo(categoryNo);
+        List<CategoryDTO> result = categoryByUserTravelNo.stream().map(i -> categoryEntityToDto(i)).collect(Collectors.toList());
+        return result;
     }
 
 

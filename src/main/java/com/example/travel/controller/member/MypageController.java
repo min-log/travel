@@ -161,6 +161,9 @@ public class MypageController {
     public String withdrawalForm(@ModelAttribute("userTravel") UserDTO user,
                                  RedirectAttributes redirectAttributes){
         log.info("회원탈퇴 ------------------------------");
+
+
+        //회원 제거
         boolean result = userService.userDelete(user.getUserId(), user.getPassword());
         log.info("회원제거 결과 : {}",result);
         if (result){

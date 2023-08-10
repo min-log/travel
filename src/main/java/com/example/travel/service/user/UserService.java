@@ -24,7 +24,9 @@ public interface UserService {
 
     public boolean userModitfy(UserDTO userSaveDTO); //회원정보 수정
 
-    public boolean userDelete(String id, String pw);
+    public boolean userDelete(String id, String pw); // 회원 인증 후 삭제
+
+    public boolean userDeleteNo(Long no); //관리자 회원 삭제
 
 
     public String userGetName(String name,String email); // 아이디 찾기

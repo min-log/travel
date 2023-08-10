@@ -52,6 +52,7 @@ public interface CategoryService {
     List<LikeCategoryDTO> categoryLikeList(long userNo);
 
     void categoryViewNumUpdate(Long categoryNo);
+    public  List<CategoryDTO>  categoryUserList(Long categoryNo) ;//회원의 전체 카테고리
 
 
 
