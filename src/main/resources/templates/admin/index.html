@@ -34,12 +34,7 @@
         let age_3 = Number(document.querySelector(".age_3 .txt").innerHTML);
         let age_4 = Number(document.querySelector(".age_4 .txt").innerHTML);
         let age_5 = Number(document.querySelector(".age_5 .txt").innerHTML);
-
-
-        let age_all = age_0 + age_1 +age_2 + age_3 + age_4;
-        console.log(age_all)
-        console.log((age_1/age_all)*100)
-        console.log((age_2/age_all)*100)
+        let age_all = [[${userTotal}]];
 
 
 
@@ -251,34 +246,6 @@
     </div>
   </div>
 
-
-
-
-  <!-- Modal -->
-  <script type="text/javascript" th:if="${error != null || cng != null || joinSuccess != null}">
-      $(document).ready(function (){
-          $('#modalJoin').modal("show");
-      })
-  </script>
-
-  <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel" th:text="${errTit}">메시지</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="modal-message">
-            <p th:text="${cng}"></p>
-            <p th:text="${joinSuccess}"></p>
-            <p th:text="${exception}">일치하는 회원이 없습니다.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End: Modal -->
 
 </th:block>
 </html>

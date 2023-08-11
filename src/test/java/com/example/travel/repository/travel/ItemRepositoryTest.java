@@ -20,7 +20,6 @@ class ItemRepositoryTest {
     public void save(){
         Category category = Category.builder().categoryNo(40L).build();
         Item build = Item.builder().category(category)
-                .itemContent("아이템 저장 테스트")
                 .itemDay(0)
                 .id("테스트")
                 .placeName("테스트")

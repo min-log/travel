@@ -15,7 +15,7 @@
       <div class="board_wrap" th:object="${categoryPage}">
         <div class="content-tit">
           <h4 class="tit_con mb-3">👀 현재 계획 중인 여행</h4>
-          <span class="num">[[${categoryPage.size}]]</span>
+          <span class="num">[[${categoryPage.getTotalElements}]]</span>
           <a class="btn btn-sm btn-outline-secondary" href="/mypage/boardList">더보기 +</a>
         </div>
 
@@ -105,7 +105,7 @@
       <div class="board_wrap" th:object="${categoryLikePage}">
         <div class="content-tit mt-5 border-top pt-5">
           <h4 class="tit_con mb-3">⭐ 찜리스트</h4>
-          <span class="num">10</span>
+          <span class="num">[[${categoryLikePage.getTotalElements}]]</span>
           <a class="btn btn-sm btn-outline-secondary" href="/mypage/boardLikeList">더보기 +</a>
         </div>
         <ul class="board_content  row row-cols-1 row-cols-md-2 g-4 ">

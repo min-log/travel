@@ -56,26 +56,19 @@ public class UserServiceImpl implements UserService {
         int userYear = Integer.parseInt(userBirthday.substring(0, 4));
         int year = now.getYear();
         int age  = year - userYear;
-
-        log.info("나이 userYear : {}",userYear);
-        log.info("나이 year : {}",year);
         log.info("나이 age : {}",age);
-
         userDto.setUserAge(age);
 
         UserTravel entity = dtoToEntity(userDto); //entity 변경
         entity.roleAdd(UserRole.USER); // 권한 추가
 
-        System.out.println();
-        log.info("getUserImg : " + userDto.getUserImg().getName());
         MultipartFile userImg = userDto.getUserImg();
-
-
-        log.info("프로필 저장");
-        UserImage imageDTO = fileService.createImageDTO(userImg,"profile");
-        UserImage save = userImageRepository.save(imageDTO);
-        entity.updateUserImage(save);
-
+        if (userImg != null){ // 프로필 이미지 존재
+            log.info("프로필 저장");
+            UserImage imageDTO = fileService.createImageDTO(userImg,"profile");
+            UserImage save = userImageRepository.save(imageDTO);
+            entity.updateUserImage(save);
+        }
         UserTravel result = userRepository.save(entity);
         return result;
     }
@@ -407,8 +400,6 @@ public class UserServiceImpl implements UserService {
 
         if (genderGraph != null) {
             for (String[] i :genderGraph){
-                log.info("i 0: {}", i[0]);
-                log.info("i 1: {}", i[1]);
                 if (i[0].equals("userGenderW")){ //여성일 경우
                     graphListGender.remove(0);
                     graphListGender.add(0,Graph.builder().graphTitle(i[0]).graphVal(i[1]).build());

@@ -58,9 +58,9 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
 
     // 관리자 회원 리스트
     @Query(value = "select u.* from (select m.*,r.role_set from user_travel m " +
-            "        left outer join user_travel_role_set r " +
-            "        on m.user_no = r.user_travel_user_no ) u" +
-            "            where u.role_set = :role and (u.name like :key or u.user_id like :key or u.user_email like :key)",nativeQuery = true)
+            "left outer join user_travel_role_set r " +
+            "on m.user_no = r.user_travel_user_no ) u " +
+            "where u.role_set = :role and (u.name like :key or u.user_id like :key or u.user_email like :key)",nativeQuery = true)
     Page<UserTravel> findAllByRoleSet(@Param("key") String keyword , Pageable pageable,@Param("role") Integer role);
 
 
@@ -75,17 +75,17 @@ public interface UserRepository extends JpaRepository<UserTravel,Long> {
 
     //회원 연령대
     @Query(value = "SELECT CASE " +
-            "            WHEN c.user_age = 0 THEN '기타' " +
-            "            WHEN c.user_age BETWEEN 10 AND 19 THEN '10대' " +
-            "            WHEN c.user_age BETWEEN 20 AND 29 THEN '20대' " +
-            "            WHEN c.user_age BETWEEN 30 AND 39 THEN '30대' " +
-            "            WHEN c.user_age BETWEEN 40 AND 49 THEN '40대' " +
-            "            WHEN c.user_age >= 50 THEN '50대 이상' " +
-            "    END AS age_group " +
-            "     , COUNT(*) total_cnt " +
+            "WHEN c.user_age = 0 THEN '기타' " +
+            "WHEN c.user_age BETWEEN 10 AND 19 THEN '10대' " +
+            "WHEN c.user_age BETWEEN 20 AND 29 THEN '20대' " +
+            "WHEN c.user_age BETWEEN 30 AND 39 THEN '30대' " +
+            "WHEN c.user_age BETWEEN 40 AND 49 THEN '40대' " +
+            "WHEN c.user_age >= 50 THEN '50대 이상' " +
+            "END AS age_group " +
+            ", COUNT(*) total_cnt " +
             "FROM(select m.* from user_travel m " +
-            "                         join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
-            "     where utrs.role_set = 0) AS c " +
+            "join user_travel_role_set utrs on m.user_no = utrs.user_travel_user_no " +
+            "where utrs.role_set = 0) AS c " +
             "GROUP BY age_group " +
             "ORDER BY age_group" , nativeQuery = true)
     public List<String[]> findAgeGraph();

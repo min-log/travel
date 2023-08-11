@@ -127,7 +127,7 @@ footer {height:85px}
     background: #eee;}
 .navbar_wrap .up .bi,
 .round_btn .bi {font-size: 16px;color: #2595ff;}
-.navbar_wrap .bottom {margin-bottom:20px}
+.navbar_wrap .bottom {padding-bottom:40px}
 .list-storage {}
 .list-storage li {border-bottom:1px #dee2e6 dashed;padding:5px 5px;display:flex;justify-content: space-between;}
 .list-storage li * {color: #999; font-size:14px;}

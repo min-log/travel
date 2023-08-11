@@ -48,6 +48,11 @@ public class MypageController {
 
         PageingDTO pageingDTO = new PageingDTO(categoryPage);
 
+        log.info(" total page : {}",categoryPage.getTotalPages());
+        log.info(" 1 : {}",categoryPage.getNumber());
+        log.info(" 2 : {}",categoryPage.getPageable().getPageSize());
+        log.info(" 3 : {}",categoryPage.getTotalElements());
+
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("categoryLikePage",categoryLikePage);
 

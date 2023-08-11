@@ -18,12 +18,7 @@ class ItemServiceImplTest {
     public void save(){
         ItemDTO build = ItemDTO.builder()
                 .categoryId(40L)
-               // .itemNo(1L)
-//                .itemDay(0)
-//                .itemNumber(0)
-//                .itemAccount(10)
                 .itemInfo("item.getItemInfo()")
-                .itemContent("item.getItemContent()")
                 .itemTime("item.getItemTime()")
                 .id("item.getId()")
                 .placeName("item.getPlaceName()")

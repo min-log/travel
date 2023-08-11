@@ -52,6 +52,7 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
         String picture = null;
         String name = null;
         String mobile = null;
+        String gender = null;
 
         if (clientName.equals("Google")){
             email = oAuth2User.getAttribute("email");
@@ -65,6 +66,12 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
             picture =(String)map.get("profile_image");
             name = (String)map.get("name");
             mobile = (String)map.get("mobile");
+            gender = (String)map.get("gender");
+            if (gender.equals("F")){
+                gender = "userGenderW";
+            }else {
+                gender = "userGenderM";
+            }
         }else if(clientName.equals("Kakao")){
             log.info("카카오");
             Map kakaoAccount = (Map)oAuth2User.getAttributes().get("kakao_account");
@@ -98,6 +105,7 @@ public class UserTravelOAuth2DetailService extends DefaultOAuth2UserService {
                 .userId(email)
                 .name(name)
                 .userPhone(mobile)
+                .userGender(gender)
                 .password(passwordEncoder.encode("1111"))
                 .userSocial(true)
                 .build();

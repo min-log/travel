@@ -24,12 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -93,7 +93,9 @@ public class AdminController {
                                 @RequestParam(value = "order",required = false) String order,
                                 @RequestParam(value = "k",required = false) String keyword,
                                 HttpSession httpSession,
-                                Model model){
+                                Model model,
+                                HttpServletRequest request
+                                ){
         log.info("회원 리스트 ----------------------");
         if(page == null) page= 1;
         if(order == null) order= "user_no";
@@ -111,6 +113,12 @@ public class AdminController {
         model.addAttribute("title","회원 리스트");
         model.addAttribute("pagePath","BoardUser");
 
+        // redirect 에러메시지
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+        if(flashMap!=null) {
+            model.addAttribute("msg",flashMap.get("msg"));
+        }
+
 
         return "admin/userList";
     }
@@ -123,7 +131,9 @@ public class AdminController {
                                 @RequestParam(value = "order",required = false) String order,
                                 @RequestParam(value = "k",required = false) String keyword,
                                 HttpSession httpSession,
-                                Model model){
+                                Model model,
+                                HttpServletRequest request
+    ){
         log.info("회원 리스트 ----------------------");
         if(page == null) page= 1;
         if(order == null) order= "created_at";
@@ -141,8 +151,13 @@ public class AdminController {
         model.addAttribute("title","관리자 리스트");
         model.addAttribute("pagePath","BoardAdmin");
 
+        // redirect 에러메시지
+        Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+        if(flashMap!=null) {
+            model.addAttribute("msg",flashMap.get("msg"));
+        }
 
-        return "admin/userList";
+        return "admin/adminList";
     }
 
 
@@ -159,17 +174,30 @@ public class AdminController {
 
 
     @GetMapping("/userDelete")
-    public String userDelete(@Param(value = "no") Long no,
+    public String userDelete(@Param(value = "no") Long no,@Param(value = "u") String board,
                              RedirectAttributes redirectAttributes){
         log.info("회원 제거 -----------");
         boolean result = userService.userDeleteNo(no);
-        if (result){
-            redirectAttributes.addFlashAttribute("msg","회원이 삭제되었습니다.");
+        if (board.equals("user")){
+            if (result){
+                redirectAttributes.addFlashAttribute("msg","회원이 삭제되었습니다.");
+                return "redirect:/admin/m/BoardUser";
+            }
+
+            redirectAttributes.addFlashAttribute("msg","회원이 삭제가 실패했습니다.");
             return "redirect:/admin/m/BoardUser";
         }
 
+        //관리자 일때
+
+        if (result){
+            redirectAttributes.addFlashAttribute("msg","회원이 삭제되었습니다.");
+            return "redirect:/admin/m/BoardAdmin";
+        }
+
         redirectAttributes.addFlashAttribute("msg","회원이 삭제가 실패했습니다.");
-        return "redirect:/admin/m/BoardUser";
+        return "redirect:/admin/m/BoardAdmin";
+
 
     }
 
