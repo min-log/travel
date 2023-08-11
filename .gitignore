@@ -23,6 +23,10 @@
 hs_err_pid*
 
 ### my ignore ###
+src/main/resources/static/upload/categoryBoard
+src/main/resources/static/upload/categoryImg
+src/main/resources/static/upload/categoryThumbnail
+src/main/resources/static/upload/profile
 src/main/resources/application-mail.properties
 src/main/java/com/example/travel/config/MailConfig.java
 src/main/resources/mail.txt

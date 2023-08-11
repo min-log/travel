@@ -1,4 +1,5 @@
 
+
     function btnLike(e){ // 좋아요 버튼 클릭
         //console.log(e);
         let box = ".col_"+e;
