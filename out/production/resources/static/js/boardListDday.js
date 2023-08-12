@@ -31,9 +31,9 @@ $(document).ready(function (){
         console.log("listD * 100 / totalDay : " + DP )
 
         if (totalDay == startEnd){
-            $(".progress-bar").css({"width": '100%'});
+            $(this).find(".progress-bar").css({"width": '100%'});
         } else {
-            $(".progress-bar").css({"width": DP});
+            $(this).find(".progress-bar").css({"width": DP});
         }
 
 
