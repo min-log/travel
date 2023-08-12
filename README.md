@@ -7,4 +7,4 @@
 <br />
 <br />
 
-![Travel-Road_복사본](https://github.com/min-log/travel/assets/98336473/aded627f-6990-4fa3-8ca8-f9736062be3b)
+![Travel-Road_복사본](https://github.com/min-log/travel/assets/98336473/96cffe84-d35c-44fe-ba45-8c427f0dc631)
