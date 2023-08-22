@@ -1,0 +1,376 @@
+.content_box {width:80%;max-width:800px;min-width:320px;margin: 0 auto;}
+.travel_add_box .search_boxes {display: flex}
+.travel_add_box .search_boxes select + select {margin-left: 10px;}
+
+/*input[type=text][readonly]{border:0;cuser:none;outline: none}*/
+/*회원가입*/
+.x_auto {display: flex;}
+.err {outline: 2px solid var(--color-err);}
+.err_txt {color:var(--color-err);}
+input.err {}
+#joinForm .btn-dark {width:140px;}
+#joinForm .mail-check-box .mail-check-input {height:100%}
+.address_wrap {}
+.address_wrap > div + div {margin-top: 10px;}
+
+.address_wrap .address_info {}
+.userimg_wrap {width: 165px;}
+.userimg_box {width: 100%;height: 170px;background:#ccc;overflow:hidden;border-radius: 0.25rem;border:1px solid #ced4da;border-bottom-left-radius: 0;border-bottom-right-radius: 0;}
+.userimg_box img {width:100%;min-height:100%;display: flex;align-items: center;}
+.userimg_wrap label {border-top-right-radius: 0;border-top-left-radius: 0;width: 100% !important;}
+.userimg_wrap #userImg {display:none;}
+
+.user_agree_wrap {padding: 10px;max-height:80px;font-size:10px;color:#5F5F5F;overflow: auto;    border: 1px solid #ced4da;border-radius: 0.25rem;}
+.login_social {border-top: 1px dashed #dee2e6;}
+.login_social .btn_social {display: block;font-weight: bold;}
+.login_social .btn_social + .btn_social {margin-top:10px;}
+.login_social .btn_social img {width:20px;margin-right:10px;vertical-align: middle}
+.btn_social.google {background: #1b17ffcc; color:#fff}
+.btn_social.kakao {background: #ffe900; }
+.btn_social.kakao img {width:35px;margin-right:0;}
+.btn_social.naver {background:#1dc800;color:#fff;}
+.btn_social.naver img {width:32px;}
+
+    /*ID 찾기*/
+#mail-Check-Btn {border-top-left-radius:0;border-bottom-left-radius: 0;}
+.mail-check-box {position:relative;}
+.mail-check-box .mail-check-input {padding-right:80px;text-overflow: ellipsis;overflow: hidden;word-wrap: break-word;white-space: inherit;}
+.mail-check-box #timerUp {position: absolute;top:0;right:0;padding:0 10px;height:calc(100% - 2px);display: flex;align-items: center;}
+.mail-check-box #timerUp i {vertical-align: middle;line-height: 100% !important;margin-left:5px;display: flex;align-items: center;}
+.mail-check-box #timerUp #timer {vertical-align: middle;}
+
+
+/*mypage*/
+
+
+
+/*일정*/
+.input-daterange input[type=text] {text-align:left;}
+.input-daterange input:first-child {border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;}
+.input-daterange input:last-child {border-top-right-radius: .375rem;border-bottom-right-radius: .375rem;}
+/*달력*/
+.datepicker {
+    width: 250px;
+    background-color: #fff;
+    border: none;
+    border-radius: 0 !important;
+    border: 1px solid #dadada;
+    padding:0!important;
+    z-index: 2000 !important;
+}
+
+.datepicker .datepicker-dropdown {
+    top: 0;
+    left: 0;
+}
+
+.datepicker table tr td.today, span.focused {
+    border-radius: 50% !important;
+    background: #5F5F5F !important;
+    color: #fff !important;
+}
+
+.datepicker table tr td.today.range {
+    background-image: linear-gradient(#eeeeee, #eeeeee) !important;
+    border-radius: 0 !important;
+}
+
+/*Weekday title*/
+.datepicker thead tr:nth-child(3) th {
+    font-weight: bold !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 12px;
+}
+
+.datepicker .dow,
+.datepicker .old-day,
+.datepicker .day,
+.datepicker .new-day {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 0px !important;
+    font-size: 12px;
+    box-sizing: border-box;
+    line-height: 35px !important;
+    padding: 0;
+}
+
+.datepicker .old-day:hover,
+.datepicker .day:hover,
+.datepicker .new-day:hover,
+.datepicker .month:hover,
+.datepicker .year:hover,
+.datepicker .decade:hover,
+.datepicker .century:hover {
+    border-radius: 50% !important;
+    background-color: #eee;
+}
+
+.datepicker .active {
+    border-radius: 50% !important;
+    background-image: linear-gradient(#90CAF9, #64B5F6) !important;
+    color: #fff !important;
+}
+
+.datepicker .range-start,
+.datepicker .range-end {
+    border-radius: 50% !important;
+    background:var(--color-main) !important;
+}
+
+.datepicker .prev,
+.datepicker .next,
+.datepicker .datepicker-switch {
+    border-radius: 0 !important;
+    padding: 10px 10px 10px 10px !important;
+    text-transform: uppercase;
+    font-size: 12px;
+    opacity: 0.8;
+}
+.datepicker .prev,
+.datepicker .next {font-size:20px;}
+
+.datepicker .prev:hover,
+.datepicker .next:hover,
+.datepicker .datepicker-switch:hover {
+    background-color: inherit !important;
+    opacity: 1;
+}
+
+.datepicker .btn-black {
+    background-color: #37474F !important;
+    color: #fff !important;
+    width: 100%;
+}
+
+.datepicker .btn-black:hover {
+    color: #fff !important;
+    background-color: #000 !important;
+}
+
+
+/**/
+.day_select {}
+.day_select a svg {width:26px;height:26px;}
+.day_select a svg path {color:var(--color-main);font-weight:normal;}
+.day_wrap {}
+.day_wrap .btn-group a:hover svg path{color:#fff;}
+.day_wrap table th,
+.day_wrap table td {padding:5px 0;}
+.day_wrap table th label {font-size:14px}
+.item_wrap li {display:flex;align-items:center;}
+.item_wrap li a {width:100%;overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;}
+.item_map .markerbg {width:44px; height:37px;background:url('/img/marker_number_blue.png') center no-repeat;background-position: 0 -10px;display:inline-block;}
+.item_map .marker_0 {background-position: 0 -10px;}
+.item_map .marker_1 {background-position: 0 -56px;}
+.item_map .marker_2 {background-position: 0 -102px}
+.item_map .marker_3 {background-position: 0 -148px;}
+.item_map .marker_4 {background-position: 0 -194px;}
+.item_map .marker_5 {background-position: 0 -240px;}
+.item_map .marker_6 {background-position: 0 -286px;}
+.item_map .marker_7 {background-position: 0 -332px;}
+.item_map .marker_8 {background-position: 0 -378px;}
+.item_map .marker_9 {background-position: 0 -423px;}
+.item_map .marker_10 {background-position: 0 -470px;}
+.item_map .marker_11 {background-position: 0 -516px;}
+.item_map .marker_12 {background-position: 0 -562px;}
+.item_map .marker_13 {background-position: 0 -608px;}
+.item_map .marker_14 {background-position: 0 -654px;}
+
+
+
+/*지도*/
+.content {position:relative;}
+.map_wrap {position:relative;width:100%;height:calc(100vh - 85px);}
+.map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+.map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+.radius_border{border:1px solid #919191;border-radius:5px;}
+.custom_zoomcontrol {position:absolute;top:20px;right:20px;width:auto;height:auto;overflow:hidden;z-index:1;background-color:#f5f5f5;display:flex;}
+.custom_zoomcontrol span {display:block;width:36px;height:30px;text-align:center;cursor:pointer;display: flex;justify-content: center;align-items: center;}
+.custom_zoomcontrol span img {width:15px;height:15px;border:none;}
+.custom_zoomcontrol span:first-child{border-right:1px solid #bfbfbf;}
+
+.map_mark_info {padding: 20px;
+    position: absolute;
+    min-width: 250px;
+    max-width: 300px;
+    bottom: 0;
+    left: 50%;
+    background: #fff;
+    border:1px solid #ccc;
+    border-radius: 8px;
+    transform: translate(-25%,24px);
+    box-sizing: border-box;
+}
+.map_mark_top {display: flex;justify-content: space-between;}
+.map_mark_top h5 {font-size:14px;font-weight:bold}
+.map_mark_top .btn-close {width: 15px;
+    height: 15px;
+    background-size: cover;
+    margin-top: -10px;
+    margin-right: -10px;}
+.map_mark_info .gray {color:#8a8a8a;}
+.map_mark_info .jibun {font-size:10px;padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+.map_mark_info .place_url {color:var(--color-main);}
+.map_mark_info .tel {color:var(--color-sub);}
+.map_mark_info p {margin-top:4px}
+.map_mark_info .item-add {padding:2px 0;}
+
+#mapMenuWrap {position:absolute;top:70px;right:20px;width:300px;height:calc(100% - 70px - 20px);background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;box-sizing: border-box;z-index: 100;}
+.bg_white {background:#fff;}
+#mapMenuWrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+#mapMenuWrap .option{text-align: center;}
+#mapMenuWrap .option p {margin:10px 0;}
+#mapMenuWrap .option button {margin-left:5px;}
+#placesList {height:90%;overflow:hidden;overflow-y:auto;border-bottom:1px solid #888;}
+#placesList li {list-style: none;}
+#placesList .item {position:relative;overflow: hidden;cursor: pointer;min-height: 65px;}
+#placesList .item + .item {border-top:1px solid #a6a6a6;}
+#placesList .item span {display: block;margin-top:4px;}
+#placesList .item h5 {font-weight: bold}
+#placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+#placesList .item .info{padding:10px 0 10px 55px;}
+#placesList .info .gray {color:#8a8a8a;}
+#placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+#placesList .info .place_url {color:var(--color-main);}
+#placesList .info .tel {color:var(--color-sub);}
+#placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url('/img/icon_map_00.png') center no-repeat; background-size:100% auto;}
+
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+.travel_list {min-width:300px;}
+.infobtn {color: #fff;border-radius:5px;padding:2px 5px;margin:0 2px;}
+.infobtn.btn-dark {background:#212529}
+#btnItemClose {color:#333;}
+#btnItemClose:hover,
+#btnItemDelete:hover path {color: #fff}
+
+
+/* 게시판 리스트 */
+.board_top {text-align:right;}
+.board_top * {display:inline-block}
+.board_top select {width: 150px;}
+.board_content .card {height:100%}
+.board_content .card-body {display: flex;align-items: flex-start;}
+.board_content .card-body .img {width:100px;height: 100px;border-radius: 4px;overflow: hidden;display:flex;align-items: center;}
+.board_content .card-body .img img {width:100%;height: auto}
+.board_content .card-body .con {width:100%;box-sizing:border-box;position:relative;font-size:12px;}
+.board_content .card-body .con .bi {font-size:14px;}
+.board_content .card-body .img + .con {padding-left:20px;width:calc(100% - 100px);}
+.board_content .card-body .con h5 {font-weight:bold;font-size:18px;}
+.board_content .card-body .con .address_info {font-size:12px;color:var(--color-main);font-weight:bold;}
+.board_content .btn-group .btn {border-top-left-radius: 0px !important;border-top-right-radius: 0px !important;}
+.board_content .btn-group .btn + .btn {border-left:1px solid #dee2e6;}
+.board_content .btn-group .btn:hover {background:var(--color-main);color:#fff;}
+.tag {display:inline-block;border:1px solid #5F5F5F;border-radius:5px;background:#eee;padding:1px 10px;margin:2px;font-size:14px;}
+.tag.point {background:var(--color-main);color:#fff !important;}
+.board_content .btn_up {position: absolute;top:0;right:0;z-index: 1;display: flex;align-items: center;}
+.board_content .btn_up .bi {width:18px;height:18px;font-size:18px !important;}
+.board_content .btn_up .bi-sticky-fill {color:var(--color-main);}
+.board_content .btn_up a + a {margin-left:5px;}
+.btn_heart .bi {font-size:18px;position:absolute;right:0;top:0;}
+.btn_heart .bi.bi-heart-fill {position: absolute;right:0;top:0;z-index:1;}
+.board_content .top_btn {display:flex;justify-content: space-between;align-items: center;}
+.board_content .top_btn a {font-size:12px;font-weight:bold;}
+.board_content .top_btn .bi {width:18px;height:18px;font-size:18px !important;}
+/*게시판 상세페이지*/
+.veiw_top .date {font-weight:bold}
+.veiw_top .area,
+.veiw_top .area span {font-weight:bold;font-size:12px;color:var(--color-main);}
+.veiw_top .img {width: 100%;
+    height: 230px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;}
+.veiw_top .img img {width:100%}
+.item_veiw_con .top {width:100%;line-height:40px !important;}
+.item_veiw_con .top > * {
+    display: inline-block;
+    vertical-align: top;
+}
+.item_veiw_con .top .place_name {font-weight:bold;width:calc(100% - 58px - 44px);margin-top:10px;}
+.item_veiw_con li{margin-bottom:20px;position:relative;}
+.item_veiw_con li:after {content: '';display:block;border-left:2px dotted #000;width:1px;height:calc(100% + 20px);position:absolute;top:0;left:13px;z-index: -1;transition:1s all;}
+.item_veiw_con li.action:after {border-left:2px solid var(--color-main);}
+.item_veiw_con li:last-child:after {display:none;}
+.item_veiw_con .con {width: calc(100% - 40px);
+    margin-left: 40px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;}
+.item_veiw_con .con p {font-size:14px;}
+.item_veiw_con .con .gray {color:#8a8a8a;}
+.item_veiw_con .con .jibun {font-size:12px;padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+.item_veiw_con .link_zone {float: right;width:58px;margin-top:10px;}
+.item_veiw_con .link_zone .bi {color:#ddd;}
+.item_veiw_con .link_zone .bi.bi-map-fill {color:#000;}
+.item_veiw_con .link_zone .bi:hover {color:var(--color-main) !important;}
+.item_veiw_con .road_address {font-weight:bold}
+.item_veiw_con .address_name {clear:both;}
+
+#summernote {}
+.note-toolbar .dropdown-toggle::after {display:none}
+.note-btn-group.open.note-color .note-dropdown-menu {display:flex;}
+.board-content-wrap h1 {font-size:24px;}
+.board-content-wrap h2 {font-size:22px;}
+.board-content-wrap h3 {font-size:20px;}
+.board-content-wrap h4 {font-size:18px;}
+.board-content-wrap h5 {font-size:16px;}
+.board-content-wrap h6 {font-size:14px;}
+.board-content-wrapeditable ul {}
+.board-content-wrap ul li {padding-left:10px;box-sizing:border-box;position:relative;}
+.board-content-wrap ul li:before {content: '';display: inline-block;top: 0;left: 0;font-size: 0px;width: 5px;height: 5px;margin-left:-10px;margin-right: 5px;background: #000;border-radius: 50%;}
+.board-content-wrap ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 30px;
+}
+
+.board-content-wrap li {display: list-item;text-align: -webkit-match-parent;}
+
+.note-modal-backdrop {display:none !important;}
+.note-modal-content {z-index:100;position: absolute;top:50%;left:50%;transform:translate(-25%,-25%);margin:0;}
+
+.comments_wrap {padding-bottom:50px;}
+.comments_input {position: sticky;bottom: -20px;left:0;margin-bottom: -20px;margin-left:-20px;width:calc(100% + 40px);background:#fff;padding:20px;
+    background: #ddd;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.comments_input .bi {}
+.comments_input input {width:70%;margin-right:5px;margin-left:5px;}
+#commentsList {}
+#commentsList .comm {margin-top:10px;border: 1px solid #dadada;
+    padding: 10px;
+    border-radius: 5px;}
+#commentsList .comm.comm_me{border: 2px solid var(--color-main);}
+#commentsList .comm.comm_me .comm_con {color: var(--color-main);font-weight: bold;}
+#commentsList .comm.comm_me a svg {vertical-align: auto}
+#commentsList .comm.comm_me a path {color: var(--color-main);}
+#commentsList .comm .comm_id {}
+#commentsList .comm .comm_con {}
+#commentsList .comm .comm_con {}
+
+#popupShare .modal-message {text-align:center}
+#popupShare .modal-message a + a {margin-left:10px;}
+#popupShare .modal-message a img {width:30px;height:auto}
+#popupShare .modal-message .ringk {display:flex}
+#popupShare .modal-message .ringk .btn {width:100px}
+
+.board-content-wrap {margin-top:50px;}

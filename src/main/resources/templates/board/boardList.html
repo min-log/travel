@@ -44,7 +44,7 @@
                           <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
                             <i class="bi bi-heart"></i>
                             <th:block th:each="likes,i:${likeList}">
-                              <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
+                              <i th:if="|${likes.categoryId} == ${list.categoryNo}|" class="bi bi-heart-fill"></i>
                             </th:block>
                           </a>
                       </p>

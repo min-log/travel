@@ -156,22 +156,11 @@
           </div>
           <div class="modal-body">
             <p class="modal-message">
-
-<!--              <span th:field="*{idCk}" th:if="*{idCk}" class="err_txt">-->
-<!--              아이디 변경 : 이미 존재하는 아이디 입니다.-->
-<!--               </span>-->
-<!--              <br />-->
               <span th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></span>
-              <br />
               <span th:if="${#fields.hasErrors('userBirthday')}" th:errors="*{userBirthday}"></span>
-              <br />
               <span th:if="${#fields.hasErrors('userPhone')}" th:errors="*{userPhone}"></span>
-              <br />
               <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-              <br />
-              <!--
-              <span th:if="${#fields.hasErrors('getUserId')}" th:errors="*{getUserId}"></span>
-              -->
+              <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
             </p>
           </div>
         </div>

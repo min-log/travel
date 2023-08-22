@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <div class="main_container">
+        <div id="mainBanner">
+            <img class="cloud cloud_1" th:src="@{/img/cloud.png}">
+            <img class="cloud cloud_2" th:src="@{/img/cloud.png}">
+            <img class="bg_4" th:src="@{/img/main_banner_5.png}">
+            <img class="bg_3" th:src="@{/img/main_banner_3.png}">
+            <img class="bg" th:src="@{/img/main_banner.jpg}">
+            <h4 class="txt">
+                <img th:src="@{/img/logo.png}"><br />
+                <p class="t_1">
+                    여행계획부터 여행 지도 및 후기 기록까지 모두 가능한 플렛폼입니다.
+                </p>
+                <p class="t_2">
+                    친구들과 함께 공유하여 꼼꼼한 여행 계획을 세우고 참고할 수 있습니다.<br />
+                    Travel Road 와 즐거운 여행을 만들어 보세요!
+                </p>
+            </h4>
+        </div>
+        <div class="sec_box sec_board_keyword">
+
+            <div class="container">
+                <h4 class="tit text-center mb-2">인기 여행 키워드 TOP 5</h4>
+                <p class="subTitle text-center mb-5">가장 많이 검색한 키워드입니다.</p>
+                <div class="keywordWrap">
+                    <i class="bi bi-search"></i>
+                    <ul th:object="${rankingList}">
+                        <th:block th:each="keyword,i:${rankingList}">
+                            <li><a th:href="@{/board/boardList(k=${keyword.title})}">[[${keyword.title}]]</a></li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sec_box sec_board_img">
+            <div class="container">
+                <h4 class="tit text-center mb-2">인기 여행지</h4>
+                <p class="subTitle text-center mb-5">즐겨 찾는 인기 여행지를 확인해보세요.</p>
+                <div class="board_wrap">
+                <div class="box">
+                    <div class="board_content_img_wrap">
+                            <ul class="board_content_img">
+                            <th:block th:each="list,i:${categoryPageImg.getContent()}">
+                                <li class="board_item">
+                                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}">
+                                        <p class="img" th:if="${list.boardImg}">
+                                            <img th:src="${list.boardImg}" alt="여행썸내일">
+                                        </p>
+                                        <div class="con">
+                                            <span class="point-color">
+                                                [[${list.categoryArea}]]
+                                                <th:block th:if="${list.categoryAreaDetails != ''}">
+                                                    / <span class="point-color" >[[${list.categoryAreaDetails}]]</span>
+                                                </th:block>
+                                            </span>
+                                            <h5 class="card-title">[[${list.categoryName}]]</h5>
+                                            <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </ul>
+                    <button class="slick-arrow prevArrow"><i class="bi bi-chevron-compact-left"></i></button>
+                    <button class="slick-arrow nextArrow"><i class="bi bi-chevron-compact-right"></i></button>
+                    </div>
+                </div>
+                <div class="box">
+                    <ul class="board_ranking">
+                        <th:block th:each="rank,i:${categoryPagePopularity.getContent()}">
+                            <li>
+                                <a th:href="@{/board/view(no=${rank.categoryNo})}">
+                                    <p class="point-color">
+                                        [[${rank.categoryArea}]]
+                                        <th:block th:if="${rank.categoryAreaDetails != ''}">
+                                            / <span class="point-color" >[[${rank.categoryAreaDetails}]]</span>
+                                        </th:block>
+                                    </p>
+                                    <p class="rank_tit">[[${rank.categoryName}]]</p>
+                                    <span><i class="bi bi-calendar-week"></i> 일정 : [[${rank.dateTxt} - 1 ]] 박 [[${rank.dateTxt}]] 일</span>
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="sec_box sec_board_new">
+            <div class="container">
+                <h4 class="tit text-center mb-2">최근 여행 리스트</h4>
+                <p class="subTitle text-center mb-5">최근 올라온 여행 리스트입니다.</p>
+                <ul class="board_content row row-cols-1 row-cols-md-2 g-4 ">
+                <th:block th:each="list,i:${categoryPageNew.getContent()}">
+                    <li class="col" th:class="|col col_${list.categoryNo}|" >
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="img" th:if="${list.boardImg}">
+                                    <img th:src="${list.boardImg}" alt="여행썸내일">
+                                </p>
+                                <div class="con">
+                                    <div class="address_info mt-1">
+                                        <p class="btn_up">
+                                            <a th:href="|javascript:btnLike(${list.categoryNo})|" title="찜하기" class="btn_heart">
+                                                <i class="bi bi-heart"></i>
+                                                <th:block th:each="likes,i:${likeList}">
+                                                    <i th:if="${likes.categoryId == list.categoryNo}" class="bi bi-heart-fill"></i>
+                                                </th:block>
+                                            </a>
+                                        </p>
+                                        <span class="point-color" th:text="${list.categoryArea}">제주도</span>
+                                        <th:block th:if="${list.categoryAreaDetails != ''}">
+                                            / <span class="point-color" th:text="${list.categoryAreaDetails}">제주도</span>
+                                        </th:block>
+                                    </div>
+                                    <h5 th:text="${list.categoryName}" class="card-title">동물농장 여행</h5>
+                                    <div class="mt-1">
+                                        <span><i class="bi bi-calendar-week"></i> 일정 : [[${list.dateTxt} - 1 ]] 박 [[${list.dateTxt}]] 일</span>
+                                        <p class="travel_date mt-1" style="display:inline-block">
+                                            ( <span class="travel_day_start" th:text="${list.dateStart}">2023-08-11</span>
+                                            -
+                                            <span class="travel_day_end" th:text="${list.dateEnd}">2023-08-20</span> )
+                                        </p>
+                                    </div>
+                                    <p class="mt-1"><i class="bi bi-clock"></i>
+                                        작성일 : [[${#temporals.format(list.createdAt,'yyyy-MM-dd')}]]</p>
+                                    <p class="travel_people mt-1">
+                                        <i class="bi bi-emoji-smile"></i>
+                                        <span class="txt_info" style="color: #333">작정자 : </span>
+                                        <span class="tag point" th:text="${list.categoryWriter}"></span>
+                                        <th:block th:each="tagItem,i:${list.tagList}" th:if="${i.size > 0}" >
+                                            <span class="">인원 : </span>
+                                            <span th:text="${i.size} + 1" class="tag"></span>
+                                        </th:block>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- end :card-body -->
+                            <div class="btn-group border-top">
+                                <a th:href="@{/board/view(no=${list.categoryNo})}" class="btn">일정상세 <i class="bi bi-map-fill"></i></a>
+                                <th:block th:if="${list.boardExistence}">
+                                    <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}" class="btn">여행기록 <i class="bi bi-pen-fill"></i></a>
+                                </th:block>
+                            </div>
+                        </div>
+                    </li>
+                </th:block>
+            </ul>
+            </div>
+        </div>
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"> 여행이름 </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="">
+                        <input class="item_id" value="" type="hidden" />
+                        <table>
+                            <colgroup>
+                                <col style="width:100px;">
+                                <col style="width:calc(100% - 100px);">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>Day</th>
+                                    <td>
+                                        <input name="travel_day" class="travel_day" type="number" value="1">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>장소명</th>
+                                    <td>
+                                        <input name="place_name" class="place_name" type="text" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>주소</th>
+                                    <td>
+                                        <input name="road_address_name" class="road_address_name" type="text" readonly>
+                                        <input name="address_name" class="address_name" type="text" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>phone</th>
+                                    <td>
+                                        <input name="phone" class="phone" type="text" value="1" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>URL</th>
+                                    <td>
+                                        <input name="place_url" class="place_url" type="text" value="1" readonly>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>시간</th>
+                                    <td>
+                                        <li>도착: <input class="time" name="time1" type="text" placeholder="7:00"/> </li>
+                                        <li>출발: <input type="text" name="time2" placeholder="7:00"/> </li>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>여행지 정보 및 운영 시간</th>
+                                    <td>
+                                        <textarea name="travel_content" class="travel_content"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">다시 작성하기 </button>
+                    <button type="button" class="btn btn-primary" onclick="itemSave()" >저장하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/boardList.js}"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript">
+        $('.board_content_img').slick({
+            prevArrow : $('.board_content_img_wrap .prevArrow'),
+            nextArrow : $('.board_content_img_wrap .nextArrow'),
+        });
+
+
+        $(".board_ranking").slick({
+            vertical: true,
+            slidesToShow: 5,
+            slidesToScroll: 5,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            arrows: false,
+            verticalSwiping: true,
+            dots: true
+        });
+    </script>
+    <!-- main page 스크롤 모션 스크립트 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js"></script>
+    <script th:src="@{/js/mainMotion.js}" type="text/javascript"></script>
+</th:block>
+</html>
+

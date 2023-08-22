@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="header">
+    <div id="admin-header" class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
+      <img th:src="@{/img/logo.png}" style="width:90px;margin:0 auto" />
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="/admin/m/main" th:attr="class=${title == '메인' ? 'nav-link active' : 'nav-link link-body-emphasis'}" class="nav-link link-body-emphasis">
+            메인
+          </a>
+        </li>
+        <li>
+          <a href="/admin/m/BoardTravel" th:attr="class=${title == '여행 게시판' ? 'nav-link active' : 'nav-link link-body-emphasis'}" class="nav-link link-body-emphasis">
+            여행 게시판
+          </a>
+        </li>
+        <li>
+          <a href="/admin/m/BoardUser" th:attr="class=${title == '회원 리스트' ? 'nav-link active' : 'nav-link link-body-emphasis'}" class="nav-link link-body-emphasis">
+            회원 리스트
+          </a>
+        </li>
+        <li>
+          <a href="/admin/m/BoardAdmin" th:attr="class=${title == '관리자 리스트' ? 'nav-link active' : 'nav-link link-body-emphasis'}" class="nav-link link-body-emphasis">
+            관리자 리스트
+          </a>
+        </li>
+      </ul>
+      <hr>
+      <th:block sec:authorize="isAnonymous()">
+       <a th:href="@{/admin}">로그인</a>
+      </th:block>
+      <th:block sec:authorize="isAuthenticated()">
+        <a th:href="@{/logout}">로그아웃</a>
+      </th:block>
+    </div>
+
+
+
+
+  <!-- Modal -->
+  <script type="text/javascript" th:if="${msg}">
+      $(document).ready(function (){
+          $('#modalMsg').modal("show");
+      })
+  </script>
+
+  <div class="modal fade" id="modalMsg" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">메시지</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-message">
+            <p th:text="${msg}"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End: Modal -->
+
+</th:block>
+</html>

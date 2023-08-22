@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "items")
+@ToString
 @Getter
 @Builder
 @Entity

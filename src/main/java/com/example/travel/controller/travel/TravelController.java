@@ -96,8 +96,7 @@ public class TravelController {
         log.info(no);
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
-        log.info("days {}" , days.getDay());
-        log.info("days info {}" , days.getDayInfo());
+
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
         ItemDTO item = ItemDTO.builder().categoryId(no).build();

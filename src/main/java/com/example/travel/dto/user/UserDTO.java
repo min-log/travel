@@ -30,7 +30,7 @@ public class UserDTO {
     private String userEmail;
 
 
-    @NotBlank(message = "비밀번호 : 비밀번호는 영어와 숫자로 포함해서 6~12자리 이내로 입력해주세요.")
+    //@NotBlank(message = "비밀번호 : 비밀번호는 영어와 숫자로 포함해서 6~12자리 이내로 입력해주세요.")
     @Pattern(regexp="[a-zA-Z1-9]{6,12}", message = "비밀번호는 영어와 숫자로 포함해서 6~12자리 이내로 입력해주세요.")
     private String password;
 

@@ -70,7 +70,7 @@ public class BoardController {
 
 
 
-        return "/board/boardList";
+        return "board/boardList";
     }
 
 
@@ -87,8 +87,7 @@ public class BoardController {
         CategoryDTO categoryDTO = categoryService.getCategory(no);
         categoryService.categoryViewNumUpdate(no);// 조회수 증가
         DayInfoDTO days = categoryService.categoryDays(categoryDTO.getDateStart(), categoryDTO.getDateEnd());
-        log.info("days {}" , days.getDay());
-        log.info("days info {}" , days.getDayInfo());
+
         LocalDate localDate = LocalDate.parse(categoryDTO.getDateStart());
         int dayOfMonth = localDate.getDayOfMonth();
 

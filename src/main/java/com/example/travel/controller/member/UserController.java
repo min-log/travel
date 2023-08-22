@@ -54,8 +54,7 @@ public class UserController {
 
             if(bindingResult.hasErrors()) {
                 log.info("회원 가입 실패");
-                log.info(bindingResult.hasErrors());
-                return "member/join";
+                return "/member/join";
             }else{
                 //성공 로직
                 System.out.println(user.getUserImg());

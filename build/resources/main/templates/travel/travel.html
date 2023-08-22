@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+    <div class="content_nav"  th:object="${category}">
+        <!-- start : navbar -->
+        <th:block th:replace="layout/navBarTravel::navBarTravel"></th:block>
+        <div class="content">
+            <p class="text-center mb-1 txt_info">stap 1 > 여행 설정</p>
+            <h2 class="tit text-center mb-4">
+                나만의 여행을 만들어보세요.
+            </h2>
+            <form id="categoryForm" th:action="@{/travel/category}"  th:method="post" class="box travel_add_box content_box">
+                <input th:field="*{boardExistence}" th:id="*{boardExistence}" th:name="*{userTravelNo}" th:value="*{boardExistence}" type="hidden">
+                <input th:field="*{userTravelNo}" th:id="*{userTravelNo}" th:name="*{userTravelNo}" th:value="*{userTravelNo}" type="hidden">
+                <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" type="hidden">
+                <input name="categoryWriter" th:id="*{categoryWriter}" th:value="${session.userT.userId}" type="hidden">
+                <table>
+                    <colgroup>
+                        <col style="width:100px">
+                        <col style="width:calc(100% - 100px)">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>여행명 <span class="txt_info ck">*</span></th>
+                            <td>
+                                <input th:field="*{categoryName}" th:id="categoryName" th:name="*{categoryName}" class="form-control" type="text" placeholder="가평 가족여행">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>기간 <span class="txt_info ck">*</span></th>
+                            <td>
+                                <div class="input-group input-daterange">
+                                    <input th:field="*{dateStart}" id="dateStart" th:name="*{dateStart}" th:value="*{dateStart}" type="text" class="form-control" placeholder="출발 일" readonly>
+                                    <input th:field="*{dateEnd}" id="dateEnd" th:name="*{dateEnd}" th:value="*{dateEnd}" type="text" class="form-control" placeholder="종료 일" readonly>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>지역 <span class="txt_info ck">*</span></th>
+                            <td>
+                                <div class="search_boxes">
+                                    <select id="categoryArea"  th:field="*{categoryArea}" th:name="*{categoryArea}" class="form-select" aria-label="Default select example" onchange="categoryChange(this)">
+                                        <option value="">시/도 선택</option>
+                                        <option value="강원">강원</option>
+                                        <option value="경기">경기</option>
+                                        <option value="경남">경남</option>
+                                        <option value="경북">경북</option>
+                                        <option value="광주">광주</option>
+                                        <option value="대구">대구</option>
+                                        <option value="대전">대전</option>
+                                        <option value="부산">부산</option>
+                                        <option value="서울">서울</option>
+                                        <option value="울산">울산</option>
+                                        <option value="인천">인천</option>
+                                        <option value="전남">전남</option>
+                                        <option value="전북">전북</option>
+                                        <option value="제주">제주</option>
+                                        <option value="충남">충남</option>
+                                        <option value="충북">충북</option>
+                                    </select>
+
+                                    <select  id="categoryAreaDetails"  th:field="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" class="form-select" aria-label="Default select example">
+                                        <option value="">군/구 선택</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>함께</th>
+                            <td>
+                                <!-- 해시 태그 정보를 저장할 input 태그. (textarea도 지원) -->
+                                <input th:field="*{tags}" th:id="*{tags}" th:name="*{tags}" class='some_class_name form-control ' data-blacklist='.NET,PHP'  type="text"  placeholder="아이디를 입력하세요" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="form-check form-switch mt-4 pt-4 border-top">
+                    <label  class="form-check-label" th:for="*{categoryOpen}"> 여행 함께 공유하기</label>
+                    <input th:field="*{categoryOpen}" th:id="*{categoryOpen}" th:name="*{categoryOpen}" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                </div>
+                <p class="txt_info mt-2">* '여행지'게시판 에서 모두와 공유하고 소통할 수 있어요.</p>
+                <button id="btnCategorySave" type="button"  class="w-100 btn btn-primary mt-4">일정 만들기</button>
+             </form>
+
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="modalJoin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">확인 </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- end :Modal -->
+
+    <!-- 장소 -->
+    <script>
+        function categoryChange(e) {
+            const state = document.getElementById("categoryAreaDetails");
+
+            const gangwon = ["강릉시","동해시","삼척시","속초시","원주시","춘천시","태백시","고성군","양구군","양양군","영월군","인제군","정선군","철원군","평창군","홍천군","화천군","횡성군"];
+            const gyeonggi = ["고양시","과천시","광명시","광주시","구리시","군포시","김포시","남양주시","동두천시","부천시","성남시","수원시","시흥시","안산시","안성시","안양시","양주시","오산시","용인시","의왕시","의정부시","이천시","파주시","평택시","포천시","하남시","화성시","가평군","양평군","여주군","연천군"];
+            const gyeongsangnam = ["거제시", "김해시", "마산시", "밀양시", "사천시", "양산시", "진주시", "진해시", "창원시", "통영시", "거창군", "고성군", "남해군", "산청군", "의령군", "창녕군", "하동군", "함안군", "함양군", "합천군"];
+            const gyeongsangbuk = ["경산시","경주시","구미시","김천시","문경시","상주시","안동시","영주시","영천시","포항시","고령군","군위군","봉화군","성주군","영덕군","영양군","예천군","울릉군","울진군","의성군","청도군","청송군","칠곡군"];
+            const gwangju = ["광산구", "남구", "동구", "북구", "서구"];
+            const daegu = ["남구", "달서구", "동구", "북구", "서구", "수성구", "중구", "달성군"];
+            const daejeon = ["대덕구", "동구", "서구", "유성구", "중구"];
+            const busan = ["강서구","금정구","남구","동구","동래구","부산진구","북구","사상구","사하구","서구","수영구","연제구","영도구","중구","해운대구","기장군"];
+            const seoul = ["강남구","강동구","강북구","강서구","관악구","광진구","구로구","금천구","노원구","도봉구","동대문구","동작구","마포구","서대문구","서초구","성동구","성북구","송파구","양천구","영등포구","용산구","은평구","종로구","중구","중랑구"];
+            const ulsan = ["남구","동구","북구","중구","울주군"];
+            const incheon = ["계양구","남구","남동구","동구","부평구","서구","연수구","중구","강화군","옹진군"];
+            const jeonnam = ["광양시","나주시","목포시","순천시","여수시","강진군","고흥군","곡성군","구례군","담양군","무안군","보성군","신안군","영광군","영암군","완도군","장성군","장흥군","진도군","함평군","해남군","화순군"];
+            const jeonbuk = ["군산시", "김제시", "남원시", "익산시", "전주시", "정읍시", "고창군", "무주군", "부안군", "순창군", "완주군", "임실군", "장수군", "진안군"];
+            const jeju = ["서귀포시","제주시","남제주군","북제주군"];
+            const chungbuk = ["제천시","청주시","충주시","괴산군","단양군","보은군","영동군","옥천군","음성군","증평군","진천군","청원군"];
+
+
+            if (e.value == "강원") {
+                add = gangwon;
+            } else if (e.value == "경기") {
+                add = gyeonggi;
+            } else if (e.value == "경남") {
+                add = gyeongsangnam;
+            } else if (e.value == "경북") {
+                add = gyeongsangbuk;
+            } else if (e.value == "광주") {
+                add = gwangju;
+            } else if (e.value == "대구") {
+                add = daegu;
+            } else if (e.value == "대전") {
+                add = daejeon;
+            } else if (e.value == "부산") {
+                add = busan;
+            } else if (e.value == "서울") {
+                add = seoul;
+            } else if (e.value == "울산") {
+                add = ulsan;
+            } else if (e.value == "인천") {
+                add = incheon;
+            } else if (e.value == "전남") {
+                add = jeonnam;
+            } else if (e.value == "전북") {
+                add = jeonbuk;
+            } else if (e.value == "제주") {
+                add = jeju;
+            } else if (e.value == "충남") {
+                add = chungnam;
+            } else if (e.value == "충북") {
+                add = chungbuk;
+            }
+
+            state.options.length = 1;
+            // 군/구 갯수;
+
+            for (property in add) {
+                let opt = document.createElement("option");
+                opt.value = add[property];
+                opt.innerHTML = add[property];
+                state.appendChild(opt);
+            }
+        }
+    </script>
+
+    <!-- 달력 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+
+            $('.input-daterange').datepicker({
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                startDate: '0d'
+            });
+        });
+    </script>
+
+    <!-- 태그 관련 소스 다운 -->
+    <script src="https://unpkg.com/@yaireo/tagify"></script>
+    <!-- 폴리필 (구버젼 브라우저 지원) -->
+    <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+
+    <!-- 해쉬 태그 -->
+    <script type="text/javascript">
+
+        let inputElm = document.querySelector('input[name=tags]')
+        let whitelist = [];
+
+        // 회원 아이디 리스트
+        $(document).ready(function (){
+            $.ajax({
+                type : 'get',
+                url : '/userApi/tag',
+                success : function (data) {
+                    whitelist = data;
+                }
+            });
+
+        });
+
+        // initialize Tagify on the above input node reference
+        let tagify = new Tagify(inputElm, {
+            enforceWhitelist: true,
+            // make an array from the initial input value
+            whitelist: inputElm.value.trim().split(/\s*,\s*/)
+        })
+
+
+        // Chainable event listeners
+        tagify.on('add', onAddTag) //태그 추가 될때
+            .on('remove', onRemoveTag) //태그가 제거될때
+            .on('input', onInput) //태그가 입력되고 있을경우
+            .on('edit', onTagEdit) // 입력된 태그 수정
+            .on('invalid', onInvalidTag) // 허용되지 않는 태그일경우
+            .on('click', onTagClick) // 해시태그 클릭
+            .on('focus', onTagifyFocusBlur) // 포커스 될경우
+            .on('blur', onTagifyFocusBlur) // 포커스 잃을 경우
+            .on('dropdown:hide dropdown:show', e => console.log(e.type))// 드롭다운 메뉴가 사라질경우
+            .on('dropdown:select', onDropdownSelect) // 드롭다운 메뉴에서 아이템을 선택할 경우
+
+        let mockAjax = (function mockAjax(){
+            var timeout;
+            return function(duration){
+                clearTimeout(timeout); // abort last request
+                return new Promise(function(resolve, reject){
+                    timeout = setTimeout(resolve, duration || 700, whitelist)
+                })
+            }
+        })()
+
+        // tag added callback
+        function onAddTag(e){
+            console.log("onAddTag: ", e.detail);
+            console.log("original input value: ", inputElm.value)
+            tagify.off('add', onAddTag) // exmaple of removing a custom Tagify event
+        }
+
+        // tag remvoed callback
+        function onRemoveTag(e){
+            console.log("onRemoveTag:", e.detail, "tagify instance value:", tagify.value)
+        }
+
+
+
+        // on character(s) added/removed (user is typing/deleting)
+        function onInput(e){
+
+            console.log("onInput: ", e.detail);
+            console.log("onInput value: ", e.detail.value);
+
+
+
+
+            tagify.settings.whitelist.length = 0; // reset current whitelist
+            tagify.loading(true).dropdown.hide.call(tagify) // show the loader animation
+
+
+
+            // get new whitelist from a delayed mocked request (Promise)
+            mockAjax()
+                .then(function(result){
+                    // replace tagify "whitelist" array values with new values
+                    // and add back the ones already choses as Tags
+                    tagify.settings.whitelist.push(...result, ...tagify.value)
+                    // render the suggestions dropdown.
+                    tagify.loading(false).dropdown.show.call(tagify, e.detail.value);
+                })
+        }
+
+        function onTagEdit(e){
+            console.log("onTagEdit: ", e.detail);
+        }
+
+        // invalid tag added callback
+        function onInvalidTag(e){
+            console.log("onInvalidTag: ", e.detail);
+        }
+
+        // invalid tag added callback
+        function onTagClick(e){
+            console.log(e.detail);
+            console.log("onTagClick: ", e.detail);
+        }
+
+        function onTagifyFocusBlur(e){
+            console.log(e.type, "event fired")
+        }
+
+        function onDropdownSelect(e){
+            console.log("onDropdownSelect: ", e.detail)
+        }
+    </script>
+
+
+    <!-- 폼저장 -->
+    <script type="text/javascript">
+        $(function (){
+
+            let form = document.querySelector("#categoryForm");
+            let name = document.querySelector("#categoryName");
+            let dateStart = document.querySelector("#dateStart");
+            let dateEnd = document.querySelector("#dateEnd");
+            let categoryArea = document.querySelector("#categoryArea");
+            let categoryAreaDetails = document.querySelector("#categoryAreaDetails");
+
+            $("#btnCategorySave").on('click',function (){
+
+                if(name.value == ''){
+                    $('.modal-message').text("여행명을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(dateStart.value == ''){
+                    $('.modal-message').text("출발일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(dateEnd.value == ''){
+                    $('.modal-message').text("종료일을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }else if(categoryArea.value == ''){
+                    $('.modal-message').text("지역을 입력하세요.");
+                    $('#modalJoin').modal("show");
+                    return false;
+                }
+
+                form.submit();
+            })
+        });
+    </script>
+
+</th:block>
+</html>
+

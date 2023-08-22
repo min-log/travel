@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic}">
+
+<th:block th:fragment="navBarTravelPost">
+  <div class="navbar">
+    <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
+    </button>
+    <div class="navbar_wrap scrollBar">
+      <div class="flex-column ">
+        <div class="top veiw_top" >
+          <div class="up">
+            <a th:href="@{/travel/category(no=${category.categoryNo})}"  title="지도보러가기">
+              <i class="bi bi-map-fill"></i>
+            </a>
+          </div>
+          <div th:object="${category}">
+            <p class="area text-center">
+              <span th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:text="*{categoryArea}"></span>
+              <th:block th:if="*{categoryAreaDetails != ''}">  /
+                <span th:field="*{categoryAreaDetails}" th:id="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" th:text="*{categoryAreaDetails}"></span>
+              </th:block>
+            </p>
+            <h3 class="text-center" th:text="*{categoryName}"></h3>
+            <div class="date text-center">
+              <span th:text="*{dateStart}"></span>
+              <span class="ml-2"> - </span>
+              <span class="ml-2" th:text="*{dateEnd}"></span>
+            </div>
+            <div class="veiw_info mt-3">
+              <p class="travel_people mt-1">
+                <span class="txt_info">여행 인원</span><br />
+                <span class="tag point" th:text="*{categoryWriter}"></span>
+                <span th:each="tagItem,i:${category.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+              </p>
+              <p class="txt_info mt-1">총 예상 비용 : <b id="totalPice" class="point-color"></b> 원</p>
+              <p class="mt-1 txt_info">작성일 : <span class="txt_info" th:field="*{createdAt}" th:id="*{createdAt}" th:name="*{createdAt}" th:text="${#temporals.format(category.createdAt, 'yyyy-MM-dd')}"></span></p>
+            </div>
+            <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
+          </div>
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-week"></i>
+            날짜선택</h4>
+          <div class="day_select mt-3" style="">
+            <select class="form-select" aria-label="Default select example" onchange="window.open(value,'_self')">
+              <th:block th:each="list, i : ${days.dayInfo}">
+                <option th:text="|D-${i.index+1} : ${list}|" th:value="|/travel/post?no=${param.no}&day=${i.index + 1}|" th:data-no="${i.index + 1}"></option>
+              </th:block>
+            </select>
+          </div>
+          <p class="mt-3"></p>
+          <!-- end : day_wrap -->
+          <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName">하루</span> 일정</h4>
+          <p class="txt_info mt-1">하루 총 예상 비용 : <b id="todayTotalPrice" class="point-color"></b> 원</p>
+          <ul id="sortable" class="item_veiw_con item_map mt-3"></ul>
+          <!-- end : sortable -->
+        </div>
+        <!-- end : top -->
+
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+      let itemNo; // 아이템 넘버
+      let modal =$('#modalMsg');
+      let msg='';
+      let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
+
+      // 아이템 생성
+      let itemListWrap = $("#sortable");
+      let daySelect = $(".day_select .form-select");
+      let todayTotalPrice = $("#todayTotalPrice"); // 하루 비용
+
+
+
+      $(function () {
+          $(document).ready(function (){
+
+
+              let totalPriceValue = [[${category.categoryTotalPrice}]];
+              let totalPrice = priceToString(totalPriceValue);
+
+              $("#totalPice").text(totalPrice);
+              let itemNum = [[${param.day}]];
+              let itemTxt = $(".day_select select option").eq(itemNum-1).text();
+              // 처음 시작시 일정 불러오기
+              itemList(itemNum);
+              console.log(itemNum);
+              $(".dayName").text(itemTxt);
+              $("#boardTravelDate").val(itemTxt);
+
+              $(".day_select select option").eq(itemNum-1).attr("selected", "selected");
+
+
+              if (itemNum == 1){
+                  $("#thumbnailWarp").show();
+              }else{
+                  $("#thumbnailWarp").hide();
+              }
+
+
+          });
+
+
+          function priceToString(price) {
+              return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          }
+
+
+          function itemList(e){
+              let itemListCon='';
+              let todayPrice= 0;
+              $.ajax({
+                  url: '/boardApi/itemList',
+                  type: "get",
+                  data: {itemDay:e,cateNo:[[${param.no}]]},
+                  dataType: 'json',
+                  cache: false,
+                  success:function (data){
+                      console.log("리스트 변경");
+                      for(var i=0 in data){
+                          itemNo = data[i].itemNo;
+                          let price = new Number(data[i].itemAccount);
+                          itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                          itemListCon += '<div class="top">';
+                          itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
+                          itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
+                          itemListCon += '<p class="link_zone">';
+                          itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
+                          itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
+                          itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
+                          itemListCon += '</p>';
+                          itemListCon += '</div>';
+                          itemListCon += '<div class="con" style="display:none;">';
+                          itemListCon += '<p class="road_address">' + data[i].roadAddressName + '</p>';
+                          itemListCon += '<p class="jibun gray address_name">' + data[i].addressName + '</p>';
+                          if(data[i].placeTime != '')     itemListCon += '<p class="place_time">운영시간 : ' + data[i].placeTime + '</p>';
+                          if(data[i].itemTime != '')      itemListCon += '<p class="item_time">도착시간 : ' + data[i].itemTime + '</p>';
+                          if(data[i].itemAccount != '0')  itemListCon += '<p class="item_account">비용 : ' + price + '</p>';
+                          if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
+                          itemListCon += '</div>';
+                          itemListCon += '</li>';
+
+                          todayPrice = todayPrice + price;
+                          if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
+                      }
+
+                      todayPrice = priceToString(todayPrice); // 가격 원단위 추가
+                      todayTotalPrice.text(todayPrice);
+
+                      itemListWrap.html(itemListCon);
+                      itemMapInfoGet();
+                  }
+              })
+          }
+
+
+
+
+
+      });
+  </script>
+</th:block>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="navBar">
+  <div class="navbar">
+    <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
+    </button>
+    <div class="navbar_wrap scrollBar">
+      <div class="profile_card ">
+        <p class="profile_image_wrap border">
+          <img sec:authorize="isAuthenticated" th:src="|/userApi/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+        </p>
+        <p class="id m-3" th:if="${session.userT != null}" th:text="${session.userT.userId}"></p>
+        <a th:href="@{/mypage/userImageModify}" class="btn btn-sm btn-outline-secondary">회원 사진 변경하기</a>
+      </div>
+
+      <ul class="list-group mt-4">
+        <li class="list-group-item justify-content-between lh-sm">
+          <a href="/mypage/boardList">
+            <h6 class="my-0">내 여행</h6>
+          </a>
+        </li>
+        <li class="list-group-item justify-content-between lh-sm">
+          <a href="/mypage/boardInvitedList">
+            <h6 class="my-0">초대 받은 여행</h6>
+          </a>
+        </li>
+        <li class="list-group-item  justify-content-between lh-sm">
+          <a href="/mypage/boardLikeList">
+            <h6 class="my-0">찜리스트</h6>
+          </a>
+        </li>
+        <li class="list-group-item justify-content-between lh-sm">
+          <a href="/mypage">
+            <h6 class="my-0">마이페이지</h6>
+          </a>
+        </li>
+        <li class="list-group-item  justify-content-between lh-sm">
+          <a th:href="@{/mypage/userModify}">
+            <h6 class="my-0">회원정보 수정</h6>
+          </a>
+        </li>
+        <li class="list-group-item justify-content-between lh-sm">
+          <a th:href="@{/mypage/withdrawal}">
+            <h6 class="my-0">회원탈퇴</h6>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</th:block>
+</html>

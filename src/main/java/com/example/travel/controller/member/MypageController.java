@@ -205,7 +205,7 @@ public class MypageController {
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
-        return "/mypage/boardList";
+        return "mypage/boardList";
     }
 
 
@@ -232,7 +232,7 @@ public class MypageController {
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
-        return "/mypage/boardInvitedList";
+        return "mypage/boardInvitedList";
     }
 
 
@@ -259,7 +259,7 @@ public class MypageController {
         model.addAttribute("categoryPage",categoryPage);
         model.addAttribute("pageing",pageingDTO);
         model.addAttribute("orderCk",order);
-        return "/mypage/boardLikeList";
+        return "mypage/boardLikeList";
     }
 
 

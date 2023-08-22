@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/basic}">
+<th:block layout:fragment="content">
+    <div class="content_nav"  th:object="${category}">
+        <!-- start : navbar -->
+        <div class="navbar">
+            <button class="btn_navbar" type="button" value="navbar 닫기"><i class="bi bi-chevron-compact-right"></i>
+            </button>
+            <div class="navbar_wrap scrollBar">
+                <div class="flex-column ">
+                    <div class="top veiw_top" >
+                        <div class="up">
+                            <th:block th:if="${category.boardExistence}">
+                                <a th:href="@{/board/postView(no=${category.categoryNo},day=1)}"  title="기록보기">
+                                    <i class="bi bi-pen-fill"></i>
+                                </a>
+                            </th:block>
+                        </div>
+                        <div th:object="${category}">
+                            <th:block th:if="|${category.boardImg != null}|">
+                                <div class="img">
+                                    <img th:src="${category.boardImg}" alt="">
+                                </div>
+                            </th:block>
+                            <p class="area text-center">
+                                <span th:field="*{categoryArea}" th:id="*{categoryArea}" th:name="*{categoryArea}" th:text="*{categoryArea}"></span>
+                                <th:block th:if="*{categoryAreaDetails != ''}">  /
+                                    <span th:field="*{categoryAreaDetails}" th:id="*{categoryAreaDetails}" th:name="*{categoryAreaDetails}" th:text="*{categoryAreaDetails}"></span>
+                                </th:block>
+                            </p>
+                            <h3 class="text-center" th:text="*{categoryName}"></h3>
+                            <div class="date text-center">
+                                <span th:text="*{dateStart}"></span>
+                                <span class="ml-2"> - </span>
+                                <span class="ml-2" th:text="*{dateEnd}"></span>
+                            </div>
+                            <div class="veiw_info mt-3">
+                                <p class="travel_people mt-1">
+                                    <span class="txt_info">여행 인원</span><br />
+                                    <span class="tag point" th:text="*{categoryWriter}"></span>
+                                    <span th:each="tagItem,i:${category.tagList}" th:text="${tagItem}" class="tag">#나무늘보 #왈왈이</span>
+                                </p>
+                                <p class="txt_info mt-1">총 예상 비용 : <b id="totalPice" class="point-color"></b> 원</p>
+                                <p class="mt-1 txt_info">작성일 : <span class="txt_info" th:field="*{createdAt}" th:id="*{createdAt}" th:name="*{createdAt}" th:text="${#temporals.format(category.createdAt, 'yyyy-MM-dd')}"></span></p>
+                            </div>
+                            <input th:field="*{categoryNo}" th:id="*{categoryNo}" th:name="*{categoryNo}" th:value="*{categoryNo}" class="border-0 text-center" type="hidden">
+                        </div>
+                        <h4 class="mt-4 pt-4 border-top"><i class="bi bi-calendar-week"></i>
+                            날짜선택</h4>
+                        <div class="day_select mt-3" style="">
+                            <select class="form-select" aria-label="Default select example">
+                                <th:block th:each="list, i : ${days.dayInfo}">
+                                    <option th:text="|D-${i.index+1} : ${list}|" th:value="${i.index + 1}" th:data-cnt="${list}" th:selected="${i.index} == 0"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <p class="mt-3"></p>
+
+                        <div th:object="${item}" class="day_wrap border box-gray p-3 rounded-2" style="display: none;" >
+                            <form id="itemForm" method="post" th:action="@{/boardApi/itemSave}">
+                                <input th:field="*{itemNo}" th:name="*{itemNo}" id="itemNo" type="hidden">
+                                <input th:field="*{categoryId}" th:id="*{categoryId}" th:name="*{categoryId}" id="categoryId" th:value="*{categoryId}" type="hidden">
+                                <input th:field="*{itemDay}" th:name="*{itemDay}" id="itemDay" value="1" type="hidden">
+                                <input th:field="*{itemDayName}" th:name="*{itemDayName}" id="itemDayName" value="" type="hidden">
+                                <input th:field="*{itemNumber}" th:name="*{itemNumber}" id="itemNumber"  type="hidden">
+                                <input th:field="*{id}" th:name="*{id}"  id="id" value="장소 id" type="hidden">
+                                <input th:field="*{x}" th:name="*{x}"  id="x" value="장소 x 위치 값" type="hidden">
+                                <input th:field="*{y}" th:name="*{y}"  id="y" value="장소 y 위치 값" type="hidden">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:60px">
+                                        <col style="width:auto">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th><label>장소명</label></th>
+                                        <td><input th:field="*{placeName}" th:id="*{placeName}" th:name="*{placeName}" id="placeName" class="form-control form-control-sm" type="text" placeholder="장소 명을 입력해주세요."></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>주소</label></th>
+                                        <td>
+                                            <input th:field="*{addressName}" th:id="*{addressName}" th:name="*{addressName}" id="addressName" class="form-control form-control-sm" placeholder="지번주소" type="text">
+                                            <input th:field="*{roadAddressName}" th:id="*{roadAddressName}" th:name="*{roadAddressName}" id="roadAddressName" class="form-control form-control-sm mt-2" placeholder="도로명주소" type="text">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>연락처</label></th>
+                                        <td><input th:field="*{phone}" th:id="*{phone}" th:name="*{phone}" id="phone" class="form-control form-control-sm" type="text" placeholder="000-000-000"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>URL</label></th>
+                                        <td><input th:field="*{placeUrl}" th:id="*{placeUrl}" th:name="*{placeUrl}" id="placeUrl" class="form-control form-control-sm" placeholder="홈페이지나 참고 링크를 남겨주세요." type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>비용</label></th>
+                                        <td><input th:field="*{itemAccount}" th:id="*{itemAccount}" th:name="*{itemAccount}" value="" id="itemAccount" class="form-control form-control-sm" type="number" placeholder="필요 경비를 적어주세요."></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>운영시간</label></th>
+                                        <td><input th:field="*{placeTime}" th:id="*{placeTime}" th:name="*{placeTime}" id="placeTime" class="form-control form-control-sm" type="text" placeholder="24:00"></td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>도착시간</label></th>
+                                        <td>
+                                            <input th:field="*{itemTime}" th:id="*{itemTime}" th:name="*{itemTime}"  id="itemTime"  type='text' class="form-control form-control-sm" placeholder="24:00" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label>내용</label></th>
+                                        <td><textarea th:field="*{itemInfo}" th:id="*{itemInfo}" th:name="*{itemInfo}"  id="itemInfo" class="form-control form-control-sm" placeholder="휴무일, 준비물 등 기억해야할 주요 정보를 적어주세요^_^✏️"></textarea></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="mt-3 overflow-hidden" style="text-align: right">
+                                    <button id="btnItemDelete" type="reset" class="btn btn-outline-secondary btn-sm me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="btn-group float-end">
+                                        <button id="btnItemClose" type="reset" class="btn btn-outline-secondary btn-sm">
+                                            닫기
+                                        </button>
+                                        <a id="btnItemSave" href="javascript:void(0)" class="btn btn-dark btn-sm">저장</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- end : day_wrap -->
+
+                        <h4 class="mt-4 pt-4 border-top"><i class="bi bi-list-ul"></i> <span class="dayName" th:text="${days.dayInfo[0]}">하루</span> 일정</h4>
+                        <p class="txt_info mt-1">하루 총 예상 비용 : <b id="todayTotalPrice" class="point-color"></b> 원</p>
+                        <ul id="sortable" class="item_veiw_con item_map mt-3"></ul>
+                        <!-- end : sortable -->
+                    </div>
+                    <!-- end : top -->
+                    <th:block th:replace="layout/navComments::navComments"></th:block>
+                </div>
+            </div>
+        </div>
+
+        <!--start 시큐리티 추가 -->
+        <input class="csrf_input" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input class="csrf_input" type="hidden" th:name="${_csrf.getHeaderName()}">
+        <!--end 시큐리티 추가 -->
+
+        <script type="text/javascript">
+
+            function tMapPost(){
+                console.log("전달6");
+
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        accept: 'application/json',
+                        appKey: 'xOlDvGyoTo8WYlGZ2pZVe5Q5zw1Nypk53yuXhc9C',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        startX: '126.926493082645',
+                        startY: '37.6134436427887',
+                        endX: '127.126936754911',
+                        endY: '37.5004198786564',
+                        lang: 0,
+                        format: 'json',
+                        count: 10,
+                        searchDttm: '202301011200'
+                    })
+                };
+
+                fetch('https://apis.openapi.sk.com/transit/routes', options)
+                    .then(response => response.json())
+                    .then(response => console.log(response))
+                    .catch(err => console.error(err));
+
+
+
+                //
+                // // let headerName = document.getElementsByClassName("csrf_input")[1].getAttribute("name");
+                // // let token = document.getElementsByClassName("csrf_input")[0].getAttribute("value");
+                // // $.ajax({
+                // //     url:"https://apis.openapi.sk.com/transit/routes",
+                // //     type: 'POST',
+                // //     dataType : "json",
+                // //     contentType: "application/json; charset=utf-8",
+                // //     async: true, //동기, 비동기 여부
+                // //     cache :false, // 캐시 여부
+                // //     beforeSend : function(xhr)
+                // //     {
+                // //         xhr.setRequestHeader(headerName,token);
+                // //         xhr.setRequestHeader("accept","application/json");
+                // //         xhr.setRequestHeader("Content-type","application/json");
+                // //         xhr.setRequestHeader("appKey","xOlDvGyoTo8WYlGZ2pZVe5Q5zw1Nypk53yuXhc9C");
+                // //     },
+                // //     data:{
+                // //         "startX": "127.02550910860451",
+                // //         "startY": "37.63788539420793",
+                // //         "endX": "127.030406594109",
+                // //         "endY": "37.609094989686",
+                // //         "count" : 1,
+                // //         "lang": 0,
+                // //         "format":"json"
+                // //     },
+                // //     success:function (data) {
+                // //         console.log(data)
+                // //     },
+                // //     error: function searchError(xhr, err) {
+                // //         console.error("Error on ajax call: " + err);
+                // //         console.log(JSON.stringify(xhr));
+                // //         alert(" Tmap 할당량을 초과했습니다.");
+                // //     }
+                //
+                // });
+
+            }tMapPost()
+
+
+        </script>
+
+        <div class="content" style="padding:0;">
+            <div id="mapMenuWrap" class="bg_white" style="display:none">
+                <ul id="placesList" class="scrollBar"></ul>
+                <div id="pagination"></div>
+            </div>
+            <div class="map_wrap">
+                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                <div class="custom_zoomcontrol radius_border">
+                    <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
+                    <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</th:block>
+</html>
+

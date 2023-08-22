@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>layout</title>
+  <th:block th:replace="admin/layout/config::config"></th:block>
+</head>
+<body>
+  <div id="admin-wrap" class="d-flex flex-nowrap">
+    <th:block th:replace="admin/layout/header::header"></th:block>
+    <div id="admin-content" class="container-fluid">
+      <th:block layout:fragment="content"></th:block>
+    </div>
+  </div>
+</body>
+</html>

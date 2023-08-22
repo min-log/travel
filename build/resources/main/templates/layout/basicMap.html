@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Road</title>
+  <th:block th:replace="layout/config::config"></th:block>
+  <script type="text/javascript">
+    $(document).ready(function () {
+        $('#keyword').attr("placeholder","원하는 장소를 입력하세요🚩");
+    })
+
+
+  </script>
+</head>
+<body>
+  <th:block th:replace="layout/header::header"></th:block>
+  <div id="contentWrap">
+    <th:block layout:fragment="content"></th:block>
+  </div>
+  <th:block th:replace="layout/footer::footer"></th:block>
+</body>
+</html>

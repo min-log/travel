@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="header">
+  <header class="py-2 border-bottom">
+    <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: auto 2fr;">
+      <a class="logo" th:href="@{/}">
+        <img th:src="@{/img/logo.png}" />
+      </a>
+
+      <div class="d-flex align-items-center">
+        <div class="gnb_wrap">
+          <a th:href="@{/travel}" class="p-2">여행만들기</a>
+          <a th:href="@{/board/boardList}" class="p-2">여행지모아모아</a>
+        </div>
+        <div class="search_wrap w-50 m-3">
+          <form role="search" onsubmit="return false;" >
+            <input type="text" class="form-control" value="" placeholder="원하는 시/도를 입력하세요 ex)제주,강원,강릉..✈️" id="keyword" size="15" aria-label="Search">
+            <button id="btnKeyword" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+
+
+        <div class="user_info flex-shrink-0 dropdown">
+          <a href="#" class="link-dark text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
+            <p class="profile_image_wrap">
+              <img sec:authorize="isAnonymous()" src="/img/profile_img.png" alt="유저이미지" class="rounded-circle">
+              <img sec:authorize="isAuthenticated" th:src="|/userApi/profileImg?no=${session.userT.userNo}|" th:alt="${session.userT.userId} + '님의 프로필 이미지'"  class="rounded-circle">
+            </p>
+            <i class="bi bi-arrow-down-short"></i>
+
+          </a>
+          <div class="dropdown-menu text-small shadow">
+            <ul sec:authorize="isAnonymous()">
+              <li class="p-3 txt">
+                소중한 여행을 계획하고 기록해보세요. ✏️
+              </li>
+              <li class="border-top pt-2">
+                <a class="dropdown-item" th:href="@{/member/loginForm}">로그인</a>
+                <a class="dropdown-item" th:href="@{/member/join}">회원가입</a>
+              </li>
+            </ul>
+            <ul sec:authorize="isAuthenticated()">
+              <li><a class="dropdown-item" href="/mypage/boardList">내 여행</a></li>
+              <li><a class="dropdown-item" href="/mypage/boardInvitedList">초대 받은 여행</a></li>
+              <li><a class="dropdown-item" href="/mypage/boardLikeList">찜리스트 <span th:text="${session.likeNum}"></span></a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" th:href="@{/logout}" href="/logout">로그아웃</a>
+                <a class="dropdown-item" th:href="@{/mypage}">마이페이지</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+</th:block>
+</html>

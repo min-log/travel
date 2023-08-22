@@ -1,0 +1,23 @@
+#admin-wrap {height:100vh;}
+#admin-content {overflow:hidden;overflow-y:auto;padding-right:0;}
+#admin-header {border-right:1px solid #ccc}
+#admin-content #content {padding:100px 20px;overflow:hidden;overflow-y:auto}
+
+.board_top {display:flex;width: 100%;justify-content: space-between;    align-items: center;}
+.board_top .left {width:60%}
+.board_top .left input {display:inline-block;width:calc(100% - 70px);}
+.board_top .left button {display:inline-block}
+.board_top .right p {display:inline-block}
+
+
+
+
+.keywordWrap {border:2px solid var(--color-main);padding:5px 40px 5px 5px;border-radius:5px;position:relative;background:#fff;}
+.keywordWrap .bi {position: absolute;top:12px;right:10px;}
+.keywordWrap .bi:before{font-size: 24px;
+    font-weight: bold !important;
+    color: var(--color-main);
+}
+.keywordWrap ul {overflow: hidden;min-height:40px;}
+.keywordWrap ul li {display:inline-block;margin:5px;float: left;}
+.keywordWrap a {border:1px solid #dee2e6;border-radius:5px;background:#dee2e6;padding:5px 10px;display:block}
