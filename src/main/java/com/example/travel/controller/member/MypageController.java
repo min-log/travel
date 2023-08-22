@@ -102,7 +102,7 @@ public class MypageController {
             return "redirect:/mypage";
         }else{
             redirectAttributes.addFlashAttribute("modal","이미지 변경이 실패 했습니다.");
-            return "redirect:mypage/userImageModify";
+            return "redirect:/mypage/userImageModify";
         }
     }
 
