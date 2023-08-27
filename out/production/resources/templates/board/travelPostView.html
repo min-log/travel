@@ -27,7 +27,7 @@
                         <div th:object="${category}">
                             <th:block th:if="|${category.boardImg != null}|">
                                 <div class="img">
-                                    <img th:src="|/upload/${category.boardImg}|" alt="여행썸내일">
+                                    <img th:src="|/boardApi/boardImg?url=${category.boardImg}|" alt="여행썸내일">
                                 </div>
                             </th:block>
                             <p class="area text-center">

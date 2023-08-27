@@ -39,7 +39,7 @@
                             <td>
                                 <div class="userimg_wrap">
                                     <div class="userimg_box">
-                                        <img th:src="|/upload/*{boardImg}|" id="preview" alt="" >
+                                        <img th:src="|/boardApi/boardImg?url=*{boardImg}|" id="preview" alt="" >
                                     </div>
                                     <label for="userImg" class="btn btn-dark btn-sm ">
                                          선택하기👆
@@ -155,7 +155,7 @@
                 focus: true,
                 success: function (data) {
                     console.log(data.url)
-                    $(el).summernote('insertImage', '/upload/'+data.url, function($image) {
+                    $(el).summernote('insertImage', '/boardApi/boardImg?url='+data.url, function($image) {
                         $image.css('width', "100%");
                         $image.attr('alt', caption)
                     });

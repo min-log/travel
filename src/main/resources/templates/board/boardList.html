@@ -35,7 +35,7 @@
                 <div class="card-body">
 
                     <p class="img" th:if="${list.boardImg}">
-                      <img th:src="|/upload/${list.boardImg}|" alt="여행썸내일">
+                      <img th:src="|/boardApi/boardImg?url=${list.boardImg}|" alt="여행썸내일">
                     </p>
 
                   <div class="con">
