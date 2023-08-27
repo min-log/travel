@@ -51,7 +51,7 @@
                                 <li class="board_item">
                                     <a th:href="@{/board/postView(no=${list.categoryNo},day=1)}">
                                         <p class="img" th:if="${list.boardImg}">
-                                            <img th:src="${list.boardImg}" alt="여행썸내일">
+                                            <img th:src="|/upload/${list.boardImg}|" alt="여행썸내일">
                                         </p>
                                         <div class="con">
                                             <span class="point-color">

@@ -1,5 +1,6 @@
 package com.example.travel.controller.api;
 
+import com.example.travel.domain.UserImage;
 import com.example.travel.dto.travel.CategoryBoardDTO;
 import com.example.travel.dto.travel.CategoryDTO;
 import com.example.travel.dto.travel.CommentsDTO;
@@ -12,8 +13,11 @@ import com.example.travel.service.travel.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -21,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +39,36 @@ public class BoardApi {
     final CategoryBoardService categoryBoardService;
     final CommentsService commentsService;
     final ItemService itemService;
+
+
+    @Value("${spring.servlet.multipart.location}")
+    private String uploadPath;
+
+
+    @GetMapping("/boardImg")
+    public ResponseEntity<byte[]> boardImgGet(@RequestParam(value = "url") String url){
+        log.info("board 이미지 불러오기");
+
+        ResponseEntity<byte[]> result = null;
+        log.info("board images : {}",url);
+
+        File file = new File(uploadPath +  File.separator + url);
+
+        try{
+            HttpHeaders headers = new HttpHeaders();
+            //MIME타입 처리
+            log.info("file --------------------------------");
+            headers.add("Content-Type" , Files.probeContentType(file.toPath()));
+            // 파일 데이터처리
+            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+            return result;
+        }catch ( Exception e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
     @GetMapping("/categoryTemList")
     public List<CategoryDTO> categoryTemList(@RequestParam("tem") Long temVel){

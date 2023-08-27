@@ -633,8 +633,10 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
             categoryUpdate(category);
             return result;
         }
+        log.info("썸네일 저장 로직 ---------------------------------------");
         // 썸네일 저장 로직 ---------------------------------------
         JsonObject categoryThumbnail = boardFileService.createImageThumbnail(file, "categoryThumbnail",save);
+        log.info("categoryThumbnail : {}", categoryThumbnail);
         if (categoryThumbnail == null) {
             // 썸네일 저장 되지 않고 오류 생길 경우 --저장된 게시글도 제거
             log.info("이미지 저장 실패");
@@ -642,17 +644,16 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
             return null;
         }
         log.info("이미지 저장 성공");
-        String asString = categoryThumbnail.get("url").getAsString();
-        result.setBoardImg(asString);
         category.setBoardExistence(true);
         String boardImgName = categoryThumbnail.get("fileName").getAsString();
-        log.info("boardImgName : {}",boardImgName);
+        log.info("boardImgName: {}",boardImgName);
         category.setBoardImg(boardImgName);
         categoryUpdate(category);
 
+        result.setBoardImg(boardImgName);
+
         return result;
     }
-
 
     @Override
     public CategoryBoardDTO getCategoryBoard(Long categoryNo,int dayNo) {
@@ -749,6 +750,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
 
     //저장 결과 전달
     CategoryBoardDTO findResultCategoryBoard(CategoryBoard categoryBoard){
+        log.info("저장된 썸네일 화면 전달");
         CategoryBoardDTO categoryBoardDTO = categoryBoardEntityToDto(categoryBoard);
         if (categoryBoardDTO != null) {
             CategoryBoard categoryBoard1 = categoryBoardDtoToEntity(categoryBoardDTO);
@@ -756,7 +758,7 @@ public class CategoryServiceImpl implements CategoryService, CategoryBoardServic
             if (img.isPresent()){
                 CategoryImage categoryImage = img.get();
                 log.info(categoryImage);
-                categoryBoardDTO.setBoardImg("/upload/" + categoryImage.getPath() + "/"+categoryImage.getThumbnailName());
+                categoryBoardDTO.setBoardImg("/" + categoryImage.getPath() + "/"+categoryImage.getThumbnailName());
             }
         }
         return categoryBoardDTO;

@@ -26,7 +26,7 @@
                 <div class="card">
                   <div class="card-body">
                     <p class="img" th:if="${list.boardImg}">
-                      <img th:src="${list.boardImg}" alt="여행썸내일">
+                      <img th:src="|/upload/${list.boardImg}|" alt="여행썸내일">
                     </p>
                     <div class="con">
                       <div class="top_btn mb-3">
@@ -115,7 +115,7 @@
                 <div class="card-body">
 
                   <p class="img" th:if="${list.boardImg}">
-                    <img th:src="${list.boardImg}" alt="여행썸내일">
+                    <img th:src="|/upload/${list.boardImg}|" alt="여행썸내일">
                   </p>
 
                   <div class="con">

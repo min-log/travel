@@ -59,12 +59,14 @@ public class BoardFileService{
 
         //저장할 파일 이름 중간에 _ 를 이용하여 구분
         String saveName = uploadPath + File.separator + folderPathMake + File.separator + originalName;
-        String url =  "/" + "upload" +  "/" + folderPathMake  + "/" + originalName;
+        String url =  "/"+ folderPathMake  + "/" + originalName;
         Path savePath=  Paths.get(saveName);
 
         try {
             //실제 이미지 저장
             uploadFile.transferTo(savePath);
+
+            log.info("url: {}",url);
             //화면에 전달할 DTO 생성
             jsonObject.addProperty("url", url);
             jsonObject.addProperty("responseCode", "succcess");
@@ -107,7 +109,6 @@ public class BoardFileService{
 
         //저장할 파일 이름 중간에 _ 를 이용하여 구분
         String saveName = uploadPath + File.separator + folderPathMake + File.separator + originalName;
-        String url =  "/" + "upload" +  "/" + folderPathMake  + "/" + originalName;
         Path savePath=  Paths.get(saveName);
 
         try {
@@ -119,6 +120,8 @@ public class BoardFileService{
             //썸네일 생성
             String thumbnailSaveName = uploadPath + File.separator + folderPathMake + File.separator + thumbnailName;
             File thumbnailFile = new File(thumbnailSaveName);
+            String url = "/" +  folderPathMake  + "/" + thumbnailName;
+
             //썸네일 저장
             Thumbnailator.createThumbnail(savePath.toFile(),thumbnailFile,400,400);
 
@@ -136,7 +139,7 @@ public class BoardFileService{
             CategoryImage save = categoryImageRepository.save(categoryImage);
 
             //화면에 전달할 DTO 생성
-            jsonObject.addProperty("fileName", (String)File.separator +"upload"+File.separator + folderPathMake + File.separator + thumbnailName);
+            jsonObject.addProperty("fileName", (String) folderPathMake + "/" + thumbnailName);
             jsonObject.addProperty("url", thumbnailSaveName);
             jsonObject.addProperty("responseCode", "succcess");
 

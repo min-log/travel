@@ -27,7 +27,7 @@ public class servletConfig implements WebMvcConfigurer {
     private String connectPath = "/upload/**";
 
     // 업로드 파일  위치
-    private String resourcePath = "file:///C:/back_project/travel/src/main/resources/static/upload/";
+    private String resourcePath = "file:///C:/upload/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

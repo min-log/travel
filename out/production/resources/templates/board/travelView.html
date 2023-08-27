@@ -12,7 +12,8 @@
                 <div class="flex-column ">
                     <div class="top veiw_top" >
                         <div class="up">
-                            <a class="" href="javascript:void(0);" onclick="pageprint()"><img src="../images/icon_print.png" alt="">
+                            <a class="" href="javascript:void(0);" onclick="pageprint()">
+                                <img src="../images/icon_print.png" alt="">
                                 <i class="bi bi-printer-fill"></i>
                             </a>
                             <a href="javascript:sharePopupShow()" class="round_btn ml-2">
@@ -27,7 +28,7 @@
                         <div th:object="${category}">
                             <th:block th:if="|${category.boardImg != null}|">
                                 <div class="img">
-                                    <img th:src="${category.boardImg}" alt="">
+                                    <img th:src="|/upload/${category.boardImg}|" alt="여행썸내일">
                                 </div>
                             </th:block>
                             <p class="area text-center">
