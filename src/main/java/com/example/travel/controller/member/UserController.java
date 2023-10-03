@@ -60,7 +60,6 @@ public class UserController {
                 System.out.println(user.getUserImg());
                 System.out.println("-------------------------------");
                 UserTravel userTravel1 = userService.userSave(user);
-
                 log.info("회원가입 성공 :{}" , userTravel1);
 
 
