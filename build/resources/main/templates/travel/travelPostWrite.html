@@ -39,7 +39,7 @@
                             <td>
                                 <div class="userimg_wrap">
                                     <div class="userimg_box">
-                                        <img th:src="*{boardImg}" id="preview" alt="" >
+                                        <img th:src="|/boardApi/boardImg?url=*{boardImg}|" id="preview" alt="" >
                                     </div>
                                     <label for="userImg" class="btn btn-dark btn-sm ">
                                          선택하기👆
@@ -154,13 +154,12 @@
                 },
                 focus: true,
                 success: function (data) {
-                    $(el).summernote(
-                        'editor.insertImage',
-                        data.url,
-                        function ($image) {
-                            $image.attr('alt', caption) // 캡션 정보를 이미지의 alt 속성에 설정
-                        }
-                    )
+                    console.log(data.url)
+                    $(el).summernote('insertImage', '/boardApi/boardImg?url='+data.url, function($image) {
+                        $image.css('width', "100%");
+                        $image.attr('alt', caption)
+                    });
+
                 },
                 error:function (data){
                     console.log(data)
