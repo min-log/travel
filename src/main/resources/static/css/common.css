@@ -4,7 +4,8 @@
     font-weight: normal;
     font-style: normal;
 }
-
+body,
+header{min-width: 1000px;}
 input:focus, select:focus, option:focus, textarea:focus, button:focus{
     outline: none;
 }
