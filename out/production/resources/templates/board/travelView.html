@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- 화면 확인 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout/basic}">
@@ -150,171 +151,7 @@
         </div>
 
 
-        <script type="text/javascript">
-            let itemNo; // 아이템 넘버
-            let modal =$('#modalMsg');
-            let msg='';
-            let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
 
-            // 아이템 생성
-            let itemListWrap = $("#sortable");
-            let daySelect = $(".day_select .form-select");
-            let todayTotalPrice = $("#todayTotalPrice"); // 하루 비용
-
-
-
-            $(function () {
-                $(document).ready(function (){
-
-
-                    let totalPriceValue = [[${category.categoryTotalPrice}]];
-                    let totalPrice = priceToString(totalPriceValue);
-                    $("#totalPice").text(totalPrice);
-                    //처음 시작시 1번 일정 불러오기
-                    itemList(1);
-
-                    $("#itemDayName").val($(".dayName").text());
-                });
-
-                daySelect.on('change',function(){
-                    let dayCnt = daySelect.find("option:selected").data("cnt");
-                    let dayVal = daySelect.find("option:selected").val();
-                    $(".dayName").text(dayCnt);
-                    $("#boardItemDay").val(dayVal);
-                    if (dayVal>1){$("#thumbnailWarp").hide();
-                    }else{$("#thumbnailWarp").show();}
-                    $('#modalMsg').modal("show");
-                    $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
-
-                    // 리스트 변경하기
-                    itemList(dayVal);
-                })
-
-                function priceToString(price) {
-                    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                }
-
-
-                function itemList(e){
-                    let itemListCon='';
-                    let todayPrice= 0;
-                    $.ajax({
-                        url: '/boardApi/itemList',
-                        type: "get",
-                        data: {itemDay:e,cateNo:[[${param.no}]]},
-                        dataType: 'json',
-                        cache: false,
-                        success:function (data){
-                            console.log("리스트 변경");
-                            for(var i=0 in data){
-                                itemNo = data[i].itemNo;
-                                let price = new Number(data[i].itemAccount);
-                                itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
-                                itemListCon += '<div class="top">';
-                                itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
-                                itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
-                                itemListCon += '<p class="link_zone">';
-                                itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
-                                itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
-                                itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
-                                itemListCon += '</p>';
-                                itemListCon += '</div>';
-                                itemListCon += '<div class="con" style="display:none;">';
-                                itemListCon += '<p class="road_address">' + data[i].roadAddressName + '</p>';
-                                itemListCon += '<p class="jibun gray address_name">' + data[i].addressName + '</p>';
-                                if(data[i].placeTime != '')     itemListCon += '<p class="place_time">운영시간 : ' + data[i].placeTime + '</p>';
-                                if(data[i].itemTime != '')      itemListCon += '<p class="item_time">도착시간 : ' + data[i].itemTime + '</p>';
-                                if(data[i].itemAccount != '0')  itemListCon += '<p class="item_account">비용 : ' + price + '</p>';
-                                if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
-                                itemListCon += '</div>';
-                                itemListCon += '</li>';
-
-                                todayPrice = todayPrice + price;
-                                if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
-                            }
-
-                            todayPrice = priceToString(todayPrice); // 가격 원단위 추가
-                            todayTotalPrice.text(todayPrice);
-
-                            itemListWrap.html(itemListCon);
-                            itemMapInfoGet();
-                        }
-                    })
-                }
-
-
-                function itemMapInfoGet(){
-                    $("#sortable li a").on('click',function (index,item) {
-                        let itemEl = $(this).parents("li");
-                        let itemCon = itemEl.find(".con");
-                        if(itemEl.hasClass("action") == false){
-                            $("#sortable li").removeClass("action");
-                            itemEl.addClass("action");
-                            itemCon.slideDown();
-
-                            let startMapX =  itemEl.data('map-x');
-                            let startMapY =  itemEl.data('map-y');
-                            let endMapX =  itemEl.next('li').data('map-x');
-                            let endMapY =  itemEl.next('li').data('map-y');
-                           // tMapPost(startMapX,startMapY,endMapX,endMapY);
-
-                        }else {
-                            itemEl.removeClass("action");
-                            itemCon.slideUp();
-                        }
-                    });
-                }
-
-
-            });
-
-
-
-
-            function tMapPost(startMapX,startMapY,endMapX,endMapY) {
-                //지도 가는길 받아오기
-                console.log("startMapX : "+ startMapX);
-                console.log("startMapY : "+ startMapY);
-                console.log("endMapX : "+ endMapX);
-                console.log("endMapY : "+ endMapY);
-
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        accept: 'application/json',
-                        appKey: 'xOlDvGyoTo8WYlGZ2pZVe5Q5zw1Nypk53yuXhc9C',
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        startX: startMapX,
-                        startY: startMapY,
-                        endX: endMapX,
-                        endY: endMapY,
-                        count: 1,
-                        lang: 0,
-                        format: 'json'
-                    })
-                };
-
-                fetch('https://apis.openapi.sk.com/transit/routes', options)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("값을 잘 받는지 확인");
-                        console.log(data);
-                        console.log(data.metaData.plan.itineraries);
-                        console.log(data.metaData.plan.itineraries.length);
-                        console.log("Titem : " + Titem)
-                        for(let i=0;i < data.metaData.plan.itineraries.length;i++){
-                            console.log("Titem - r: " + data.metaData.plan.itineraries[i])
-
-                        }
-                    })
-                    .catch((error) => console.log(error))
-
-            }
-
-
-        </script>
 
         <div class="content" style="padding:0;">
             <div id="mapMenuWrap" class="bg_white" style="display:none">
@@ -334,10 +171,171 @@
 
 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
-    <script>
+
+    <script type="text/javascript">
+        let itemNo; // 아이템 넘버
+        let modal =$('#modalMsg');
+        let msg='';
+        let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
+
+        // 아이템 생성
+        let itemListWrap = $("#sortable");
+        let daySelect = $(".day_select .form-select");
+        let todayTotalPrice = $("#todayTotalPrice"); // 하루 비용
+
+
     $(document).ready(function () {
 
 
+        let totalPriceValue = [[${category.categoryTotalPrice}]];
+        let totalPrice = priceToString(totalPriceValue);
+        $("#totalPice").text(totalPrice);
+        //처음 시작시 1번 일정 불러오기
+        itemList(1);
+
+        $("#itemDayName").val($(".dayName").text());
+
+
+        daySelect.on('change',function(){
+            let dayCnt = daySelect.find("option:selected").data("cnt");
+            let dayVal = daySelect.find("option:selected").val();
+            $(".dayName").text(dayCnt);
+            $("#boardItemDay").val(dayVal);
+            if (dayVal>1){$("#thumbnailWarp").hide();
+            }else{$("#thumbnailWarp").show();}
+            $('#modalMsg').modal("show");
+            $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
+
+            // 리스트 변경하기
+            itemList(dayVal);
+            setMap();
+        })
+
+        function priceToString(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+
+        function itemList(e){
+            let itemListCon='';
+            let todayPrice= 0;
+            $.ajax({
+                url: '/boardApi/itemList',
+                type: "get",
+                data: {itemDay:e,cateNo:[[${param.no}]]},
+                dataType: 'json',
+                cache: false,
+                success:function (data){
+                    //console.log("리스트 변경");
+                    for(var i=0 in data){
+                        itemNo = data[i].itemNo;
+                        let price = new Number(data[i].itemAccount);
+                        itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                        itemListCon += '<div class="top">';
+                        itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
+                        itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
+                        itemListCon += '<p class="link_zone">';
+                        itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
+                        itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
+                        itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
+                        itemListCon += '</p>';
+                        itemListCon += '</div>';
+                        itemListCon += '<div class="con" style="display:none;">';
+                        itemListCon += '<p class="road_address">' + data[i].roadAddressName + '</p>';
+                        itemListCon += '<p class="jibun gray address_name">' + data[i].addressName + '</p>';
+                        if(data[i].placeTime != '')     itemListCon += '<p class="place_time">운영시간 : ' + data[i].placeTime + '</p>';
+                        if(data[i].itemTime != '')      itemListCon += '<p class="item_time">도착시간 : ' + data[i].itemTime + '</p>';
+                        if(data[i].itemAccount != '0')  itemListCon += '<p class="item_account">비용 : ' + price + '</p>';
+                        if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
+                        itemListCon += '</div>';
+                        itemListCon += '</li>';
+
+                        todayPrice = todayPrice + price;
+                        if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
+                    }
+
+                    todayPrice = priceToString(todayPrice); // 가격 원단위 추가
+                    todayTotalPrice.text(todayPrice);
+
+                    itemListWrap.html(itemListCon);
+                    itemMapInfoGet();
+                }
+            })
+        }
+
+
+        function itemMapInfoGet(){
+            $("#sortable li a").on('click',function (index,item) {
+                let itemEl = $(this).parents("li");
+                let itemCon = itemEl.find(".con");
+                if(itemEl.hasClass("action") == false){
+                    $("#sortable li").removeClass("action");
+                    itemEl.addClass("action");
+                    itemCon.slideDown();
+
+                    let startMapX =  itemEl.data('map-x');
+                    let startMapY =  itemEl.data('map-y');
+                    let endMapX =  itemEl.next('li').data('map-x');
+                    let endMapY =  itemEl.next('li').data('map-y');
+                    // tMapPost(startMapX,startMapY,endMapX,endMapY);
+
+                }else {
+                    itemEl.removeClass("action");
+                    itemCon.slideUp();
+                }
+            });
+        }
+
+
+
+
+
+        function tMapPost(startMapX,startMapY,endMapX,endMapY) {
+            //지도 가는길 받아오기
+            // console.log("startMapX : "+ startMapX);
+            // console.log("startMapY : "+ startMapY);
+            // console.log("endMapX : "+ endMapX);
+            // console.log("endMapY : "+ endMapY);
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    accept: 'application/json',
+                    appKey: 'xOlDvGyoTo8WYlGZ2pZVe5Q5zw1Nypk53yuXhc9C',
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    startX: startMapX,
+                    startY: startMapY,
+                    endX: endMapX,
+                    endY: endMapY,
+                    count: 1,
+                    lang: 0,
+                    format: 'json'
+                })
+            };
+
+            fetch('https://apis.openapi.sk.com/transit/routes', options)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("값을 잘 받는지 확인");
+                    console.log(data);
+                    console.log(data.metaData.plan.itineraries);
+                    console.log(data.metaData.plan.itineraries.length);
+                    console.log("Titem : " + Titem)
+                    for(let i=0;i < data.metaData.plan.itineraries.length;i++){
+                        console.log("Titem - r: " + data.metaData.plan.itineraries[i])
+
+                    }
+                })
+                .catch((error) => console.log(error))
+
+        }
+
+
+
+        // ====================================================================
+        // 지도
 
         // 마커를 담을 배열입니다
         var markers = [];
@@ -386,7 +384,7 @@
         // ----------- 검색
         // 장소 검색 객체를 생성합니다
         // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-        var infowindow = new kakao.maps.InfoWindow({zIndex:8});
+        var infowindow = new kakao.maps.InfoWindow({zIndex:5});
         // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
         $(document).ready(function (){
                 setMap();
@@ -434,7 +432,7 @@
                     });
 
                     $("#sortable li").onclick = function (){
-                        console.log("클릭")
+                        //console.log("클릭")
                         displayInfowindow(marker, info);
                     }
                 })(marker, info);
@@ -459,7 +457,7 @@
         function myMerkerSet(){
             //일정 선택시 변경되는 imgOptions
             $("#sortable li").each(function (i,box){
-                console.log($(box).find(".place_name").text());
+                //console.log($(box).find(".place_name").text());
 
                 var positionsItem = {
                     content : '<div></div>',
@@ -506,7 +504,7 @@
         // 지도 위에 표시되고 있는 마커를 모두 제거합니다
         function removeMarker() {
             for ( var i = 0; i < markers.length; i++ ) {
-                console.log("제거----------------")
+                //("제거----------------")
                 markers[i].setMap(null);
             }
             positions = [];
@@ -538,12 +536,12 @@
 
         //라인 생성
         function mapLine(){
-            console.log("지도 선 그리기")
+            //console.log("지도 선 그리기")
             let linePath=[];
             let distance;
 
             for(let i=0;i<positions.length;i++){
-                console.log(positions[i].latlng);
+                //console.log(positions[i].latlng);
                 linePath.push(positions[i].latlng);
 
             }//end for
