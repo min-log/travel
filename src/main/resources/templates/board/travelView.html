@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+<!-- 화면 확인 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/basic}">
+      layout:decorate="~{layout/basic}">
 <th:block layout:fragment="content">
     <div class="content_nav"  th:object="${category}">
         <!-- start : navbar -->
@@ -150,133 +151,151 @@
         </div>
 
 
-        <script type="text/javascript">
-            let itemNo; // 아이템 넘버
-            let modal =$('#modalMsg');
-            let msg='';
-            let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
-
-            // 아이템 생성
-            let itemListWrap = $("#sortable");
-            let daySelect = $(".day_select .form-select");
-            let todayTotalPrice = $("#todayTotalPrice"); // 하루 비용
 
 
+        <div class="content" style="padding:0;">
+            <div id="mapMenuWrap" class="bg_white" style="display:none">
+                <ul id="placesList" class="scrollBar"></ul>
+                <div id="pagination"></div>
+            </div>
+            <div class="map_wrap">
+                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                <div class="custom_zoomcontrol radius_border">
+                    <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
+                    <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            $(function () {
-                $(document).ready(function (){
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
+
+    <script type="text/javascript">
+        let itemNo; // 아이템 넘버
+        let modal =$('#modalMsg');
+        let msg='';
+        let categoryArea = $('input[name=categoryArea]').val(); //여행 지역
+
+        // 아이템 생성
+        let itemListWrap = $("#sortable");
+        let daySelect = $(".day_select .form-select");
+        let todayTotalPrice = $("#todayTotalPrice"); // 하루 비용
 
 
-                    let totalPriceValue = [[${category.categoryTotalPrice}]];
-                    let totalPrice = priceToString(totalPriceValue);
-                    $("#totalPice").text(totalPrice);
-                    //처음 시작시 1번 일정 불러오기
-                    itemList(1);
+        $(document).ready(function () {
 
-                    $("#itemDayName").val($(".dayName").text());
-                });
 
-                daySelect.on('change',function(){
-                    let dayCnt = daySelect.find("option:selected").data("cnt");
-                    let dayVal = daySelect.find("option:selected").val();
-                    $(".dayName").text(dayCnt);
-                    $("#boardItemDay").val(dayVal);
-                    if (dayVal>1){$("#thumbnailWarp").hide();
-                    }else{$("#thumbnailWarp").show();}
-                    $('#modalMsg').modal("show");
-                    $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
+            let totalPriceValue = [[${category.categoryTotalPrice}]];
+            let totalPrice = priceToString(totalPriceValue);
+            $("#totalPice").text(totalPrice);
+            //처음 시작시 1번 일정 불러오기
+            itemList(1);
 
-                    // 리스트 변경하기
-                    itemList(dayVal);
+            $("#itemDayName").val($(".dayName").text());
+
+
+            daySelect.on('change',function(){
+                let dayCnt = daySelect.find("option:selected").data("cnt");
+                let dayVal = daySelect.find("option:selected").val();
+                $(".dayName").text(dayCnt);
+                $("#boardItemDay").val(dayVal);
+                if (dayVal>1){$("#thumbnailWarp").hide();
+                }else{$("#thumbnailWarp").show();}
+                $('#modalMsg').modal("show");
+                $('#modalMsg .modal-message').html("D-" + dayVal + " : " + dayCnt + " 일정을 불러옵니다.");
+
+                // 리스트 변경하기
+                itemList(dayVal);
+                setMap();
+            })
+
+            function priceToString(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+
+            function itemList(e){
+                let itemListCon='';
+                let todayPrice= 0;
+                $.ajax({
+                    url: '/boardApi/itemList',
+                    type: "get",
+                    data: {itemDay:e,cateNo:[[${param.no}]]},
+                    dataType: 'json',
+                    cache: false,
+                    success:function (data){
+                        //console.log("리스트 변경");
+                        for(var i=0 in data){
+                            itemNo = data[i].itemNo;
+                            let price = new Number(data[i].itemAccount);
+                            itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
+                            itemListCon += '<div class="top">';
+                            itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
+                            itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
+                            itemListCon += '<p class="link_zone">';
+                            itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
+                            itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
+                            itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
+                            itemListCon += '</p>';
+                            itemListCon += '</div>';
+                            itemListCon += '<div class="con" style="display:none;">';
+                            itemListCon += '<p class="road_address">' + data[i].roadAddressName + '</p>';
+                            itemListCon += '<p class="jibun gray address_name">' + data[i].addressName + '</p>';
+                            if(data[i].placeTime != '')     itemListCon += '<p class="place_time">운영시간 : ' + data[i].placeTime + '</p>';
+                            if(data[i].itemTime != '')      itemListCon += '<p class="item_time">도착시간 : ' + data[i].itemTime + '</p>';
+                            if(data[i].itemAccount != '0')  itemListCon += '<p class="item_account">비용 : ' + price + '</p>';
+                            if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
+                            itemListCon += '</div>';
+                            itemListCon += '</li>';
+
+                            todayPrice = todayPrice + price;
+                            if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
+                        }
+
+                        todayPrice = priceToString(todayPrice); // 가격 원단위 추가
+                        todayTotalPrice.text(todayPrice);
+
+                        itemListWrap.html(itemListCon);
+                        itemMapInfoGet();
+                    }
                 })
-
-                function priceToString(price) {
-                    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                }
+            }
 
 
-                function itemList(e){
-                    let itemListCon='';
-                    let todayPrice= 0;
-                    $.ajax({
-                        url: '/boardApi/itemList',
-                        type: "get",
-                        data: {itemDay:e,cateNo:[[${param.no}]]},
-                        dataType: 'json',
-                        cache: false,
-                        success:function (data){
-                            console.log("리스트 변경");
-                            for(var i=0 in data){
-                                itemNo = data[i].itemNo;
-                                let price = new Number(data[i].itemAccount);
-                                itemListCon +='<li class="lh-sm" data-index="'+ data[i].itemNumber +'" data-no="' + data[i].itemNo + '" data-map-id="'+ data[i].id +'"  data-map-x="'+ data[i].x +'" data-map-y="'+ data[i].y +'" data-day="'+ data[i].itemDay +'" >';
-                                itemListCon += '<div class="top">';
-                                itemListCon +=    '<span class="markerbg marker_'+ i +'"></span>';
-                                itemListCon +=    '<a class="place_name" href="javascript:void(0)" >'+ data[i].placeName +'</a>';
-                                itemListCon += '<p class="link_zone">';
-                                itemListCon += '    <a href="\thttps://map.kakao.com/link/to/'+ data[i].id +'" target="_blank" title="가는 길 새창으로 열기"><i class="bi bi-map-fill"></i></a>';
-                                itemListCon += '    <a href="'+data[i].placeUrl+'" target="_blank" title="정보 새창으로 열기"><i class="bi bi-house-door-fill"></i></a>';
-                                itemListCon += '    <a href="tel:'+ data[i].phone +'" target="_blank" title="연락하기"><i class="bi bi-telephone-fill"></i></a>';
-                                itemListCon += '</p>';
-                                itemListCon += '</div>';
-                                itemListCon += '<div class="con" style="display:none;">';
-                                itemListCon += '<p class="road_address">' + data[i].roadAddressName + '</p>';
-                                itemListCon += '<p class="jibun gray address_name">' + data[i].addressName + '</p>';
-                                if(data[i].placeTime != '')     itemListCon += '<p class="place_time">운영시간 : ' + data[i].placeTime + '</p>';
-                                if(data[i].itemTime != '')      itemListCon += '<p class="item_time">도착시간 : ' + data[i].itemTime + '</p>';
-                                if(data[i].itemAccount != '0')  itemListCon += '<p class="item_account">비용 : ' + price + '</p>';
-                                if(data[i].itemInfo != '')      itemListCon += '<p class="item_info">메모 : ' + data[i].itemInfo + '</p>';
-                                itemListCon += '</div>';
-                                itemListCon += '</li>';
+            function itemMapInfoGet(){
+                $("#sortable li a").on('click',function (index,item) {
+                    let itemEl = $(this).parents("li");
+                    let itemCon = itemEl.find(".con");
+                    if(itemEl.hasClass("action") == false){
+                        $("#sortable li").removeClass("action");
+                        itemEl.addClass("action");
+                        itemCon.slideDown();
 
-                                todayPrice = todayPrice + price;
-                                if(price != 'NaN' || price != null || price != 0) price = priceToString(price);
-                            }
+                        let startMapX =  itemEl.data('map-x');
+                        let startMapY =  itemEl.data('map-y');
+                        let endMapX =  itemEl.next('li').data('map-x');
+                        let endMapY =  itemEl.next('li').data('map-y');
+                        // tMapPost(startMapX,startMapY,endMapX,endMapY);
 
-                            todayPrice = priceToString(todayPrice); // 가격 원단위 추가
-                            todayTotalPrice.text(todayPrice);
+                    }else {
+                        itemEl.removeClass("action");
+                        itemCon.slideUp();
+                    }
+                });
+            }
 
-                            itemListWrap.html(itemListCon);
-                            itemMapInfoGet();
-                        }
-                    })
-                }
-
-
-                function itemMapInfoGet(){
-                    $("#sortable li a").on('click',function (index,item) {
-                        let itemEl = $(this).parents("li");
-                        let itemCon = itemEl.find(".con");
-                        if(itemEl.hasClass("action") == false){
-                            $("#sortable li").removeClass("action");
-                            itemEl.addClass("action");
-                            itemCon.slideDown();
-
-                            let startMapX =  itemEl.data('map-x');
-                            let startMapY =  itemEl.data('map-y');
-                            let endMapX =  itemEl.next('li').data('map-x');
-                            let endMapY =  itemEl.next('li').data('map-y');
-                            //tMapPost(startMapX,startMapY,endMapX,endMapY);
-
-                        }else {
-                            itemEl.removeClass("action");
-                            itemCon.slideUp();
-                        }
-                    });
-                }
-
-
-            });
 
 
 
 
             function tMapPost(startMapX,startMapY,endMapX,endMapY) {
-
-                console.log("startMapX : "+ startMapX);
-                console.log("startMapY : "+ startMapY);
-                console.log("endMapX : "+ endMapX);
-                console.log("endMapY : "+ endMapY);
+                //지도 가는길 받아오기
+                // console.log("startMapX : "+ startMapX);
+                // console.log("startMapY : "+ startMapY);
+                // console.log("endMapX : "+ endMapX);
+                // console.log("endMapY : "+ endMapY);
 
                 const options = {
                     method: 'POST',
@@ -314,255 +333,234 @@
             }
 
 
-        </script>
 
-        <div class="content" style="padding:0;">
-            <div id="mapMenuWrap" class="bg_white" style="display:none">
-                <ul id="placesList" class="scrollBar"></ul>
-                <div id="pagination"></div>
-            </div>
-            <div class="map_wrap">
-                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
-                <div class="custom_zoomcontrol radius_border">
-                    <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>
-                    <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
-                </div>
-            </div>
-        </div>
-    </div>
+            // ====================================================================
+            // 지도
+
+            // 마커를 담을 배열입니다
+            var markers = [];
+            var positions = []; // 내 리스트 배열
+
+            let imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
+            let imageSize, spriteSize, spriteOrigin,offset;
 
 
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=613aa2f615dd1e9e1195bc49e034884a&libraries=services,clusterer,drawing"></script>
-    <script>
-    $(document).ready(function () {
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+                    level: 8 // 지도의 확대 레벨
+                };
+
+            // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomIn() {
+                map.setLevel(map.getLevel() - 1);
+            }
+
+            // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomOut() {
+                map.setLevel(map.getLevel() + 1);
+            }
 
 
+            // 지도 이동
+            function setCenter(y,x) {
+                // 이동할 위도 경도 위치를 생성합니다
+                var moveLatLon = new kakao.maps.LatLng(y, x);
 
-        // 마커를 담을 배열입니다
-        var markers = [];
-        var positions = []; // 내 리스트 배열
-
-        let imageSrc = '/img/icon_map_00.png'; // 마커 이미지 url, 스프라이트 이미지를 씁니다
-        let imageSize, spriteSize, spriteOrigin,offset;
-
-
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-                center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-                level: 8 // 지도의 확대 레벨
-            };
-
-        // 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomIn() {
-            map.setLevel(map.getLevel() - 1);
-        }
-
-        // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomOut() {
-            map.setLevel(map.getLevel() + 1);
-        }
-
-
-        // 지도 이동
-        function setCenter(y,x) {
-            // 이동할 위도 경도 위치를 생성합니다
-            var moveLatLon = new kakao.maps.LatLng(y, x);
-
-            // 지도 중심을 이동 시킵니다
-            //map.setCenter(moveLatLon);
-            // 지도 중심을 부드럽게 이동시킵니다
-            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-            map.panTo(moveLatLon);
-        }
+                // 지도 중심을 이동 시킵니다
+                //map.setCenter(moveLatLon);
+                // 지도 중심을 부드럽게 이동시킵니다
+                // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+                map.panTo(moveLatLon);
+            }
 
 
 
 
-        // ------------ 내 위치
-        // ----------- 검색
-        // 장소 검색 객체를 생성합니다
-        // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-        var infowindow = new kakao.maps.InfoWindow({zIndex:8});
-        // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
-        $(document).ready(function (){
+            // ------------ 내 위치
+            // ----------- 검색
+            // 장소 검색 객체를 생성합니다
+            // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({zIndex:5});
+            // 처음들어갈 시 여행 제목 키워드로 장소를 검색합니다
+            $(document).ready(function (){
                 setMap();
 
-        })
-        function setMap(){
-            infowindow.close();
-            removeMarker();// 지도에 표시되고 있는 마커를 제거합니다
-            setTimeout(function (){
-                let places = myMerkerSet();
-                displayPlaces(places);
-                mapLine();
-            },100);
-        }
+            })
+            function setMap(){
+                infowindow.close();
+                removeMarker();// 지도에 표시되고 있는 마커를 제거합니다
+                setTimeout(function (){
+                    let places = myMerkerSet();
+                    displayPlaces(places);
+                    //mapLine();
+                },100);
+            }
 
 
 
-        // 검색 결과 목록과 마커를 표출하는 함수입니다
-        function displayPlaces(places) {
+            // 검색 결과 목록과 마커를 표출하는 함수입니다
+            function displayPlaces(places) {
 
-            var bounds = new kakao.maps.LatLngBounds();
-
-
-
-            // 내가 저장한 마커 표시
+                var bounds = new kakao.maps.LatLngBounds();
 
 
-            // 전달 받은 데이터의 마커를 생성하고 지도에 표시합니다
-            for ( var i=0; i<places.length; i++ ) {
-                var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-                    marker = addMarker(placePosition, i, places[i]);
+
+                // 내가 저장한 마커 표시
 
 
-                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-                // LatLngBounds 객체에 좌표를 추가합니다
-                bounds.extend(placePosition);
+                // 전달 받은 데이터의 마커를 생성하고 지도에 표시합니다
+                for ( var i=0; i<places.length; i++ ) {
+                    var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+                        marker = addMarker(placePosition, i, places[i]);
 
-                // 마커와 검색결과 항목에 mouseover 했을때
-                // 해당 장소에 인포윈도우에 장소명을 표시합니다
-                // mouseout 했을 때는 인포윈도우를 닫습니다
-                let info = places[i];
-                (function(marker, info) {
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                        displayInfowindow(marker, info);
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                    // LatLngBounds 객체에 좌표를 추가합니다
+                    bounds.extend(placePosition);
+
+                    // 마커와 검색결과 항목에 mouseover 했을때
+                    // 해당 장소에 인포윈도우에 장소명을 표시합니다
+                    // mouseout 했을 때는 인포윈도우를 닫습니다
+                    let info = places[i];
+                    (function(marker, info) {
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                            displayInfowindow(marker, info);
+                        });
+
+                        $("#sortable li").onclick = function (){
+                            //console.log("클릭")
+                            displayInfowindow(marker, info);
+                        }
+                    })(marker, info);
+
+
+                }
+
+
+                function markeClose (){
+                    infowindow.close();
+                }
+
+
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+                map.setBounds(bounds);
+            }
+
+
+
+            // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다. ------------------------------
+
+            function myMerkerSet(){
+                //일정 선택시 변경되는 imgOptions
+                $("#sortable li").each(function (i,box){
+                    //console.log($(box).find(".place_name").text());
+
+                    var positionsItem = {
+                        content : '<div></div>',
+                        latlng: new kakao.maps.LatLng($(box).attr('data-map-y'), $(box).attr('data-map-x')),
+                        x: $(box).attr('data-map-x'),
+                        y: $(box).attr('data-map-y'),
+                        itemIndexArr:$(box).attr('data-index'),
+                        mapIdArr :$(box).attr('data-map-id'),
+                        place_name :$(box).find(".place_name").text(),
+                        road_address_name :$(box).find(".road_address_name").text(),
+                        address_name :$(box).find(".address_name").text()
+                    }
+                    positions.push(positionsItem);
+                });
+                return positions;
+            }
+
+            function addMarker(position, idx,place) {
+                imageSrc ='/img/marker_number_blue.png';
+                spriteSize = new kakao.maps.Size(35, 691);
+                spriteOrigin= new kakao.maps.Point(0, (place.itemIndexArr*46)+10);
+                offset = new kakao.maps.Point(13, 37);
+
+                //기본 imgOptions
+                imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
+
+                var imgOptions =  {
+                        spriteSize : spriteSize, // 스프라이트 이미지의 크기
+                        spriteOrigin : spriteOrigin, // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+                        offset: offset // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+                    },
+                    markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+                    marker = new kakao.maps.Marker({
+                        position: position, // 마커의 위치
+                        image: markerImage
                     });
 
-                    $("#sortable li").onclick = function (){
-                        console.log("클릭")
-                        displayInfowindow(marker, info);
-                    }
-                })(marker, info);
+                marker.setMap(map); // 지도 위에 마커를 표출합니다
+                markers.push(marker);  // 배열에 생성된 마커를 추가합니다
 
-
+                return marker;
             }
 
-
-            function markeClose (){
-                infowindow.close();
-            }
-
-
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-            map.setBounds(bounds);
-        }
-
-
-
-        // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다. ------------------------------
-
-        function myMerkerSet(){
-            //일정 선택시 변경되는 imgOptions
-            $("#sortable li").each(function (i,box){
-                console.log($(box).find(".place_name").text());
-
-                var positionsItem = {
-                    content : '<div></div>',
-                    latlng: new kakao.maps.LatLng($(box).attr('data-map-y'), $(box).attr('data-map-x')),
-                    x: $(box).attr('data-map-x'),
-                    y: $(box).attr('data-map-y'),
-                    itemIndexArr:$(box).attr('data-index'),
-                    mapIdArr :$(box).attr('data-map-id'),
-                    place_name :$(box).find(".place_name").text(),
-                    road_address_name :$(box).find(".road_address_name").text(),
-                    address_name :$(box).find(".address_name").text()
+            // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+            function removeMarker() {
+                for ( var i = 0; i < markers.length; i++ ) {
+                    //("제거----------------")
+                    markers[i].setMap(null);
                 }
-                positions.push(positionsItem);
-            });
-            return positions;
-        }
+                positions = [];
+                markers = [];
+            }
 
-        function addMarker(position, idx,place) {
-            imageSrc ='/img/marker_number_blue.png';
-            spriteSize = new kakao.maps.Size(35, 691);
-            spriteOrigin= new kakao.maps.Point(0, (place.itemIndexArr*46)+10);
-            offset = new kakao.maps.Point(13, 37);
 
-            //기본 imgOptions
-            imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
+            // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+            // 인포윈도우에 장소명을 표시합니다
+            function displayInfowindow(marker, info) {
+                var iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 
-            var imgOptions =  {
-                    spriteSize : spriteSize, // 스프라이트 이미지의 크기
-                    spriteOrigin : spriteOrigin, // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
-                    offset: offset // 마커 좌표에 일치시킬 이미지 내에서의 좌표
-                },
-                markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-                marker = new kakao.maps.Marker({
-                    position: position, // 마커의 위치
-                    image: markerImage
+                var content = '<div class="map_mark_info">';
+                content += '<div class="map_mark_top mb-3">';
+                content +=  '   <h5 class="place_name">'+ info.place_name+ '</h5>';
+                content +=  '   <a href="javascript:infowindow.close()" class="btn btn-close"></a>'
+                content += '</div>'
+                content += '    <p class="jibun gray  road_address_name">' + info.road_address_name + '</p>';
+                content += '    <p class="address_name">' +  info.address_name  + '</p>';
+                content += '</div>';
+
+                setCenter(info.y,info.x);
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+
+            }
+
+
+
+            //라인 생성
+            function mapLine(){
+                //console.log("지도 선 그리기")
+                let linePath=[];
+                let distance;
+
+                for(let i=0;i<positions.length;i++){
+                    //console.log(positions[i].latlng);
+                    linePath.push(positions[i].latlng);
+
+                }//end for
+                // 지도에 표시할 선을 생성합니다
+                const polyline = new kakao.maps.Polyline({
+                    path: linePath, // 선을 구성하는 좌표배열 입니다
+                    strokeWeight: 5, // 선의 두께 입니다
+                    strokeColor: "#FFAE00", // 선의 색깔입니다
+                    strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeStyle: "solid", // 선의 스타일입니다
                 });
 
-            marker.setMap(map); // 지도 위에 마커를 표출합니다
-            markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+                //lineLine.push(drawLine);
+                polyline.setMap(map);
 
-            return marker;
-        }
 
-        // 지도 위에 표시되고 있는 마커를 모두 제거합니다
-        function removeMarker() {
-            for ( var i = 0; i < markers.length; i++ ) {
-                console.log("제거----------------")
-                markers[i].setMap(null);
             }
-            positions = [];
-            markers = [];
-        }
 
-
-        // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
-        // 인포윈도우에 장소명을 표시합니다
-        function displayInfowindow(marker, info) {
-            var iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-            var content = '<div class="map_mark_info">';
-            content += '<div class="map_mark_top mb-3">';
-            content +=  '   <h5 class="place_name">'+ info.place_name+ '</h5>';
-            content +=  '   <a href="javascript:infowindow.close()" class="btn btn-close"></a>'
-            content += '</div>'
-            content += '    <p class="jibun gray  road_address_name">' + info.road_address_name + '</p>';
-            content += '    <p class="address_name">' +  info.address_name  + '</p>';
-            content += '</div>';
-
-            setCenter(info.y,info.x);
-            infowindow.setContent(content);
-            infowindow.open(map, marker);
-
-        }
-
-
-
-        //라인 생성
-        function mapLine(){
-            console.log("지도 선 그리기")
-            let linePath=[];
-            let distance;
-
-            for(let i=0;i<positions.length;i++){
-                console.log(positions[i].latlng);
-                linePath.push(positions[i].latlng);
-
-            }//end for
-            // 지도에 표시할 선을 생성합니다
-            const polyline = new kakao.maps.Polyline({
-                path: linePath, // 선을 구성하는 좌표배열 입니다
-                strokeWeight: 5, // 선의 두께 입니다
-                strokeColor: "#FFAE00", // 선의 색깔입니다
-                strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                strokeStyle: "solid", // 선의 스타일입니다
-            });
-
-            //lineLine.push(drawLine);
-            polyline.setMap(map);
-
-
-        }
-
-    });
+        });
 
     </script>
 
