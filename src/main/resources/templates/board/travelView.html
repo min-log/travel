@@ -256,7 +256,7 @@
                             let startMapY =  itemEl.data('map-y');
                             let endMapX =  itemEl.next('li').data('map-x');
                             let endMapY =  itemEl.next('li').data('map-y');
-                            tMapPost(startMapX,startMapY,endMapX,endMapY);
+                           // tMapPost(startMapX,startMapY,endMapX,endMapY);
 
                         }else {
                             itemEl.removeClass("action");
@@ -272,7 +272,7 @@
 
 
             function tMapPost(startMapX,startMapY,endMapX,endMapY) {
-
+                //지도 가는길 받아오기
                 console.log("startMapX : "+ startMapX);
                 console.log("startMapY : "+ startMapY);
                 console.log("endMapX : "+ endMapX);
@@ -398,7 +398,7 @@
             setTimeout(function (){
                 let places = myMerkerSet();
                 displayPlaces(places);
-                mapLine();
+                //mapLine();
             },100);
         }
 

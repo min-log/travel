@@ -32,7 +32,7 @@ public class UserDTO {
 
     @NotBlank(message = "비밀번호 : 비밀번호는 영어와 숫자로 포함해서 6자리 이상 입력하세요.")
     @Size(min = 6,message = "비밀번호 : 6자리 이상 입력하세요.")
-    @Pattern(regexp="^[a-zA-Z1-9]*$", message = "비밀번호 : 영어와 숫자를 포함해서 6자리 이상 입력하세요.")
+    @Pattern(regexp="^[a-zA-Z1-9`~!@#$%^&*()-_=+]*$", message = "비밀번호 : 영어와 숫자를 포함해서 6자리 이상 입력하세요.")
     private String password;
 
     @NotBlank(message = "이름 : 이름을 입력하세요.")
