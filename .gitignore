@@ -30,3 +30,6 @@ src/main/resources/static/upload/profile
 src/main/resources/application-mail.properties
 src/main/java/com/example/travel/config/MailConfig.java
 src/main/resources/mail.txt
+src/main/resources/application.properties
+src/main/resources/application-mail.properties
+src/main/resources/application-oauth.properties
