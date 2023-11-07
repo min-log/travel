@@ -102,7 +102,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <p class="img" th:if="${list.boardImg}">
-                                    <img th:src="${list.boardImg}" alt="여행썸내일">
+                                    <img th:src="|/boardApi/boardImg?url=${list.boardImg}|" alt="여행썸내일">
                                 </p>
                                 <div class="con">
                                     <div class="address_info mt-1">
