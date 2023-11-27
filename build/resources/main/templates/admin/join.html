@@ -292,22 +292,24 @@
       function emailSend(email){
           //console.log("email : {}",email);
 
+          msg  += "<div class='text-center'>";
+          msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";
+          msg  += "<b class='border box-gray p-2 mb-3 mt-3' style='display:inline-block'>"+email+"</b>";
+          msg  += "<p class='point-color info'>1분 이내로 입력해주세요.</p>";
+          msg  += "<p>인증번호가 위 이메일로 전송되었습니다.</p>";
+          msg  += "</div>";
+
+          //alert('인증번호가 전송되었습니다.');
+          $('#modalJoin .modal-title').html("회원인증");
+          $('#modalJoin .modal-message').html(msg);
+          $('#modalJoin').modal("show");
+
           $.ajax({
               type : 'get',
               url : '/mail/mailCheck?email='+email, // GET방식이라 Url 뒤에 email을 뭍힐수있다.
               success : function (data) {
                   //console.log("data : {}",data);
-                  msg  += "<div class='text-center'>";
-                  msg  += "<i class='bi bi-clock point-color ' style='font-size:30px;'></i><br />";
-                  msg  += "<b class='border box-gray p-2 mb-3 mt-3' style='display:inline-block'>"+email+"</b>";
-                  msg  += "<p class='point-color info'>1분 이내로 입력해주세요.</p>";
-                  msg  += "<p>인증번호가 위 이메일로 전송되었습니다.</p>";
-                  msg  += "</div>";
 
-                  //alert('인증번호가 전송되었습니다.');
-                  $('#modalJoin .modal-title').html("회원인증");
-                  $('#modalJoin .modal-message').html(msg);
-                  $('#modalJoin').modal("show");
 
                   $(".mail-check-wrap").show();
                   checkInput.attr('disabled',false);
@@ -450,13 +452,13 @@
               $("#userId").addClass('err');
 
               return false;
-          }
+          }else
           if (document.getElementById("idCheckValue").value == 'false'){
               $('#modalJoin').modal("show");
               $('.modal-message').html('사용 가능한 아이디를 확인을 해주세요.');
               $("#userId").addClass('err');
               return false
-          }
+          }else
 
           if(document.getElementById("password").value==''){
               $('#modalJoin').modal("show");
@@ -464,7 +466,7 @@
               $("#password").addClass('err');
 
               return false;
-          }
+          }else
 
           if(document.getElementById("name").value==''){
               $('#modalJoin').modal("show");
@@ -473,20 +475,20 @@
 
 
               return false;
-          }
+          }else
           if(document.getElementById("userEmail").value==''){
               $('#modalJoin').modal("show");
               $('.modal-message').html('이메일을 입력해주세요.');
               $("#userEmail1").addClass('err');
               return false;
-          }
+          }else
 
           if (document.getElementById("emailCheckValue").value == 'false'){
               $('#modalJoin').modal("show");
               $('.modal-message').html('이메일 인증을 해주세요.');
               $("#userEmail1").addClass('err');
               return false
-          }
+          }else
 
 
           if(document.getElementById("userPhone").value==''){
@@ -494,14 +496,14 @@
               $('.modal-message').html('연락처를 입력해주세요.');
               $("#userPhone").addClass('err');
               return false;
-          }
+          }else
 
           if(document.getElementById("address").value==''){
               $('#modalJoin').modal("show");
               $('.modal-message').html('주소를 입력해주세요.');
               $("#address").addClass('err');
               return false;
-          }
+          }else
 
           if(document.getElementById("userBirthday").value==''){
               $('#modalJoin').modal("show");
@@ -510,12 +512,20 @@
               $('.modal-message').html(html);
               $("#userBirthday").addClass('err');
               return false;
-          }
+          }else
 
           if ( ! $('input[name=userAgree]:checked').val()) {
               alert('개인정보 활용에 동의해주세요.');
               return false;
+          } else {
+              msg  = "<div class='text-center'>";
+              msg  += "<p>회원가입이 진행 중 입니다. 잠시만 기다려주세요.</p>";
+              msg  += "</div>";
+              $('#modalJoin .modal-title').html("회원가입");
+              $('#modalJoin .modal-message').html(msg);
+              $('#modalJoin').modal("show");
           }
+
 
           document.getElementById('joinForm').submit();
       }
